@@ -9,7 +9,7 @@ export default function AllLists({ lists }) {
     return (
         <Layout>
             <Head>
-                <title>[User]'s Lists</title>
+                <title>All Lists</title>
             </Head>
             <h2>All Lists</h2>
             {lists.map((list) => {
