@@ -13,8 +13,8 @@ export default function ListPage({ listData }) {
             <h2>{data.name} - {data.type}</h2>
             {data.items.map((item) => {
                 return (
-                    <div>
-                        <p key={item._id}>{item.name} - {item.status}</p>
+                    <div key={item._id}>
+                        <p>{item.name} - {item.status}</p>
                         <img src={item.artURL} width={50} height={50} />
                     </div>
 
