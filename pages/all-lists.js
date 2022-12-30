@@ -21,7 +21,7 @@ export default function AllLists({ lists }) {
     );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
     await dbConnect();
 
     const results = await List.find({})
