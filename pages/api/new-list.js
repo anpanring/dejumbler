@@ -1,15 +1,26 @@
+import { ObjectId } from "bson";
+import dbConnect from "../../lib/mongodb";
 import List from "../../models/List";
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
+    await dbConnect();
+
     const info = req.body;
-    console.log('info: ', info);
+
     new List({
-        user: null,
+        user: ObjectId('624e59e8dd126d61910fee6d'),
         name: info.name,
         type: info.type,
         description: info.description,
         createdAt: Date.now()
-    }).save().then((savedDoc) => {
-        res.redirect(`/list/${savedDoc._id}`);
+    }).save((err, list, count) => {
+        if (err) console.log(err);
+        else res.redirect(`/list/${list._id}`);
     });
 }
+
+export const config = {
+    api: {
+        externalResolver: true,
+    },
+};

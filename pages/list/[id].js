@@ -1,6 +1,8 @@
 import Head from 'next/head';
 import Layout from "../../components/layout";
 import List from '../../models/List';
+import SearchBar from '../../components/SearchBar';
+import dbConnect from '../../lib/mongodb';
 
 export default function ListPage({ listData }) {
     const data = JSON.parse(listData);
@@ -11,6 +13,7 @@ export default function ListPage({ listData }) {
                 <title>{data.name}</title>
             </Head>
             <h2>{data.name} - {data.type}</h2>
+            <SearchBar type={data.type} />
             {data.items.map((item) => {
                 return (
                     <div key={item._id}>
@@ -25,11 +28,12 @@ export default function ListPage({ listData }) {
 }
 
 export async function getServerSideProps({ params }) {
-    const data = await List.find({ _id: params.id })
-    console.log(data[0]);
-    return {
-        props: {
-            listData: JSON.stringify(data[0]),
-        },
-    };
+    await dbConnect();
+
+    const data = await List.findById(params.id);
+    const listData = JSON.stringify(data);
+
+    console.log(listData);
+
+    return { props: { listData } };
 }

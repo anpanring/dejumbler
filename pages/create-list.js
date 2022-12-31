@@ -5,7 +5,7 @@ export default function AllLists() {
         <Layout>
             <h2>Create List</h2>
             <form action="/api/new-list" method="POST">
-                <div class='form-row'>
+                <div className='form-row'>
                     <label>Type: </label>
                     <input list="types" name="type" required />
                     <datalist id="types">
@@ -15,15 +15,15 @@ export default function AllLists() {
                         <option value="Any" />
                     </datalist>
                 </div>
-                <div class='form-row'>
+                <div className='form-row'>
                     <label>Name: </label>
                     <input type="text" name="name" required />
                 </div>
-                <div class='form-row'>
+                <div className='form-row'>
                     <label>Description: </label>
                     <textarea type="text" name="description"></textarea>
                 </div>
-                <div class='form-row'>
+                <div className='form-row'>
                     <input type="submit" value="Create List" />
                 </div>
             </form>
