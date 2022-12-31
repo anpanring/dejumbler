@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Layout from "../../components/layout";
 import List from '../../models/List';
+import SearchBar from '../../components/SearchBar';
 
 export default function ListPage({ listData }) {
     const data = JSON.parse(listData);
@@ -11,6 +12,7 @@ export default function ListPage({ listData }) {
                 <title>{data.name}</title>
             </Head>
             <h2>{data.name} - {data.type}</h2>
+            <SearchBar type={data.type} />
             {data.items.map((item) => {
                 return (
                     <div key={item._id}>

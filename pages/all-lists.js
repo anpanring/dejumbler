@@ -3,9 +3,21 @@ import Layout from "../components/layout";
 import Link from "next/link";
 import List from "../models/List";
 import Head from "next/head";
+import getToken from "../lib/spotify";
 
 export default function AllLists({ lists }) {
     lists = JSON.parse(lists);
+    // async function handleDelete(listId) {
+    //     try {
+    //         await fetch(`/api/${listId}`, {
+    //             method: 'DELETE',
+    //         })
+    //         router.push('/all-lists');
+    //     } catch (error) {
+    //         alert('Failed to delete the pet.');
+    //     }
+    // }
+
     return (
         <Layout>
             <Head>
@@ -13,29 +25,22 @@ export default function AllLists({ lists }) {
             </Head>
             <h2>All Lists</h2>
             {lists.map((list) => {
-                return <p key={list._id}>
+                return <div key={list._id}>
                     <Link href={`/list/${list._id}`} >{list.name}</Link>
-                </p>
+                    {/* <button onClick={handleDelete(list._id)}>Delete list</button> */}
+                </div>
             })}
         </Layout>
     );
 }
 
 export async function getStaticProps() {
+    console.log(await getToken());
+
     await dbConnect();
 
-    const results = await List.find({})
-    const paths = results.map((doc) => {
-        const listID = doc._id.toString();
-        return {
-            params: {
-                id: listID,
-            }
-        }
-    });
-
     /* find all the data in our database */
-    const result = await List.find({})
+    const result = await List.find({});
 
     return { props: { lists: JSON.stringify(result) } }
 }
