@@ -1,7 +1,10 @@
 import { ObjectId } from "bson";
+import dbConnect from "../../lib/mongodb";
 import List from "../../models/List";
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
+    await dbConnect();
+
     const info = req.body;
 
     new List({
