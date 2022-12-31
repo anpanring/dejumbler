@@ -15,3 +15,7 @@ export default function SearchBar(props) {
         );
     }
 }
+
+// function handleChange() {
+//     console.log()
+// }

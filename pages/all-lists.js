@@ -35,7 +35,7 @@ export default function AllLists({ lists }) {
 }
 
 export async function getStaticProps() {
-    console.log(await getToken());
+    // console.log(await getToken());
 
     await dbConnect();
 

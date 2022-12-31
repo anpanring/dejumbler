@@ -3,7 +3,7 @@ import List from "../../models/List";
 
 export default function handler(req, res) {
     const info = req.body;
-    console.log('info: ', info);
+
     new List({
         user: ObjectId('624e59e8dd126d61910fee6d'),
         name: info.name,
@@ -15,3 +15,9 @@ export default function handler(req, res) {
         else res.redirect(`/list/${list._id}`);
     });
 }
+
+export const config = {
+    api: {
+        externalResolver: true,
+    },
+};
