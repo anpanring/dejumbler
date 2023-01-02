@@ -40,12 +40,15 @@ class SearchBar extends React.Component {
         var body = await response.json();
         const type = event.target.type.value;
 
+        console.log(body);
+
         body = body[`${type.toLowerCase()}s`].items.slice(0, 5);
 
         const results = []
         body.map((item) => {
             let temp = {}
             temp.name = item.name;
+            temp.id = item.id;
             if (type == 'track') {
                 temp.image = item.album.images[2].url;
                 temp.artist = ' - ' + item.artists.map((artist) => {
@@ -83,8 +86,8 @@ class SearchBar extends React.Component {
                 <div>
                     {this.state.results.map((result) => {
                         return (
-                            <div>
-                                <img src={result.image} />
+                            <div key={result.id}>
+                                <img src={result.image} alt={result.name} />
                                 <p>{result.name}{result.artist}</p>
                             </div>
                         )
