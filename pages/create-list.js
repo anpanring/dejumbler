@@ -7,13 +7,12 @@ export default function AllLists() {
             <form action="/api/new-list" method="POST">
                 <div className='form-row'>
                     <label>Type: </label>
-                    <input list="types" name="type" required />
-                    <datalist id="types">
-                        <option value="Books" />
-                        <option value="Movies" />
-                        <option value="Music" />
-                        <option value="Any" />
-                    </datalist>
+                    <select id="types" list="types" name="type" required>
+                        <option value="Any">Any</option>
+                        <option value="Books">Books</option>
+                        <option value="Movies">Movies</option>
+                        <option value="Music">Music</option>
+                    </select>
                 </div>
                 <div className='form-row'>
                     <label>Name: </label>

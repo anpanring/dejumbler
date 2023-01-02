@@ -3,7 +3,6 @@ import Layout from "../components/layout";
 import Link from "next/link";
 import List from "../models/List";
 import Head from "next/head";
-import getToken from "../lib/spotify";
 
 export default function AllLists({ lists }) {
     lists = JSON.parse(lists);
@@ -26,7 +25,7 @@ export default function AllLists({ lists }) {
             <h2>All Lists</h2>
             {lists.map((list) => {
                 return <div key={list._id}>
-                    <Link href={`/list/${list._id}`} >{list.name}</Link>
+                    <p><Link href={`/list/${list._id}`} >{list.name}</Link> - {list.type}</p>
                     {/* <button onClick={handleDelete(list._id)}>Delete list</button> */}
                 </div>
             })}
@@ -35,8 +34,6 @@ export default function AllLists({ lists }) {
 }
 
 export async function getStaticProps() {
-    // console.log(await getToken());
-
     await dbConnect();
 
     /* find all the data in our database */
