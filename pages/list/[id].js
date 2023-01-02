@@ -13,7 +13,7 @@ export default function ListPage({ listData }) {
                 <title>{data.name}</title>
             </Head>
             <h2>{data.name} - {data.type}</h2>
-            <SearchBar type={data.type} />
+            <SearchBar />
             {data.items.map((item) => {
                 return (
                     <div key={item._id}>
@@ -32,8 +32,6 @@ export async function getServerSideProps({ params }) {
 
     const data = await List.findById(params.id);
     const listData = JSON.stringify(data);
-
-    console.log(listData);
 
     return { props: { listData } };
 }
