@@ -4,7 +4,7 @@ import List from '../../models/List';
 import SearchBar from '../../components/SearchBar';
 import dbConnect from '../../lib/mongodb';
 
-export default function ListPage({ listData }) {
+export default function ListPage({ listData, id }) {
     const data = JSON.parse(listData);
 
     return (
@@ -13,7 +13,7 @@ export default function ListPage({ listData }) {
                 <title>{data.name}</title>
             </Head>
             <h2>{data.name} - {data.type}</h2>
-            <SearchBar />
+            <SearchBar listId={id} />
             {data.items.map((item) => {
                 return (
                     <div key={item._id}>
@@ -33,5 +33,5 @@ export async function getServerSideProps({ params }) {
     const data = await List.findById(params.id);
     const listData = JSON.stringify(data);
 
-    return { props: { listData } };
+    return { props: { listData, id: params.id } };
 }
