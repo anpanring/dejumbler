@@ -1,7 +1,8 @@
 import { Album, Artist, Song } from "../../models/Types";
+import dbConnect from "../../lib/mongodb";
 import List from "../../models/List";
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
     console.log(req.body);
 
     const data = req.body;
@@ -37,9 +38,10 @@ export default function handler(req, res) {
 
     console.log(newItem);
 
-    List.findOneAndUpdate({ _id: listId }, { $push: { items: newItem } }, (err, list, count) => {
-        if (err) console.log(err);
-        console.log(`/list/${listId}`);
-        res.status(200).json({ message: "success" });
+    await dbConnect().then(() => {
+        List.findOneAndUpdate({ _id: listId }, { $push: { items: newItem } }, (err, list, count) => {
+            if (err) console.log(err);
+            res.status(200).json({ message: "success" });
+        });
     });
 }
