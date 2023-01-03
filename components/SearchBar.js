@@ -12,17 +12,20 @@ class SearchBar extends React.Component {
             results: [],
             apiToken: ''
         }
+        this.spotSearch = this.spotSearch.bind(this);
     }
 
     async componentDidMount() {
         const token = await getToken();
+        console.log(this.state);
 
         this.setState({
             apiToken: token
         });
     }
 
-    spotSearch = async (event) => {
+    async spotSearch(event) {
+        console.log(this);
         event.preventDefault();
 
         const fetchOptions = {
