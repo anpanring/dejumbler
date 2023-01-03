@@ -2,6 +2,7 @@ import dbConnect from '../../lib/mongodb';
 import Head from 'next/head';
 import Layout from "../../components/layout";
 import List from '../../models/List';
+import ListItem from '../../components/ListItem';
 import SearchBar from '../../components/SearchBar';
 import styles from '../../styles/ListPage.module.css';
 
@@ -13,19 +14,15 @@ export default function ListPage({ listData, id }) {
             <Head>
                 <title>{data.name}</title>
             </Head>
-            <div className={styles.listTextWrapper}>
+            <div className={styles.listInfo}>
                 <h2 className={styles.listTitle}>{data.name}</h2>
                 <h3 className={styles.listType}>{data.type}</h3>
             </div>
             <SearchBar listId={id} />
-            <div className={styles.resultsWrapper}>
+            <div className={styles.itemWrapper}>
                 {data.items.map((item) => {
                     return (
-                        <div key={item._id}>
-                            <p>{item.name} - {item.status}</p>
-                            <img src={item.artURL} width={50} height={50} />
-                        </div>
-
+                        <ListItem data={item} />
                     );
                 })}
             </div>
