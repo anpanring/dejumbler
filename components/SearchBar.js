@@ -1,6 +1,9 @@
 import getToken from "../lib/spotify";
 import Image from "next/image";
+// import List from "../models/List";
 import React, { useCallback, useRef, useState } from "react";
+import SearchResult from "./SearchResult";
+import styles from "./search.module.css";
 
 class SearchBar extends React.Component {
     constructor(props) {
@@ -47,6 +50,7 @@ class SearchBar extends React.Component {
         const results = []
         body.map((item) => {
             let temp = {}
+            temp.type = type;
             temp.name = item.name;
             temp.id = item.id;
             if (type == 'track') {
@@ -73,7 +77,7 @@ class SearchBar extends React.Component {
     render() {
         return (
             <div>
-                <form onSubmit={this.spotSearch}>
+                <form onSubmit={this.spotSearch} className={styles.searchBar}>
                     <input type="text" name="value" placeholder="Search Spotify..." required />
                     <label>Type: </label>
                     <select id="types" list="types" name="type" required>
@@ -86,10 +90,7 @@ class SearchBar extends React.Component {
                 <div>
                     {this.state.results.map((result) => {
                         return (
-                            <div key={result.id}>
-                                <img src={result.image} alt={result.name} />
-                                <p>{result.name}{result.artist}</p>
-                            </div>
+                            <SearchResult key={result.id} data={result} listId={this.props.listId} />
                         )
                     })}
                 </div>
