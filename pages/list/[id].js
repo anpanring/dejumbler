@@ -22,7 +22,7 @@ export default function ListPage({ listData, id }) {
             <div className={styles.itemWrapper}>
                 {data.items.map((item) => {
                     return (
-                        <ListItem data={item} />
+                        <ListItem data={item} key={item._id} />
                     );
                 })}
             </div>

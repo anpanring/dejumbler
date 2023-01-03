@@ -9,7 +9,7 @@ class ListItem extends React.Component {
 
     render() {
         return (
-            <div key={this.data._id} className={styles.listItem}>
+            <div className={styles.listItem}>
                 <img src={this.data.artURL} width={50} height={50} />
                 <div className={styles.listItemText}>
                     <p>{this.data.name}</p>
