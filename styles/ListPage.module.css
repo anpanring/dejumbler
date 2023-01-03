@@ -1,0 +1,20 @@
+.resultsWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.listTextWrapper {
+    margin: 30px 0 20px 0;
+}
+
+.listTitle {
+    margin: 0;
+    line-height: 0.7;
+}
+
+.listType {
+    margin: 0;
+    font-size: 15px;
+    color: grey;
+}

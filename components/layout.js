@@ -1,4 +1,4 @@
-import './layout.module.css';
+import styles from './layout.module.css';
 import Link from 'next/link';
 
 export default function Layout({ children }) {
@@ -13,12 +13,12 @@ export default function Layout({ children }) {
                 </div>
                 <h1 className='dejumbler-title'>Dejumbler</h1>
             </div>
-            <div>
+            <div className={styles.navbar}>
                 <Link href="/">Home</Link> |
                 <Link href="/all-lists">All Lists</Link> |
                 <Link href="/create-list">Create a New List</Link>
             </div>
-            <div id="bd">
+            <div>
                 {children}
             </div>
         </div>

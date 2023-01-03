@@ -1,8 +1,9 @@
+import dbConnect from '../../lib/mongodb';
 import Head from 'next/head';
 import Layout from "../../components/layout";
 import List from '../../models/List';
 import SearchBar from '../../components/SearchBar';
-import dbConnect from '../../lib/mongodb';
+import styles from '../../styles/ListPage.module.css';
 
 export default function ListPage({ listData, id }) {
     const data = JSON.parse(listData);
@@ -12,17 +13,22 @@ export default function ListPage({ listData, id }) {
             <Head>
                 <title>{data.name}</title>
             </Head>
-            <h2>{data.name} - {data.type}</h2>
+            <div className={styles.listTextWrapper}>
+                <h2 className={styles.listTitle}>{data.name}</h2>
+                <h3 className={styles.listType}>{data.type}</h3>
+            </div>
             <SearchBar listId={id} />
-            {data.items.map((item) => {
-                return (
-                    <div key={item._id}>
-                        <p>{item.name} - {item.status}</p>
-                        <img src={item.artURL} width={50} height={50} />
-                    </div>
+            <div className={styles.resultsWrapper}>
+                {data.items.map((item) => {
+                    return (
+                        <div key={item._id}>
+                            <p>{item.name} - {item.status}</p>
+                            <img src={item.artURL} width={50} height={50} />
+                        </div>
 
-                );
-            })}
+                    );
+                })}
+            </div>
         </Layout>
     )
 }
