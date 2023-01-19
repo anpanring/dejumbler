@@ -34,8 +34,8 @@ export async function getServerSideProps({ params }) {
     await dbConnect();
 
     const data = await List.findById(params.id);
-    console.log(data["description"]);
-    console.log(data);
+    // console.log(data["description"]);
+    // console.log(data);
     const listData = JSON.stringify(data);
 
     return { props: { listData, id: params.id } };

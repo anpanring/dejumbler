@@ -31,5 +31,4 @@ async function addToList(data, listId) {
     await fetch('/api/add-item', fetchOptions);
 
     Router.push(`/list/${listId}`);
-    console.log('refreshed');
 }
