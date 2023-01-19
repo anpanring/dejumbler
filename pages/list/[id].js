@@ -22,7 +22,7 @@ export default function ListPage({ listData, id }) {
             <div className={styles.itemWrapper}>
                 {data.items.map((item) => {
                     return (
-                        <ListItem data={item} key={item._id} />
+                        <ListItem data={item} listId={id} key={item._id} />
                     );
                 })}
             </div>
@@ -34,6 +34,8 @@ export async function getServerSideProps({ params }) {
     await dbConnect();
 
     const data = await List.findById(params.id);
+    console.log(data["description"]);
+    console.log(data);
     const listData = JSON.stringify(data);
 
     return { props: { listData, id: params.id } };

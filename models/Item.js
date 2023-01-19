@@ -7,7 +7,8 @@ export const ItemSchema = new mongoose.Schema({
     status: {
         type: String, enum: ["todo", "in progress", "done"],
         default: false, required: true
-    }
+    },
+    notes: { type: String }
 }, {
     _id: true
 });
