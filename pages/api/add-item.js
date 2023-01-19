@@ -41,7 +41,7 @@ export default async function handler(req, res) {
     await dbConnect().then(() => {
         List.findOneAndUpdate({ _id: listId }, { $push: { items: newItem } }, (err, list, count) => {
             if (err) console.log(err);
-            res.status(200).json({ message: "success" });
+            else res.status(200).json({ message: "success" });
         });
     });
 }

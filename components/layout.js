@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function Layout({ children }) {
     return (
-        <div id="wrapper">
+        <div className={styles.wrapper}>
             <div id="hd">
                 <div>
                     <p>Logged in as: (<a href="/logout">Logout</a>)</p>
