@@ -25,7 +25,7 @@ class ListItem extends React.Component {
 
         await fetch('/api/remove-item', fetchOptions);
 
-        console.log(this.listId);
+        Router.push(`/list/${this.listId}`);
     }
 
     render() {
@@ -33,8 +33,8 @@ class ListItem extends React.Component {
             <div className={styles.listItem}>
                 <img src={this.data.artURL} width={50} height={50} />
                 <div className={styles.listItemText}>
-                    <p>{this.data.name}</p>
-                    <p className={styles.notes}>Notes: </p>
+                    <p>{this.data.name} {this.data.artist}</p>
+                    <p className={styles.notes}>Notes: {this.data.notes}</p>
                     <div className={styles.listItemActions}>
                         <button className={styles.button}>Edit</button>
                         <button className={styles.button} onClick={this.handleDelete}>Remove</button>
