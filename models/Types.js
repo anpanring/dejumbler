@@ -1,25 +1,35 @@
 import Item from "./Item";
 import mongoose from "mongoose";
 
-//Album inherits Item properties
-if (!mongoose.models.Album) {
-    const AlbumSchema = Item.discriminator('Album', new mongoose.Schema({
-        artist: { type: String, required: true },
-        lengthMins: { type: Number },
-        year: { type: String },
-    }));
+if (mongoose.modelNames().includes('Album')) {
+    mongoose.deleteModel('Album');
+    mongoose.deleteModel('Artist');
+    mongoose.deleteModel('Song');
 }
 
-//Artist inherits Item properties
-if (!mongoose.models.Artist) {
-    const ArtistSchema = Item.discriminator('Artist', new mongoose.Schema({
-        genres: [String], //string array for artist's genres
-    }));
+if (Item.discriminators && 'Album' in Item.discriminators) {
+    delete Item.discriminators.Album;
+    delete Item.discriminators.Artist;
+    delete Item.discriminators.Song;
 }
+
+//Album inherits Item properties
+const AlbumSchema = Item.discriminator('Album', new mongoose.Schema({
+    artist: { type: String, required: true },
+    lengthMins: { type: Number },
+    year: { type: String },
+}));
+// }
+
+//Artist inherits Item properties
+// if (mongoose.models.Artist) mongoose.deleteModel("Artist");
+const ArtistSchema = Item.discriminator('Artist', new mongoose.Schema({
+    genres: [String], //string array for artist's genres
+}));
+// }
 
 //Book inherits Item properties
 if (!mongoose.models.Book) {
-
     const BookSchema = Item.discriminator('Book', new mongoose.Schema({
         author: { type: String, required: true },
         year: { type: String },
@@ -37,13 +47,12 @@ if (!mongoose.models.Movie) {
 }
 
 //Song inherits Item properties
-if (!mongoose.models.Song) {
-    const SongSchema = Item.discriminator('Song', new mongoose.Schema({
-        artist: { type: String, required: true },
-        album: { type: String },
-        lengthMins: { type: Number },
-    }));
-}
+const SongSchema = Item.discriminator('Song', new mongoose.Schema({
+    artist: { type: String, required: true },
+    album: { type: String },
+    lengthMins: { type: Number },
+}));
+// }
 
 // User.plugin(passportLocalMongoose);
 // List.plugin(URLSlugs('name'));
