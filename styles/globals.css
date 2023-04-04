@@ -20,3 +20,13 @@ a:hover {
   background: green;
   color: white
 }
+
+select {
+  border-radius: 0px;
+  border-color: green;
+}
+
+select:hover {
+  background-color: green;
+  color: white;
+}
