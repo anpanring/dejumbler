@@ -5,12 +5,12 @@ export default function Layout({ children }) {
     return (
         <div className={styles.wrapper}>
             <div id="hd">
-                <div>
+                {/* <div>
                     <p>Logged in as: (<a href="/logout">Logout</a>)</p>
                 </div>
                 <div>
                     <p>Logged in to Spotify as: </p>
-                </div>
+                </div> */}
                 <h1 className='dejumbler-title'>Dejumbler</h1>
             </div>
             <div className={styles.navbar}>

@@ -3,6 +3,7 @@ import Layout from "../components/layout";
 import Link from "next/link";
 import List from "../models/List";
 import Head from "next/head";
+import styles from "../styles/AllLists.module.css";
 
 export default function AllLists({ lists }) {
     lists = JSON.parse(lists);
@@ -23,12 +24,14 @@ export default function AllLists({ lists }) {
                 <title>All Lists</title>
             </Head>
             <h2>All Lists</h2>
-            {lists.map((list) => {
-                return <div key={list._id}>
-                    <p><Link href={`/list/${list._id}`} >{list.name}</Link> - {list.type}</p>
-                    {/* <button onClick={handleDelete(list._id)}>Delete list</button> */}
-                </div>
-            })}
+            <div className={styles.allListsContainer}>
+                {lists.map((list) => {
+                    return <div key={list._id} className={styles.listInfo}>
+                        <p><Link href={`/list/${list._id}`} >{list.name}</Link> - {list.type}</p>
+                        {/* <button onClick={handleDelete(list._id)}>Delete list</button> */}
+                    </div>
+                })}
+            </div>
         </Layout>
     );
 }

@@ -14,5 +14,5 @@ export default function Home() {
       </Head>
       <h2>Login or Register to dejumble your brain.</h2>
     </Layout>
-  )
+  );
 }
