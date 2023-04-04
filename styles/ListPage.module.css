@@ -22,7 +22,7 @@
 .listItemText {
     display: flex;
     flex-direction: column;
-    margin-left: 10px;
+    margin-left: 15px;
 }
 
 .listItemActions {
