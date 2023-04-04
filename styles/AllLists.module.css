@@ -1,0 +1,10 @@
+.allListsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.listInfo {
+    padding: 5px;
+    border: solid black 1px;
+}

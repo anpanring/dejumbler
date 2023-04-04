@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from "react";
 import Router from 'next/router';
 import styles from '../styles/ListPage.module.css';

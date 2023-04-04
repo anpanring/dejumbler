@@ -20,11 +20,13 @@ export default function ListPage({ listData, id }) {
             </div>
             <SearchBar listId={id} />
             <div className={styles.itemWrapper}>
-                {data.items.map((item) => {
-                    return (
-                        <ListItem data={item} listId={id} key={item._id} />
-                    );
-                })}
+                {
+                    data.items.map((item) => {
+                        return (
+                            <ListItem data={item} listId={id} key={item._id} />
+                        );
+                    })
+                }
             </div>
         </Layout>
     )
