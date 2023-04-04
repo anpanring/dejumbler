@@ -8,12 +8,9 @@ export default async function handler(req, res) {
     } = req;
 
     await dbConnect();
-    var data;
 
-    if (query.type == "Any") data = await List.find({});
-    else {
-        var listType = query.type.charAt(0).toUpperCase() + query.type.slice(1);
-        data = await List.find({ type: listType });
-    }
+    const data = await List.findByIdAndDelete(query.id)
+        .then(() => List.find({}));
+
     res.status(200).json(data);
 };

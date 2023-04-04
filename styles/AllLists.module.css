@@ -7,10 +7,22 @@
 .listInfo {
     padding: 5px;
     border: solid black 1px;
+    display: flex;
+    flex-direction: column;
 }
 
 .topBar {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.delete {
+    color: red;
+    align-self: end;
+}
+
+.delete:hover {
+    color: white;
+    background-color: red;
 }
