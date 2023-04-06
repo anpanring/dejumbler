@@ -44,13 +44,14 @@ export default function AllLists({ lists }) {
             return (
                 <div key={data._id} className={styles.listInfo}>
                     <p><Link href={`/list/${data._id}`} >{data.name}</Link> - {data.type}</p>
-                    <p>{data.description}</p>
+                    <p>{data.description} - {data.items.length} items</p>
                     <a onClick={(e) => handleDelete(e, data._id)} className={styles.delete}>Delete list</a>
                 </div>);
         }
         else return (
             <div key={data._id} className={styles.listInfo}>
                 <p><Link href={`/list/${data._id}`} >{data.name}</Link> - {data.type}</p>
+                <p>{data.items.length} items</p>
                 <a onClick={(e) => handleDelete(e, data._id)} className={styles.delete}>Delete list</a>
             </div>);
     }

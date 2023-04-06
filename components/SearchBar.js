@@ -88,7 +88,7 @@ class SearchBar extends React.Component {
                         <option value="artist">Artist</option>
                         <option value="album">Album</option>
                     </select>
-                    <input type="submit" value="Search" />
+                    <input type="submit" value="Search" className={styles.button} />
                 </form>
                 <div>
                     {this.state.results.map((result) => {

@@ -16,3 +16,15 @@
     gap: 10px;
     margin-bottom: 20px;
 }
+
+.button {
+    border: solid green 1px;
+    background-color: white;
+    cursor: pointer;
+    width: auto;
+}
+
+.button:hover {
+    background-color: green;
+    color: white;
+}
