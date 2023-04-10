@@ -9,15 +9,11 @@ import Login from './login';
 export default function Layout({ children }) {
     return (
         <div className={styles.wrapper}>
-            <Login />
+            <div className={styles.statusBar}>
+                <h1 className={styles.dejumblerTitle}>Dejumbler</h1>
+                <Login />
+            </div>
             {/* <div id="hd"> */}
-            {/* <div>
-                    <p>Logged in as: (<a href="/logout">Logout</a>)</p>
-                </div>
-                <div>
-                    <p>Logged in to Spotify as: </p>
-                </div> */}
-            <h1 className={styles.dejumblerTitle}>Dejumbler</h1>
             {/* <img src="/dejumbler-text-logo.png" className={styles.dejumblerTitle}></img> */}
             {/* </div> */}
             <div className={styles.navbar}>

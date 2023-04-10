@@ -6,9 +6,12 @@ import Link from "next/link";
 import List from "../models/List";
 import styles from "../styles/AllLists.module.css";
 import { useSession } from "next-auth/react";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "./api/auth/[...nextauth]";
 
 export default function AllLists({ lists }) {
-    const [listData, setListData] = useState(JSON.parse(lists));
+    const parsedData = lists ? JSON.parse(lists) : [];
+    const [listData, setListData] = useState(parsedData);
     // const [isLoading, setIsLoading] = useState(false);
 
     async function handleDelete(e, id) {
@@ -36,7 +39,7 @@ export default function AllLists({ lists }) {
                     });
             setListData(data);
             // setIsLoading(false);
-        } catch (error) { alert('Failed to retrieve data.'); }
+        } catch (error) { alert('No lists.'); }
     }
 
     // if (isLoading) return <p>Loading...</p>
@@ -87,11 +90,17 @@ export default function AllLists({ lists }) {
     );
 }
 
-export async function getServerSideProps() {
-    await dbConnect();
+export async function getServerSideProps(context) {
+    const session = await getServerSession(context.req, context.res, authOptions);
+    // console.log(session);
+    if (session) {
+        const { user, expires } = session;
+        // console.log(user);
 
-    /* find all the data in our database */
-    const result = await List.find({});
+        await dbConnect();
+        /* find all the data in our database */
+        const result = await List.find({ user: user.email });
 
-    return { props: { lists: JSON.stringify(result) } }
+        return { props: { lists: JSON.stringify(result) } }
+    } else return { props: {} };
 }

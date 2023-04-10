@@ -4,11 +4,6 @@ body {
   line-height: 1.6;
 }
 
-@font-face {
-  font-family: 'dejumbler';
-  src: url('/Dejumbler-Regular.ttf') format('truetype'),
-}
-
 p {
   margin: 0;
 }

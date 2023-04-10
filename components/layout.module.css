@@ -1,6 +1,6 @@
 .dejumblerTitle {
-    align-self: left;
     height: 2em;
+    margin: 0;
 }
 
 .navbar {
@@ -13,4 +13,9 @@
     display: flex;
     flex-direction: column;
     padding: 10px;
+}
+
+.statusBar {
+    display: flex;
+    justify-content: space-between;
 }
