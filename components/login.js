@@ -11,13 +11,13 @@ export default function Login() {
                 {/* <img src={userData.image} width={40} height={40} /> */}
                 <p>Signed in as: {userData.name}</p>
                 {/* <p>ID: {userData.email}</p> */}
-                <button onClick={() => signOut()}>Sign out</button>
-            </div>
+                <a href="#" onClick={() => signOut()} className={styles.signoutButton}>Sign out</a>
+            </div >
         )
     }
     return (
         <div className={styles.loginWrapper}>
-            <button onClick={() => signIn()}>Sign in</button>
+            <a href="#" onClick={() => signIn()} className={styles.button}>Sign in</a>
         </div>
     )
 }

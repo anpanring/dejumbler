@@ -14,6 +14,14 @@ export default function AllLists({ lists }) {
     const [listData, setListData] = useState(parsedData);
     // const [isLoading, setIsLoading] = useState(false);
 
+    const session = useSession();
+
+    if (!session.data) return (
+        <Layout>
+            <h2>You must be signed in to see lists.</h2>
+        </Layout>
+    );
+
     async function handleDelete(e, id) {
         e.preventDefault();
         try {
