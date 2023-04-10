@@ -22,22 +22,22 @@ export const authOptions = {
         strategy: 'jwt'
     },
     secret: process.env.NEXTAUTH_SECRET,
-    logger: {
-        error(code, metadata) {
-            console.log({ type: 'inside error logger', code, metadata });
-        },
-        warn(code) {
-            console.log({ type: 'inside warn logger', code });
-        },
-        debug(code, metadata) {
-            console.log({ type: 'inside debug logger', code, metadata });
-        },
-    },
+    // logger: {
+    //     error(code, metadata) {
+    //         console.log({ type: 'inside error logger', code, metadata });
+    //     },
+    //     warn(code) {
+    //         console.log({ type: 'inside warn logger', code });
+    //     },
+    //     debug(code, metadata) {
+    //         console.log({ type: 'inside debug logger', code, metadata });
+    //     },
+    // },
     providers: [
-        GithubProvider({
-            clientId: process.env.GITHUB_ID,
-            clientSecret: process.env.GITHUB_SECRET,
-        }),
+        // GithubProvider({
+        //     clientId: process.env.GITHUB_ID,
+        //     clientSecret: process.env.GITHUB_SECRET,
+        // }),
         CredentialsProvider({
             // The name to display on the sign in form (e.g. 'Sign in with...')
             name: 'username and password',
