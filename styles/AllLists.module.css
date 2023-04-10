@@ -20,6 +20,7 @@
 .delete {
     color: red;
     align-self: end;
+    text-decoration: none;
 }
 
 .delete:hover {

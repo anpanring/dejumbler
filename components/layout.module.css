@@ -1,8 +1,16 @@
+.dejumblerTitle {
+    align-self: left;
+    height: 2em;
+}
+
 .navbar {
     display: flex;
+    align-self: left;
     gap: 5px;
 }
 
 .wrapper {
+    display: flex;
+    flex-direction: column;
     padding: 10px;
 }
