@@ -5,12 +5,14 @@ import Layout from "../components/layout";
 import Link from "next/link";
 import List from "../models/List";
 import styles from "../styles/AllLists.module.css";
+import { useSession } from "next-auth/react";
 
 export default function AllLists({ lists }) {
     const [listData, setListData] = useState(JSON.parse(lists));
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
 
     async function handleDelete(e, id) {
+        e.preventDefault();
         try {
             const updatedData =
                 await fetch(`/api/delete-list?id=${id}`)
@@ -23,7 +25,7 @@ export default function AllLists({ lists }) {
     }
 
     async function handleFilterChange(e) {
-        setIsLoading(true);
+        // setIsLoading(true);
         try {
             const data =
                 await fetch(`/api/get-all-lists?type=${e.target.value}`)
@@ -33,7 +35,7 @@ export default function AllLists({ lists }) {
                         return data;
                     });
             setListData(data);
-            setIsLoading(false);
+            // setIsLoading(false);
         } catch (error) { alert('Failed to retrieve data.'); }
     }
 
@@ -45,14 +47,14 @@ export default function AllLists({ lists }) {
                 <div key={data._id} className={styles.listInfo}>
                     <p><Link href={`/list/${data._id}`} >{data.name}</Link> - {data.type}</p>
                     <p>{data.description} - {data.items.length} items</p>
-                    <a onClick={(e) => handleDelete(e, data._id)} className={styles.delete}>Delete list</a>
+                    <a href="#" onClick={(e) => handleDelete(e, data._id)} className={styles.delete}>Delete list</a>
                 </div>);
         }
         else return (
             <div key={data._id} className={styles.listInfo}>
                 <p><Link href={`/list/${data._id}`} >{data.name}</Link> - {data.type}</p>
                 <p>{data.items.length} items</p>
-                <a onClick={(e) => handleDelete(e, data._id)} className={styles.delete}>Delete list</a>
+                <a href="#" onClick={(e) => handleDelete(e, data._id)} className={styles.delete}>Delete list</a>
             </div>);
     }
 

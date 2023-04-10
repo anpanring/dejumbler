@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import dbConnect from '../../lib/mongodb';
 import Head from 'next/head';
 import Layout from "../../components/layout";
@@ -7,26 +8,27 @@ import SearchBar from '../../components/SearchBar';
 import styles from '../../styles/ListPage.module.css';
 
 export default function ListPage({ listData, id }) {
-    const data = JSON.parse(listData);
+    const [data, setData] = useState(JSON.parse(listData));
 
     return (
         <Layout>
             <Head>
                 <title>{data.name}</title>
             </Head>
+
             <div className={styles.listInfo}>
                 <h2 className={styles.listTitle}>{data.name}</h2>
                 <h3 className={styles.listType}>{data.type}</h3>
             </div>
+
             <SearchBar listId={id} />
+
             <div className={styles.itemWrapper}>
-                {
-                    data.items.map((item) => {
-                        return (
-                            <ListItem data={item} listId={id} key={item._id} />
-                        );
-                    })
-                }
+                {data.items.map((item) => {
+                    return (
+                        <ListItem data={item} listId={id} key={item._id} />
+                    );
+                })}
             </div>
         </Layout>
     )
@@ -36,8 +38,7 @@ export async function getServerSideProps({ params }) {
     await dbConnect();
 
     const data = await List.findById(params.id);
-    // console.log(data["description"]);
-    // console.log(data);
+
     const listData = JSON.stringify(data);
 
     return { props: { listData, id: params.id } };

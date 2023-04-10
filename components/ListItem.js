@@ -70,7 +70,7 @@ class ListItem extends React.Component {
                 <div className={styles.listItemText}>
                     <p>{this.data.name} {this.data.artist}</p>
                     <p className={styles.notes}>Notes: {this.state.notes} </p>
-                    {this.state.showForm ? <form onSubmit={this.handleNoteChange}>
+                    {this.state.showForm ? <form onSubmit={this.handleNoteChange} className={styles.notesForm}>
                         <input type="text" name="notes" defaultValue={this.state.notes} />
                         <button className={styles.button} type="submit">Save</button>
                         <button className={styles.button} onClick={this.toggleEditForm}>Cancel</button>
