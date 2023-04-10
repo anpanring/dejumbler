@@ -59,16 +59,11 @@ export const authOptions = {
 
                 await dbConnect();
 
-                console.log(credentials.username);
-                console.log(credentials.password);
-
                 const user = await User.findOne({
                     username: credentials.username,
                 })
 
                 if (!user) return null;
-
-                console.log(user);
 
                 if (credentials.password == user.password) return {
                     name: user.username,
