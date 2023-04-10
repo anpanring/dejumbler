@@ -1,6 +1,15 @@
 import Layout from "../components/layout";
+import { useSession } from "next-auth/react";
 
 export default function AllLists() {
+    const session = useSession();
+
+    if (!session.data) return (
+        <Layout>
+            <h2>You must be signed in to create lists.</h2>
+        </Layout>
+    );
+
     return (
         <Layout>
             <h2>Create List</h2>

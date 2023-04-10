@@ -5,3 +5,12 @@
     flex-wrap: wrap;
     align-items: flex-end;
 }
+
+.signoutButton {
+    color: red;
+}
+
+.signoutButton:hover {
+    color: white;
+    background-color: red;
+}
