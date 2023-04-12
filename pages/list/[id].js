@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Layout from "../../components/layout";
 import List from '../../models/List';
 import ListItem from '../../components/ListItem';
-import SearchBar from '../../components/SearchBar';
+import SearchBar from '../../components/search';
 import styles from '../../styles/ListPage.module.css';
 
 export default function ListPage({ listData, id }) {

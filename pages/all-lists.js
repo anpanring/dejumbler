@@ -106,8 +106,8 @@ export async function getServerSideProps(context) {
         // console.log(user);
 
         await dbConnect();
-        /* find all the data in our database */
-        const result = await List.find({ user: user.email });
+
+        const result = await List.find({ user: user.email }); // email is rly _id
 
         return { props: { lists: JSON.stringify(result) } }
     } else return { props: {} };
