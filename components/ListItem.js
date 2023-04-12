@@ -66,9 +66,9 @@ class ListItem extends React.Component {
     render() {
         return (
             <div className={styles.listItem}>
-                <img src={this.data.artURL} width={50} height={50} />
+                <Image src={this.data.artURL} width={50} height={50} alt={this.data.name} />
                 <div className={styles.listItemText}>
-                    <p>{this.data.name} {this.data.artist}</p>
+                    <p>{this.data.name} {this.data.artist} - {this.data.__t}</p>
                     <p className={styles.notes}>Notes: {this.state.notes} </p>
                     {this.state.showForm ? <form onSubmit={this.handleNoteChange} className={styles.notesForm}>
                         <input type="text" name="notes" defaultValue={this.state.notes} />

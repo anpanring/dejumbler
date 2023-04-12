@@ -13,8 +13,8 @@
 
 .searchBar {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 0.5em;
+    margin-bottom: 1em;
 }
 
 .button {
@@ -27,4 +27,8 @@
 .button:hover {
     background-color: green;
     color: white;
+}
+
+.resultsWrapper {
+    margin: 0 1em 1em 0;
 }

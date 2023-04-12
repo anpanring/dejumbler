@@ -24,7 +24,7 @@ export default function Layout({ children }) {
             <div>
                 {children}
             </div>
-            <Footer />
+            {/* <Footer /> */}
         </div>
     );
 }
