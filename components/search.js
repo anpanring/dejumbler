@@ -95,7 +95,7 @@ function SearchBar(props) {
                     <option value="artist">Artist</option>
                     <option value="album">Album</option>
                 </select>
-                <input type="submit" value="Search" className={styles.button} />
+                {/* <input type="submit" value="Search" className={styles.button} /> */}
             </form>
             <div className={styles.resultsWrapper}>
                 {results.map((result) => {
