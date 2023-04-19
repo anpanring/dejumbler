@@ -4,9 +4,8 @@ import styles from "./search.module.css";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-function SearchResult(props) {
-    const { data, listId } = props;
-    const router = useRouter();
+function SearchResult({ data, listId, handleDataChange }) {
+    // const router = useRouter();
     console.log(data);
 
     async function addToList(data, listId) {
@@ -22,9 +21,8 @@ function SearchResult(props) {
             body: data
         };
 
-        await fetch('/api/add-item', fetchOptions);
-
-        router.push(`/list/${listId}`);
+        const updatedList = await fetch('/api/add-item', fetchOptions);
+        handleDataChange(updatedList);
     }
 
     const {
@@ -42,15 +40,16 @@ function SearchResult(props) {
         <div className={styles.searchResultsWrapper}>
             <Image src={imageURLs[0]} height={60} width={60} alt={name} />
             <div className={styles.searchResultText}>
-                <p>{name} {artistNames.join(', ')}</p>
-                <p>{type}</p>
+                <p>{name}</p>
+                <p>{artistNames.join(', ')}</p>
+                <p>{type.charAt(0).toUpperCase() + type.substring(1)}</p>
                 <button onClick={() => addToList(data, listId)}>Add to list</button>
             </div>
         </div>
     );
 }
 
-function SearchBar(props) {
+function SearchBar({ listId, handleDataChange }) {
     const [results, setResults] = useState([]);
     const [type, setType] = useState('all');
     const [query, setQuery] = useState('');
@@ -75,12 +74,10 @@ function SearchBar(props) {
     }, [query, type]);
 
     function handleQueryChange(e) {
-        console.log(e.target.value);
         setQuery(e.target.value);
     }
 
     function handleTypeChange(e) {
-        console.log(e.target.value);
         setType(e.target.value);
     }
 
@@ -99,7 +96,7 @@ function SearchBar(props) {
             </form>
             <div className={styles.resultsWrapper}>
                 {results.map((result) => {
-                    return <SearchResult key={result} data={result} listId={props.listId} />;
+                    return <SearchResult key={result} data={result} listId={listId} handleDataChange={handleDataChange} />;
                 })}
             </div>
         </div>
