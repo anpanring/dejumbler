@@ -8,9 +8,7 @@ export default function Login() {
         const userData = data.user;
         return (
             <div className={styles.loginWrapper}>
-                {/* <img src={userData.image} width={40} height={40} /> */}
                 <p>Signed in as: {userData.name}</p>
-                {/* <p>ID: {userData.email}</p> */}
                 <a href="#" onClick={() => signOut()} className={styles.signoutButton}>Sign out</a>
             </div >
         )

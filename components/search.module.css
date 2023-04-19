@@ -1,14 +1,18 @@
 .searchResultsWrapper {
     display: flex;
+    position: relative;
     align-items: center;
     margin: 0px 0 10px 0;
+    height: 4em;
+    width: 90%;
 }
 
 .searchResultText {
     display: flex;
     flex-direction: column;
     font-size: small;
-    margin-left: 15px;
+    margin-left: 1.5em;
+    width: 90%;
 }
 
 .searchBar {
@@ -20,7 +24,6 @@
 .button {
     border: solid green 1px;
     background-color: white;
-    cursor: pointer;
     width: auto;
 }
 
@@ -31,4 +34,41 @@
 
 .resultsWrapper {
     margin: 0 1em 1em 0;
+}
+
+.title {
+    text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.artist {
+    font-size: 0.85em;
+    color: rgb(45, 45, 45);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.type {
+    font-style: italic;
+    font-size: 0.75em;
+}
+
+.addButton {
+    height: 1.5em;
+    width: 1.5em;
+    position: absolute;
+    top: 3em;
+    left: 3em;
+    background: white;
+    color: green;
+    border: 1px solid green;
+    text-align: center;
+}
+
+.addButton:hover {
+    background: green;
+    color: white;
 }

@@ -1,11 +1,8 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
 import styles from '../styles/Home.module.css'
-import Layout from '../components/layout'
+import Layout, { siteTitle } from '../components/layout'
 import { useSession } from 'next-auth/react'
 
-const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
     const session = useSession();
@@ -17,7 +14,7 @@ export default function Home() {
     return (
         <Layout>
             <Head>
-                <title>Home</title>
+                <title>{siteTitle}</title>
             </Head>
             {homeMessage}
         </Layout>

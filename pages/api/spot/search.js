@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     } = req;
 
     const accessToken = await getToken();
-    console.log(accessToken);
+    // console.log(accessToken);
     // if (!localStorage.getItem("spotToken")) {
     //     console.log(localStorage.getItem("spotToken"));
     //     const token = await getToken();
@@ -37,17 +37,30 @@ export default async function handler(req, res) {
             type: type,
             limit: 6,
         }).toString(), fetchOptions)
-        .then(res => res.json());
+        .then(res => res.json())
+        .then((data) => {
+            if (data.error) {
+                console.log(data.error);
+                return 401;
+            }
+            else return data;
+        })
 
-    let list = [];
-    if (query.type == 'all') {
-        data.albums.items.slice(0, 2).map(album => list.push(album));
-        data.tracks.items.slice(0, 2).map(track => list.push(track));
-        data.artists.items.slice(0, 2).map(artist => list.push(artist));
+    if (data == 401) res.status(401).send();
+
+    else {
+        // console.log(data);
+
+        let list = [];
+        if (query.type == 'all') {
+            data.albums.items.slice(0, 2).map(album => list.push(album));
+            data.tracks.items.slice(0, 2).map(track => list.push(track));
+            data.artists.items.slice(0, 2).map(artist => list.push(artist));
+        }
+        else list = data[`${query.type}s`].items;
+
+        // console.log(list);
+
+        res.status(200).json(list);
     }
-    else list = data[`${query.type}s`].items;
-
-    console.log(list);
-
-    res.status(200).json(list);
 }

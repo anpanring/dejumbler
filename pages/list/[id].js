@@ -6,6 +6,8 @@ import List from '../../models/List';
 import ListItem from '../../components/ListItem';
 import SearchBar from '../../components/search';
 import styles from '../../styles/ListPage.module.css';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../api/auth/[...nextauth]';
 
 export default function ListPage({ listData, id }) {
     const [data, setData] = useState(JSON.parse(listData));
@@ -38,12 +40,20 @@ export default function ListPage({ listData, id }) {
     )
 }
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps(context) {
+    const session = await getServerSession(context.req, context.res, authOptions);
+
+    if (!session) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        }
+    }
+
     await dbConnect();
-
-    const data = await List.findById(params.id);
-
+    const data = await List.findById(context.params.id);
     const listData = JSON.stringify(data);
-
-    return { props: { listData, id: params.id } };
+    return { props: { listData, id: context.params.id } };
 }
