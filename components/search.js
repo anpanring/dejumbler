@@ -2,10 +2,8 @@ import getToken from "../lib/spotify";
 import React, { useEffect, useState } from "react";
 import styles from "./search.module.css";
 import Image from "next/image";
-import { useRouter } from "next/router";
 
 function SearchResult({ data, listId, handleDataChange }) {
-    // const router = useRouter();
     console.log(data);
 
     async function addToList(data, listId) {
@@ -38,12 +36,12 @@ function SearchResult({ data, listId, handleDataChange }) {
 
     return (
         <div className={styles.searchResultsWrapper}>
-            <Image src={imageURLs[0]} height={60} width={60} alt={name} />
+            <Image src={imageURLs[0]} height={50} width={50} alt={name} />
+            <button className={styles.addButton} onClick={() => addToList(data, listId)}>+</button>
             <div className={styles.searchResultText}>
-                <p>{name}</p>
-                <p>{artistNames.join(', ')}</p>
-                <p>{type.charAt(0).toUpperCase() + type.substring(1)}</p>
-                <button onClick={() => addToList(data, listId)}>Add to list</button>
+                <p className={styles.title}>{name}</p>
+                <p className={styles.artist}>{artistNames.join(', ')}</p>
+                <p className={styles.type}>{type.charAt(0).toUpperCase() + type.substring(1)}</p>
             </div>
         </div>
     );
@@ -58,19 +56,19 @@ function SearchBar({ listId, handleDataChange }) {
     useEffect(() => {
         const spotSearch = async () => {
             if (query) {
-                try {
-                    const data =
-                        await fetch(`/api/spot/search?q=${query}&type=${type}`)
-                            .then((res) => res.json())
-                            .then((data) => {
-                                return data;
-                            });
-                    console.log(data);
-                    setResults(data);
-                } catch (error) { alert('Failed to search.'); }
+                const data =
+                    await fetch(`/api/spot/search?q=${query}&type=${type}`)
+                        .then((res) => {
+                            if (res.status != 200) {
+                                alert('Error ' + res.status);
+                                return [];
+                            }
+                            else return res.json();
+                        });
+                setResults(data);
             } else setResults([]);
         }
-        spotSearch().catch(console.error);
+        spotSearch();
     }, [query, type]);
 
     function handleQueryChange(e) {

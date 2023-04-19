@@ -1,8 +1,9 @@
 .button {
     border: solid green 1px;
     background-color: white;
-    cursor: pointer;
     width: auto;
+    height: 1.5em;
+    cursor: pointer;
 }
 
 .button:hover {
@@ -61,8 +62,11 @@
 .notesForm {
     display: flex;
     gap: 0.5em;
+    align-items: flex-end;
 }
 
 .notesInput {
     max-width: max-content;
+    font-family: 'Epilogue', sans-serif;
+    line-height: 1.5;
 }

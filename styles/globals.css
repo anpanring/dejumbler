@@ -1,3 +1,9 @@
+/* @font-face {
+  font-family: "Blockarama";
+  src: url(../public/fonts/Dejumbler-Regular.woff2);
+  font-style: normal;
+} */
+
 html,
 body {
   font-family: 'Epilogue', sans-serif;
@@ -10,6 +16,7 @@ p {
 
 button {
   width: 100px;
+  cursor: pointer;
 }
 
 a {
@@ -24,6 +31,7 @@ a:hover {
 select {
   border-radius: 0px;
   border-color: green;
+  cursor: pointer;
 }
 
 select:hover {

@@ -2,15 +2,20 @@ import Footer from './footer';
 import styles from './layout.module.css';
 import Link from 'next/link';
 import Login from './login';
-// import localFont from 'next/font/local';
+import Head from 'next/head';
 
-// const myFont = localFont({ src: './Dejumbler-Regular.ttf' });
+export const siteTitle = 'Dejumbler';
 
 export default function Layout({ children }) {
     return (
         <div className={styles.wrapper}>
+            <Head>
+                <meta name="description" content={siteTitle} />
+                <meta name="og:title" content={siteTitle} />
+                <meta name="twitter:card" content="summary_large_image" />
+            </Head>
             <div className={styles.statusBar}>
-                <h1 className={styles.dejumblerTitle}>Dejumbler</h1>
+                <h1 className={styles.dejumblerTitle}>DEJUMBLER</h1>
                 <Login />
             </div>
             {/* <div id="hd"> */}
