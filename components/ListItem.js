@@ -34,7 +34,6 @@ class ListItem extends React.Component {
 
     toggleEditForm() {
         this.state.showForm ? this.setState({ showForm: false }) : this.setState({ showForm: true });
-        console.log(this.state.showForm);
     }
 
     async handleNoteChange(event) {
@@ -68,10 +67,10 @@ class ListItem extends React.Component {
             <div className={styles.listItem}>
                 <Image src={this.data.artURL} width={50} height={50} alt={this.data.name} />
                 <div className={styles.listItemText}>
-                    <p>{this.data.name} {this.data.artist} - {this.data.__t}</p>
-                    <p className={styles.notes}>Notes: {this.state.notes} </p>
+                    <p className={styles.itemInfo}>{this.data.name} {this.data.artist} - {this.data.__t}</p>
+                    {!this.state.showForm && <p className={styles.notes}>Notes: {this.state.notes} </p>}
                     {this.state.showForm ? <form onSubmit={this.handleNoteChange} className={styles.notesForm}>
-                        <input type="text" name="notes" defaultValue={this.state.notes} />
+                        <textarea type="text" name="notes" defaultValue={this.state.notes} className={styles.notesInput} />
                         <button className={styles.button} type="submit">Save</button>
                         <button className={styles.button} onClick={this.toggleEditForm}>Cancel</button>
                     </form> : null}

@@ -6,7 +6,8 @@ export default async function handler(req, res) {
         method,
     } = req;
 
-    const accessToken = await getToken();;
+    const accessToken = await getToken();
+    console.log(accessToken);
     // if (!localStorage.getItem("spotToken")) {
     //     console.log(localStorage.getItem("spotToken"));
     //     const token = await getToken();
