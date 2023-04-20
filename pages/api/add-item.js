@@ -6,31 +6,37 @@ export default async function handler(req, res) {
     console.log('api/add-items called');
 
     const data = req.body;
-    const { listId, type } = data;
+    const {
+        listId,
+        artists,
+        images,
+        type,
+        name,
+        album
+    } = data;
 
-    var newItem;
+    const artistNames = artists ? artists.map((artist) => artist.name) : [];
+    const imageURLs = images ? images.map((image) => image.url) : album.images.map((image) => image.url);
 
+    let newItem;
     if (type === 'artist') {
-        const { name, image } = data;
         newItem = new Artist({
             name: name,
-            artURL: image,
+            artURL: imageURLs[0],
             status: "todo"
         });
     } else if (type === 'track') {
-        const { name, artist, image } = data;
         newItem = new Song({
             name: name,
-            artist: artist,
-            artURL: image,
+            artist: artistNames.join(', '),
+            artURL: imageURLs[0],
             status: "todo"
         });
     } else {
-        const { name, artist, image } = data;
         newItem = new Album({
             name: name,
-            artist: artist,
-            artURL: image,
+            artist: artistNames.join(', '),
+            artURL: imageURLs[0],
             status: "todo"
         });
     }
@@ -44,10 +50,7 @@ export default async function handler(req, res) {
             { new: true }, // return updated list
             (err, list, count) => { // callback function
                 if (err) res.status(401).send();
-                else {
-                    console.log(list);
-                    res.status(200).json(list);
-                }
+                else res.status(200).json(list);
             });
     });
 }
