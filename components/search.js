@@ -84,7 +84,7 @@ function SearchBar({ listId, handleDataChange }) {
     return (
         <div>
             <form className={styles.searchBar}>
-                <input onChange={handleQueryChange} type="text" name="value" placeholder="Search Spotify..." required />
+                <input className={styles.searchInput} onChange={handleQueryChange} type="text" name="value" placeholder="Search Spotify..." required />
                 <label>Type: </label>
                 <select onChange={handleTypeChange} id="types" list="types" name="type" required>
                     <option value="all">All</option>
