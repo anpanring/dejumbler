@@ -12,6 +12,7 @@ import { authOptions } from "./api/auth/[...nextauth]";
 export default function AllLists({ lists }) {
     const parsedData = lists ? JSON.parse(lists) : [];
     const [listData, setListData] = useState(parsedData);
+    const [type, setType] = useState('All');
     // const [isLoading, setIsLoading] = useState(false);
 
     const session = useSession();
@@ -36,23 +37,36 @@ export default function AllLists({ lists }) {
     }
 
     async function handleFilterChange(e) {
-        // setIsLoading(true);
+        let type = e.target.value;
         try {
             const data =
-                await fetch(`/api/get-all-lists?type=${e.target.value}`)
+                await fetch(`/api/get-all-lists?type=${type}`)
                     .then((res) => res.json())
                     .then((data) => {
                         console.log(data);
                         return data;
                     });
             setListData(data);
-            // setIsLoading(false);
+            switch(type) {
+                case 'Any': 
+                    type = 'All';
+                    break;
+                case 'Books': 
+                    type = 'Book';
+                    break;
+                case 'Movies': 
+                    type = 'Movie';
+                    break;
+                default:
+                    type = 'Music';
+            }
+            setType(type);
         } catch (error) { alert('No lists.'); }
     }
 
     // if (isLoading) return <p>Loading...</p>
 
-    function listLink(data) {
+    function listBox(data) {
         if (data.description) {
             return (
                 <div key={data._id} className={styles.listInfo}>
@@ -72,7 +86,7 @@ export default function AllLists({ lists }) {
     const listContainer =
         <div className={styles.allListsContainer}>
             {listData.map((list) => {
-                return listLink(list);
+                return listBox(list);
             })}
         </div>
 
@@ -82,7 +96,7 @@ export default function AllLists({ lists }) {
                 <title>All Lists</title>
             </Head>
             <div className={styles.topBar}>
-                <h2>All Lists</h2>
+                <h2>{type} Lists ({listData.length})</h2>
                 <div className='form-row'>
                     <label>Type: </label>
                     <select id="types" list="types" name="type" onChange={handleFilterChange} required>
@@ -100,10 +114,8 @@ export default function AllLists({ lists }) {
 
 export async function getServerSideProps(context) {
     const session = await getServerSession(context.req, context.res, authOptions);
-    // console.log(session);
     if (session) {
         const { user, expires } = session;
-        // console.log(user);
 
         await dbConnect();
 

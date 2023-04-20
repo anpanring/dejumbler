@@ -13,6 +13,7 @@ export default function Layout({ children }) {
                 <meta name="description" content={siteTitle} />
                 <meta name="og:title" content={siteTitle} />
                 <meta name="twitter:card" content="summary_large_image" />
+                <meta name="google-site-verification" content="n5dZdc1QljJ4k39BSCkZAbhnJS5CjIdAo6OHVqD_c-Y" />
             </Head>
             <div className={styles.statusBar}>
                 <h1 className={styles.dejumblerTitle}>DEJUMBLER</h1>
