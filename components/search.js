@@ -6,6 +6,17 @@ import Image from "next/image";
 function SearchResult({ data, listId, handleDataChange }) {
     console.log(data);
 
+    const {
+        artists,
+        images,
+        type,
+        name,
+        album
+    } = data;
+
+    const artistNames = artists ? artists.map((artist) => artist.name) : [];
+    const imageURLs = images ? images.map((image) => image.url) : album.images.map((image) => image.url);
+
     async function addToList(data, listId) {
         data.listId = listId;
         data = JSON.stringify(data);
@@ -19,20 +30,11 @@ function SearchResult({ data, listId, handleDataChange }) {
             body: data
         };
 
-        const updatedList = await fetch('/api/add-item', fetchOptions);
+        const updatedList = await fetch('/api/add-item', fetchOptions)
+            .then(res => res.json());
+        console.log(updatedList);
         handleDataChange(updatedList);
     }
-
-    const {
-        artists,
-        images,
-        type,
-        name,
-        album
-    } = data;
-
-    const artistNames = artists ? artists.map((artist) => artist.name) : [];
-    const imageURLs = images ? images.map((image) => image.url) : album.images.map((image) => image.url);
 
     return (
         <div className={styles.searchResultsWrapper}>

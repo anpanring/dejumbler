@@ -17,7 +17,6 @@ class ListItem extends React.Component {
     async handleDelete() {
         var itemInfo = this.data;
         itemInfo.listId = this.listId;
-        // console.log(itemInfo)
 
         const fetchOptions = {
             method: 'POST',
@@ -33,7 +32,9 @@ class ListItem extends React.Component {
     }
 
     toggleEditForm() {
-        this.state.showForm ? this.setState({ showForm: false }) : this.setState({ showForm: true });
+        this.state.showForm
+            ? this.setState({ showForm: false })
+            : this.setState({ showForm: true });
     }
 
     async handleNoteChange(event) {
@@ -62,12 +63,15 @@ class ListItem extends React.Component {
             });
     }
 
+
     render() {
+        let artist = this.data.artist ? ' - ' + this.data.artist : '';
+
         return (
             <div className={styles.listItem}>
                 <Image src={this.data.artURL} width={50} height={50} alt={this.data.name} />
                 <div className={styles.listItemText}>
-                    <p className={styles.itemInfo}>{this.data.name} {this.data.artist} - {this.data.__t}</p>
+                    <p className={styles.itemInfo}>{this.data.name} {artist} - {this.data.__t}</p>
                     {!this.state.showForm && <p className={styles.notes}>Notes: {this.state.notes} </p>}
                     {this.state.showForm ? <form onSubmit={this.handleNoteChange} className={styles.notesForm}>
                         <textarea type="text" name="notes" defaultValue={this.state.notes} className={styles.notesInput} />

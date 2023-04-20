@@ -1,5 +1,6 @@
 import Layout from "../components/layout";
 import { useSession } from "next-auth/react";
+import styles from "../styles/CreateList.module.css";
 
 export default function AllLists() {
     const session = useSession();
@@ -13,25 +14,25 @@ export default function AllLists() {
     return (
         <Layout>
             <h2>Create List</h2>
-            <form action="/api/new-list" method="POST">
-                <div className='form-row'>
+            <form className={styles.form} action="/api/new-list" method="POST">
+                <div className={styles.formRow}>
                     <label>Type: </label>
-                    <select id="types" list="types" name="type" required>
+                    <select className={styles.type} id="types" list="types" name="type" required>
                         <option value="Any">Any</option>
                         <option value="Books">Books</option>
                         <option value="Movies">Movies</option>
                         <option value="Music">Music</option>
                     </select>
                 </div>
-                <div className='form-row'>
+                <div className={styles.formRow}>
                     <label>Name: </label>
-                    <input type="text" name="name" required />
+                    <input className={styles.nameInput} type="text" name="name" required />
                 </div>
-                <div className='form-row'>
+                <div className={styles.formRow}>
                     <label>Description: </label>
                     <textarea type="text" name="description"></textarea>
                 </div>
-                <div className='form-row'>
+                <div className={styles.formRow}>
                     <input type="submit" value="Create List" />
                 </div>
             </form>
