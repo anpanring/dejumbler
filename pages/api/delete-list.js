@@ -1,5 +1,7 @@
 import dbConnect from "../../lib/mongodb";
 import List from "../../models/List";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./auth/[...nextauth]";
 
 export default async function handler(req, res) {
     const {
@@ -7,10 +9,17 @@ export default async function handler(req, res) {
         method,
     } = req;
 
-    await dbConnect();
+    // Check logged in
+    const session = await getServerSession(req, res, authOptions);
 
-    const data = await List.findByIdAndDelete(query.id)
-        .then(() => List.find({}));
+    if(session) {
+        const { user } = session;
 
-    res.status(200).json(data);
+        await dbConnect();
+
+        const data = await List.findByIdAndDelete(query.id)
+            .then(() => List.find({ user: user.email }));
+
+        res.status(200).json(data);
+    } else res.status(401).send();
 };
