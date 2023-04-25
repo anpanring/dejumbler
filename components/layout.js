@@ -10,7 +10,7 @@ export default function Layout({ children }) {
     return (
         <div className={styles.wrapper}>
             <Head>
-                <meta name="description" content={siteTitle} />
+                <meta name="description" content="Clean your brain out with the Dejumbler." />
                 <meta name="og:title" content={siteTitle} />
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="google-site-verification" content="n5dZdc1QljJ4k39BSCkZAbhnJS5CjIdAo6OHVqD_c-Y" />
