@@ -9,7 +9,7 @@ export default function Home() {
 
     const homeMessage = session.data
         ? <h2>Hi {session.data.user.name}. Make lists.</h2>
-        : <h2>Login or Register to dejumble your brain.</h2>
+        : <h2>The Dejumbler is a platform that helps you use lists to manage the media you consume. Login or Register to dejumble your brain.</h2>
 
     return (
         <Layout>
