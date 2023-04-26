@@ -7,4 +7,11 @@
     min-height: 90vh;
 }
 
-.description {}
+.description {
+    font-size: 1em;
+}
+
+.textLogo {
+    width: 75%;
+    height: 50%;
+}
