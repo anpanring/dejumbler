@@ -11,11 +11,16 @@ export default function Home() {
 
     if (!session.data) {
         return (
-            <div className={styles.container}>
-                <Image className={styles.textLogo} src={textLogo} alt="Dejumbler text logo" />
-                <h2 className={styles.description}>The Dejumbler is a platform that helps you use lists to manage the media you consume.</h2>
-                <Login />
-            </div>
+            <>
+                <Head>
+                    <title>{siteTitle}</title>
+                </Head>
+                <div className={styles.container}>
+                    <Image className={styles.textLogo} src={textLogo} alt="Dejumbler text logo" />
+                    <h2 className={styles.description}>The Dejumbler is a platform that helps you use lists to manage the media you consume.</h2>
+                    <Login />
+                </div>
+            </>
         )
     }
 

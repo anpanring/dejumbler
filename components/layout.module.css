@@ -21,3 +21,8 @@
     display: flex;
     justify-content: space-between;
 }
+
+.textLogo {
+    width: 15em;
+    height: 2em;
+}

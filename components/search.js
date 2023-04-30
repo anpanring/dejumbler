@@ -4,8 +4,6 @@ import styles from "./search.module.css";
 import Image from "next/image";
 
 function SearchResult({ data, listId, handleDataChange }) {
-    console.log(data);
-
     const {
         artists,
         images,
@@ -15,12 +13,13 @@ function SearchResult({ data, listId, handleDataChange }) {
     } = data;
 
     const artistNames = artists ? artists.map((artist) => artist.name) : [];
-    const imageURLs = images ? images.map((image) => image.url) : album.images.map((image) => image.url);
+    const imageURLs = images
+        ? images.map((image) => image.url)
+        : album.images.map((image) => image.url);
 
     async function addToList(data, listId) {
         data.listId = listId;
         data = JSON.stringify(data);
-        console.log(data);
 
         const fetchOptions = {
             method: 'POST',
@@ -30,10 +29,9 @@ function SearchResult({ data, listId, handleDataChange }) {
             body: data
         };
 
-        const updatedList = await fetch('/api/add-item', fetchOptions)
-            .then(res => res.json());
-        console.log(updatedList);
-        handleDataChange(updatedList);
+        fetch('/api/add-item', fetchOptions)
+            .then(res => res.json())
+            .then(data => handleDataChange(data));
     }
 
     return (
@@ -56,22 +54,12 @@ function SearchBar({ listId, handleDataChange }) {
     // const [apiToken, setToken] = useState(getToken());
 
     useEffect(() => {
-        const spotSearch = async () => {
-            if (query) {
-                const data =
-                    await fetch(`/api/spot/search?q=${query}&type=${type}`)
-                        .then((res) => {
-                            if (res.status != 200) {
-                                alert('Error ' + res.status);
-                                return [];
-                            }
-                            else return res.json();
-                        });
-                setResults(data);
-            } else setResults([]);
-        }
-        spotSearch();
-    }, [query, type]);
+        if (query) {
+            fetch(`/api/spot/search?q=${query}&type=${type}`)
+                .then(res => res.json())
+                .then(data => setResults(data));
+        } else setResults([]);
+    }, [query, type]); // since results isn't here, no infinite loop
 
     function handleQueryChange(e) {
         setQuery(e.target.value);

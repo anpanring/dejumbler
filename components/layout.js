@@ -1,8 +1,10 @@
-import Footer from './footer';
+// import Footer from './footer';
 import styles from './layout.module.css';
 import Link from 'next/link';
 import Login from './login';
 import Head from 'next/head';
+import Image from 'next/image';
+import textLogo from '../public/dejumbler-text-logo.png';
 
 export const siteTitle = 'Dejumbler';
 
@@ -17,6 +19,7 @@ export default function Layout({ children }) {
             </Head>
             <div className={styles.statusBar}>
                 <h1 className={styles.dejumblerTitle}>DEJUMBLER</h1>
+                {/* <Image className={styles.textLogo} src={textLogo} alt="Dejumbler text logo" /> */}
                 <Login />
             </div>
             {/* <div id="hd"> */}
