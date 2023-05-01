@@ -7,14 +7,20 @@
 
 .navbar {
     display: flex;
-    align-self: left;
     gap: 5px;
+    justify-content: flex-start;
 }
 
 .wrapper {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     padding: 10px;
+}
+
+.flexContainer {
+    display: flex;
+    flex-direction: column;
 }
 
 .statusBar {
@@ -25,4 +31,9 @@
 .textLogo {
     width: 15em;
     height: 2em;
+}
+
+.footer {
+    margin-top: auto;
+    color: red;
 }
