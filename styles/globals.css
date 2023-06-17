@@ -8,6 +8,7 @@ html,
 body {
   font-family: 'Epilogue', sans-serif;
   line-height: 1.6;
+  /* background-image: url('../public/images/noise.png'); */
 }
 
 p {
