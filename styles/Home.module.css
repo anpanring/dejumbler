@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    min-height: 80vh;
+    padding: 3em;
+}
+
+.description {
+    font-size: 1em;
+    width: 70%;
+}
+
+.textLogo {
+    width: 15em;
+    height: 2em;
+}

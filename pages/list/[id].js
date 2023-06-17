@@ -3,7 +3,7 @@ import dbConnect from '../../lib/mongodb';
 import Head from 'next/head';
 import Layout from "../../components/layout";
 import List from '../../models/List';
-import ListItem from '../../components/ListItem';
+import ListItem from '../../components/list-item';
 import SearchBar from '../../components/search';
 import styles from '../../styles/ListPage.module.css';
 import { getServerSession } from 'next-auth/next';
