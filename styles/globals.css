@@ -1,49 +1,52 @@
-/* @font-face {
-  font-family: "Blockarama";
-  src: url(../public/fonts/Dejumbler-Regular.woff2);
-  font-style: normal;
-} */
+:root {
+    --accent-color: green;
+    --background-color: black;
+    --main-text-color: white;
+}
 
 html,
 body {
-  font-family: 'Epilogue', sans-serif;
-  line-height: 1.6;
-  height: 98%;
-  /* background-image: url('../public/images/noise.png'); */
+    font-family: 'Epilogue', sans-serif;
+    line-height: 1.6;
+    height: 98%;
+    background-color: var(--background-color);
+    color: var(--main-text-color);
+    /* background-image: url('../public/images/noise.png'); */
 }
 
 p {
-  margin: 0;
+    margin: 0;
 }
 
 button {
-  width: 100px;
-  cursor: pointer;
+    width: 100px;
+    cursor: pointer;
 }
 
 a {
-  color: green;
+    color: var(--accent-color);
 }
 
 a:hover {
-  background: green;
-  color: white
+    background: var(--accent-color);
+    color: white;
 }
 
 select {
-  border-radius: 0px;
-  border-color: green;
-  cursor: pointer;
+    background-color: var(--background-color);
+    color: var(--main-text-color);
+    border: solid 1px var(--accent-color);
+    cursor: pointer;
 }
 
 select:hover {
-  background-color: green;
-  color: white;
+    background-color: var(--accent-color);
+    color: white;
 }
 
 .loading-spinner {
-  height: 2em;
-  width: 2em;
-  border: 1px solid green;
-  background-color: white;
+    height: 2em;
+    width: 2em;
+    border: 1px solid var(--accent-color);
+    background-color: white;
 }

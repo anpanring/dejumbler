@@ -1,13 +1,14 @@
 .button {
-    border: solid green 1px;
-    background-color: white;
+    border: solid 1px var(--accent-color);
+    background-color: var(--background-color);
+    color: var(--main-text-color);
     width: auto;
     height: 1.5em;
     cursor: pointer;
 }
 
 .button:hover {
-    background-color: green;
+    background-color: var(--accent-color);
     color: white;
 }
 
@@ -22,7 +23,7 @@
     display: flex;
     align-items: center;
     overflow: hidden;
-    border: solid black 1px;
+    border: solid var(--main-text-color) 1px;
     padding: 10px 10px 10px 10px;
 }
 

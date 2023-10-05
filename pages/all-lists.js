@@ -7,13 +7,25 @@ import styles from "../styles/AllLists.module.css";
 import { useSession } from "next-auth/react";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./api/auth/[...nextauth]";
+import { useDrag } from "react-dnd";
 
-function ListBox({ data, setListData }) {
+function ListBox({ data, setListData, isDragging }) {
+    // const [{ opacity }, dragRef] = useDrag(
+    //     () => ({
+    //         type: "ListBox",
+    //         item: { id: data._id },
+    //         collect: (monitor) => ({
+    //             opacity: monitor.isDragging() ? 0.5 : 1
+    //         })
+    //     }),
+    //     []
+    // )
+
     async function handleDelete(e, id) {
         e.preventDefault();
         try {
             const updatedData =
-                await fetch(`/api/delete-list?id=${id}`)
+                fetch(`/api/delete-list?id=${id}`)
                     .then((res) => res.json())
                     .then((data) => {
                         return data;
@@ -22,15 +34,16 @@ function ListBox({ data, setListData }) {
         } catch (error) { alert('Failed to delete list.'); }
     }
 
-    let descriptionLine;
-    if (data.description) {
-        descriptionLine = <p>{data.description} - {data.items.length} items</p>;
-    } else descriptionLine = <p>{data.items.length} items</p>;
+
     return (
         <div key={data._id} className={styles.listInfo}>
-            <p><Link href={`/list/${data._id}`} >{data.name}</Link> - {data.type}</p>
-            {descriptionLine}
-            <a href="#" onClick={(e) => handleDelete(e, data._id)} className={styles.delete}>Delete list</a>
+            <p>
+                <Link href={`/list/${data._id}`} >{data.name}</Link> ({data.items.length}) - {data.type}
+            </p>
+            {data.description && <p className={styles.description}>{data.description}</p>}
+            <a href="#" onClick={(e) => handleDelete(e, data._id)} className={styles.delete}>
+                Delete list
+            </a>
         </div>
     );
 }

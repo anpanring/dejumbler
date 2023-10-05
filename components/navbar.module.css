@@ -12,8 +12,15 @@
 }
 
 .createButton {
-    border: 1px solid green;
+    border: 1px solid var(--accent-color);
     border-radius: 5px;
     width: 3em;
     height: 3em;
+    background-color: var(--background-color);
+    color: var(--main-text-color);
+}
+
+.createButton:hover {
+    background-color: var(--accent-color);
+    color: var(--background-color);
 }
