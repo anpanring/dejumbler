@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dbConnect from "../lib/mongodb";
-import Head from "next/head";
 import Layout from "../components/layout";
 import Link from "next/link";
 import List from "../models/List";
@@ -9,20 +8,7 @@ import { useSession } from "next-auth/react";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./api/auth/[...nextauth]";
 
-export default function AllLists({ lists }) {
-    const parsedData = lists ? JSON.parse(lists) : [];
-    const [listData, setListData] = useState(parsedData);
-    const [type, setType] = useState('All');
-    // const [isLoading, setIsLoading] = useState(false);
-
-    const session = useSession();
-
-    if (!session.data) return (
-        <Layout>
-            <h2>You must be signed in to see lists.</h2>
-        </Layout>
-    );
-
+function ListBox({ data, setListData }) {
     async function handleDelete(e, id) {
         e.preventDefault();
         try {
@@ -36,70 +22,60 @@ export default function AllLists({ lists }) {
         } catch (error) { alert('Failed to delete list.'); }
     }
 
-    async function handleFilterChange(e) {
-        let type = e.target.value;
-        try {
-            const data =
-                await fetch(`/api/get-all-lists?type=${type}`)
-                    .then((res) => res.json())
-                    .then((data) => {
-                        console.log(data);
-                        return data;
-                    });
-            setListData(data);
-            switch(type) {
-                case 'Any': 
-                    type = 'All';
-                    break;
-                case 'Books': 
-                    type = 'Book';
-                    break;
-                case 'Movies': 
-                    type = 'Movie';
-                    break;
-                default:
-                    type = 'Music';
-            }
-            setType(type);
-        } catch (error) { alert('No lists.'); }
-    }
+    let descriptionLine;
+    if (data.description) {
+        descriptionLine = <p>{data.description} - {data.items.length} items</p>;
+    } else descriptionLine = <p>{data.items.length} items</p>;
+    return (
+        <div key={data._id} className={styles.listInfo}>
+            <p><Link href={`/list/${data._id}`} >{data.name}</Link> - {data.type}</p>
+            {descriptionLine}
+            <a href="#" onClick={(e) => handleDelete(e, data._id)} className={styles.delete}>Delete list</a>
+        </div>
+    );
+}
 
-    // if (isLoading) return <p>Loading...</p>
-
-    function listBox(data) {
-        if (data.description) {
-            return (
-                <div key={data._id} className={styles.listInfo}>
-                    <p><Link href={`/list/${data._id}`} >{data.name}</Link> - {data.type}</p>
-                    <p>{data.description} - {data.items.length} items</p>
-                    <a href="#" onClick={(e) => handleDelete(e, data._id)} className={styles.delete}>Delete list</a>
-                </div>);
-        }
-        else return (
-            <div key={data._id} className={styles.listInfo}>
-                <p><Link href={`/list/${data._id}`} >{data.name}</Link> - {data.type}</p>
-                <p>{data.items.length} items</p>
-                <a href="#" onClick={(e) => handleDelete(e, data._id)} className={styles.delete}>Delete list</a>
-            </div>);
-    }
-
-    const listContainer =
+function ListContainer({ lists, setListData }) {
+    return (
         <div className={styles.allListsContainer}>
-            {listData.map((list) => {
-                return listBox(list);
+            {lists.map((list) => {
+                return <ListBox data={list} setListData={setListData} key={list._id} />;
             })}
         </div>
+    );
+}
+
+export default function AllLists({ lists }) {
+    const parsedData = lists ? JSON.parse(lists) : [];
+    const [listData, setListData] = useState(parsedData);
+    const [type, setType] = useState('Any');
+
+    // infinite loop!! fix
+    useEffect(() => {
+        console.log('hello');
+        async function populateList() {
+            const res = await fetch(`/api/get-all-lists?type=${type}`);
+            const data = await res.json();
+            setListData(await data);
+        }
+        populateList();
+    }, [type]);
+
+
+    // // Block non-logged in users - need to check if correct user too
+    // if (!session.data) return (
+    //     <Layout>
+    //         <h2>You must be signed in to see lists.</h2>
+    //     </Layout>
+    // );
 
     return (
         <Layout>
-            <Head>
-                <title>All Lists</title>
-            </Head>
             <div className={styles.topBar}>
                 <h2>{type} Lists ({listData.length})</h2>
                 <div className='form-row'>
                     <label>Type: </label>
-                    <select id="types" list="types" name="type" onChange={handleFilterChange} required>
+                    <select id="types" list="types" name="type" onChange={e => setType(e.target.value)} required>
                         <option value="Any">All</option>
                         <option value="Music">Music</option>
                         <option value="Movies">Movies</option>
@@ -107,7 +83,7 @@ export default function AllLists({ lists }) {
                     </select>
                 </div>
             </div>
-            {listContainer}
+            <ListContainer lists={listData} setListData={setListData} />
         </Layout>
     );
 }
@@ -117,8 +93,8 @@ export async function getServerSideProps(context) {
     if (session) {
         const { user, expires } = session;
 
+        // Get lists with direct mongoose call
         await dbConnect();
-
         const result = await List.find({ user: user.email }); // email is rly _id
 
         return { props: { lists: JSON.stringify(result) } }

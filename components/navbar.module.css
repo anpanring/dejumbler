@@ -1,0 +1,17 @@
+.navbarContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar {
+    display: flex;
+    gap: 5px;
+    justify-content: flex-start;
+}
+
+.createButton {
+    border: 1px solid green;
+    border-radius: 5px;
+    width: 3em;
+    height: 3em;
+}

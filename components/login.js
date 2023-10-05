@@ -3,7 +3,12 @@ import styles from "./login.module.css";
 
 export default function Login() {
     const { data, status } = useSession();
-    if (status == "loading") return <p>Loading</p>;
+    if (status == "loading") return (
+        <>
+            <div className="loading-spinner"></div>
+            <p>Loading...</p>
+        </>
+    );
     if (data) {
         const userData = data.user;
         return (

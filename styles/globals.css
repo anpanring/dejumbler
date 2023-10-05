@@ -40,3 +40,10 @@ select:hover {
   background-color: green;
   color: white;
 }
+
+.loading-spinner {
+  height: 2em;
+  width: 2em;
+  border: 1px solid green;
+  background-color: white;
+}

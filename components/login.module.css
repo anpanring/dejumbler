@@ -6,6 +6,12 @@
     align-items: flex-end;
 }
 
+.loading-spinner {
+    width: 2em;
+    height: 2em;
+    border: solid green 1px;
+}
+
 .signoutButton {
     color: red;
 }

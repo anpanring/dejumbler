@@ -5,12 +5,6 @@
     margin: 0;
 }
 
-.navbar {
-    display: flex;
-    gap: 5px;
-    justify-content: flex-start;
-}
-
 .wrapper {
     display: flex;
     flex-direction: column;
