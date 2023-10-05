@@ -18,6 +18,7 @@
     display: flex;
     gap: 0.5em;
     margin-bottom: 1em;
+    align-items: center;
 }
 
 .searchInput {
@@ -25,6 +26,7 @@
     border: solid 1px var(--main-text-color);
     background-color: var(--background-color);
     color: var(--main-text-color);
+    padding: 0.5em;
 }
 
 .button {
@@ -51,7 +53,7 @@
 
 .artist {
     font-size: 0.85em;
-    color: rgb(45, 45, 45);
+    color: grey;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;

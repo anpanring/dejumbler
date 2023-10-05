@@ -18,6 +18,10 @@ p {
     margin: 0;
 }
 
+h2 {
+    margin: 1em 0 1em;
+}
+
 button {
     width: 100px;
     cursor: pointer;
