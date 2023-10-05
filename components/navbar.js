@@ -7,21 +7,28 @@ import { gsap } from "gsap";
 export default function Navbar() {
     const [showModal, setShowModal] = useState(false);
     const buttonRef = useRef();
+    const containerRef = useRef();
 
     function handleCreate() {
         setShowModal(!showModal);
         gsap.to(buttonRef, {
-            rotate: 360
+            rotate: "+=360"
         });
     }
 
     return (
-        <div className={styles.navbarContainer}>
+        <div className={styles.navbarContainer} ref={containerRef}>
             <div className={styles.navbar}>
                 <Link href="/">Home</Link> |
-                <Link href="/all-lists">All Lists</Link>
+                <Link href="/all-lists">My Lists</Link>
             </div>
-            <button onClick={handleCreate} href="#" className={styles.createButton} ref={buttonRef}>+</button>
+            <button
+                onClick={handleCreate}
+                href="#"
+                className={styles.createButton}
+                ref={buttonRef}>
+                +
+            </button>
             <Modal className="modal" show={showModal} />
         </div>
     )

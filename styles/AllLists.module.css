@@ -11,6 +11,12 @@
     flex-direction: column;
 }
 
+.selectMenu {
+    border: solid 1px green;
+    border-radius: 5px;
+    height: 2.5em;
+}
+
 .topBar {
     display: flex;
     align-items: center;

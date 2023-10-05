@@ -59,32 +59,41 @@ function SearchBar({ listId, handleDataChange }) {
                 .then(res => res.json())
                 .then(data => setResults(data));
         } else setResults([]);
-    }, [query, type]); // since results isn't here, no infinite loop
-
-    function handleQueryChange(e) {
-        setQuery(e.target.value);
-    }
-
-    function handleTypeChange(e) {
-        setType(e.target.value);
-    }
+    }, [query, type]);
 
     return (
         <div>
             <form className={styles.searchBar}>
-                <input className={styles.searchInput} onChange={handleQueryChange} type="text" name="value" placeholder="Search Spotify..." required />
+                <input
+                    className={styles.searchInput}
+                    onChange={(e) => setQuery(e.target.value)}
+                    type="text"
+                    name="value"
+                    placeholder="Search Spotify..."
+                    required
+                />
                 <label>Type: </label>
-                <select onChange={handleTypeChange} id="types" list="types" name="type" required>
+                <select
+                    onChange={(e) => setType(e.target.value)}
+                    id="types"
+                    list="types"
+                    name="type"
+                    required
+                >
                     <option value="all">All</option>
                     <option value="track">Track</option>
                     <option value="artist">Artist</option>
                     <option value="album">Album</option>
                 </select>
-                {/* <input type="submit" value="Search" className={styles.button} /> */}
             </form>
             <div className={styles.resultsWrapper}>
                 {results.map((result) => {
-                    return <SearchResult key={result} data={result} listId={listId} handleDataChange={handleDataChange} />;
+                    return <SearchResult
+                        key={result.id}
+                        data={result}
+                        listId={listId}
+                        handleDataChange={handleDataChange}
+                    />;
                 })}
             </div>
         </div>

@@ -50,7 +50,6 @@ export default function AllLists({ lists }) {
     const [listData, setListData] = useState(parsedData);
     const [type, setType] = useState('Any');
 
-    // infinite loop!! fix
     useEffect(() => {
         console.log('hello');
         async function populateList() {
@@ -74,8 +73,8 @@ export default function AllLists({ lists }) {
             <div className={styles.topBar}>
                 <h2>{type} Lists ({listData.length})</h2>
                 <div className='form-row'>
-                    <label>Type: </label>
-                    <select id="types" list="types" name="type" onChange={e => setType(e.target.value)} required>
+                    <label>Filter: </label>
+                    <select className={styles.selectMenu} list="types" name="type" onChange={e => setType(e.target.value)} required>
                         <option value="Any">All</option>
                         <option value="Music">Music</option>
                         <option value="Movies">Movies</option>

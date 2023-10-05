@@ -2,7 +2,6 @@
     display: flex;
     position: relative;
     align-items: center;
-    margin: 0px 0 10px 0;
     height: 4em;
     width: 90%;
 }
@@ -37,7 +36,7 @@
 }
 
 .resultsWrapper {
-    margin: 0 1em 1em 0;
+    margin-bottom: 1em;
 }
 
 .title {

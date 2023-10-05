@@ -8,6 +8,7 @@ import Image from 'next/image';
 import textLogo from '../public/dejumbler-text-logo.png';
 import { Suspense } from 'react';
 import Navbar from './navbar';
+import svgLogo from '../public/logo.svg';
 
 export const siteTitle = 'Dejumbler';
 

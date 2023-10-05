@@ -13,6 +13,7 @@ export default function ListPage({ listData, id }) {
     const [data, setData] = useState(JSON.parse(listData));
 
     function handleDataChange(changedData) {
+        console.log(changedData);
         setData(changedData);
     }
 
@@ -32,7 +33,12 @@ export default function ListPage({ listData, id }) {
             <div className={styles.itemWrapper}>
                 {data.items.map((item) => {
                     return (
-                        <ListItem data={item} listId={id} key={item._id} />
+                        <ListItem
+                            data={item}
+                            listId={id}
+                            key={item._id}
+                            handleDataChange={handleDataChange}
+                        />
                     );
                 })}
             </div>

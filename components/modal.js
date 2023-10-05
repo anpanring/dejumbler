@@ -1,11 +1,10 @@
 import { useLayoutEffect, useRef } from "react";
 import styles from "../styles/CreateList.module.css";
-import { gsap, CSSPlugin } from "gsap";
+import { gsap } from "gsap";
 
 export default function Modal({ show }) {
     const comp = useRef();
     const boxRef = useRef();
-    gsap.registerPlugin(CSSPlugin);
 
     useLayoutEffect(() => {
         const ctx = gsap.context(() => {

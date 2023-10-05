@@ -3,9 +3,7 @@ import dbConnect from "../../lib/mongodb";
 import List from "../../models/List";
 
 export default async function handler(req, res) {
-    console.log('api/add-items called');
 
-    const data = req.body;
     const {
         listId,
         artists,
@@ -13,7 +11,7 @@ export default async function handler(req, res) {
         type,
         name,
         album
-    } = data;
+    } = req.body;
 
     const artistNames = artists ? artists.map((artist) => artist.name) : [];
     const imageURLs = images ? images.map((image) => image.url) : album.images.map((image) => image.url);
@@ -41,16 +39,11 @@ export default async function handler(req, res) {
         });
     }
 
-    console.log(newItem);
-
-    await dbConnect().then(() => {
-        List.findOneAndUpdate(
-            { _id: listId }, // query for list
-            { $push: { items: newItem } }, // add new item
-            { new: true }, // return updated list
-            (err, list, count) => { // callback function
-                if (err) res.status(401).send();
-                else res.status(200).json(list);
-            });
-    });
+    await dbConnect();
+    const updatedList = await List.findOneAndUpdate(
+        { _id: listId }, // query for list
+        { $push: { items: newItem } }, // add new item
+        { new: true }, // return updated list
+    );
+    res.status(200).json(updatedList);
 }

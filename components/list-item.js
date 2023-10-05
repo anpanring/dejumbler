@@ -1,91 +1,74 @@
 import Image from 'next/image';
-import React from "react";
-import Router from 'next/router';
+import React, { useState } from "react";
 import styles from '../styles/ListPage.module.css';
 
-class ListItem extends React.Component {
-    constructor(props) {
-        super(props);
-        this.data = props.data;
-        this.state = { notes: this.data.notes, showForm: false };
-        this.listId = props.listId;
-        this.handleDelete = this.handleDelete.bind(this);
-        this.handleNoteChange = this.handleNoteChange.bind(this);
-        this.toggleEditForm = this.toggleEditForm.bind(this);
-    }
+function ListItem({ data, listId, handleDataChange }) {
+    const [notes, setNotes] = useState(data.notes);
+    const [showForm, setShowForm] = useState(false);
 
-    async handleDelete() {
-        var itemInfo = this.data;
-        itemInfo.listId = this.listId;
+    async function handleDelete() {
+        const itemInfo = data;
+        itemInfo.listId = listId;
 
         const fetchOptions = {
             method: 'POST',
-            headers: {
-                "Content-Type": 'application/json',
-            },
+            headers: { "Content-Type": 'application/json' },
             body: JSON.stringify(itemInfo),
         };
 
-        await fetch('/api/remove-item', fetchOptions);
+        const updatedList = fetch('/api/remove-item', fetchOptions)
+            .then(res => res.json());
 
-        Router.push(`/list/${this.listId}`);
+        handleDataChange(await updatedList);
     }
 
-    toggleEditForm() {
-        this.state.showForm
-            ? this.setState({ showForm: false })
-            : this.setState({ showForm: true });
-    }
+    async function handleNoteChange(e) {
+        e.preventDefault();
 
-    async handleNoteChange(event) {
-        event.preventDefault();
-
-        var itemInfo = {
-            itemId: this.data._id,
-            listId: this.listId,
-            updatedNotes: event.target.notes.value
+        const itemInfo = {
+            itemId: data._id,
+            listId: listId,
+            updatedNotes: e.target.notes.value
         }
 
         const fetchOptions = {
             method: 'POST',
-            headers: {
-                "Content-Type": 'application/json',
-            },
+            headers: { "Content-Type": 'application/json' },
             body: JSON.stringify(itemInfo),
         };
 
-        await fetch('/api/edit-list-item', fetchOptions)
+        fetch('/api/edit-list-item', fetchOptions)
             .then(response => response.json())
             .then((data) => {
-                console.log(data);
-                this.setState({ notes: data.notes });
-                this.toggleEditForm();
+                setNotes(data.notes);
+                toggleEditForm();
             });
     }
 
-
-    render() {
-        let artist = this.data.artist ? ' - ' + this.data.artist : '';
-
-        return (
-            <div className={styles.listItem}>
-                <Image src={this.data.artURL} width={50} height={50} alt={this.data.name} />
-                <div className={styles.listItemText}>
-                    <p className={styles.itemInfo}>{this.data.name} {artist} - {this.data.__t}</p>
-                    {!this.state.showForm && <p className={styles.notes}>Notes: {this.state.notes} </p>}
-                    {this.state.showForm ? <form onSubmit={this.handleNoteChange} className={styles.notesForm}>
-                        <textarea type="text" name="notes" defaultValue={this.state.notes} className={styles.notesInput} />
-                        <button className={styles.button} type="submit">Save</button>
-                        <button className={styles.button} onClick={this.toggleEditForm}>Cancel</button>
-                    </form> : null}
-                    <div className={styles.listItemActions}>
-                        <button className={styles.button} onClick={this.toggleEditForm}>Edit</button>
-                        <button className={styles.button} onClick={this.handleDelete}>Remove</button>
-                    </div>
-                </div>
-            </div >
-        )
+    function toggleEditForm() {
+        setShowForm(!showForm);
     }
+
+    // let artist = data.artist ? ' - ' + data.artist : '';
+    return (
+        <div className={styles.listItem}>
+            <Image src={data.artURL} width={50} height={50} alt={data.name} />
+            <div className={styles.listItemText}>
+                <p className={styles.itemInfo}>{data.name}</p>
+                <p className={styles.artistRow}>{data.artist} - {data.__t}</p>
+                {!showForm && <p className={styles.notes}>Notes: {notes} </p>}
+                {showForm ? <form onSubmit={handleNoteChange} className={styles.notesForm}>
+                    <textarea type="text" name="notes" defaultValue={notes} className={styles.notesInput} />
+                    <button className={styles.button} type="submit">Save</button>
+                    <button className={styles.button} onClick={toggleEditForm}>Cancel</button>
+                </form> : null}
+                <div className={styles.listItemActions}>
+                    <button className={styles.button} onClick={toggleEditForm}>Edit</button>
+                    <button className={styles.button} onClick={handleDelete}>Remove</button>
+                </div>
+            </div>
+        </div >
+    );
 }
 
 export default ListItem;
