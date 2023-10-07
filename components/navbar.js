@@ -11,9 +11,18 @@ export default function Navbar() {
 
     function handleCreate() {
         setShowModal(!showModal);
-        gsap.to(buttonRef, {
-            rotate: "+=360"
-        });
+        // gsap.fromTo(buttonRef.current,
+        //     {
+        //         width: "-=5",
+        //         height: "-=5",
+        //         duration: 0.1,
+        //     },
+        //     {
+        //         width: "+=5",
+        //         height: "+=5",
+        //         duration: 0.1,
+        //     },
+        // );
     }
 
     return (

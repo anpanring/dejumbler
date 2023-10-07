@@ -72,10 +72,9 @@ function SearchBar({ listId, handleDataChange }) {
                     placeholder="Search Spotify..."
                     required
                 />
-                <label>Type: </label>
                 <select
                     onChange={(e) => setType(e.target.value)}
-                    id="types"
+                    className={styles.searchTypeSelect}
                     list="types"
                     name="type"
                     required

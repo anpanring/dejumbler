@@ -18,7 +18,7 @@
     display: flex;
     gap: 0.5em;
     margin-bottom: 1em;
-    align-items: center;
+    height: 2em;
 }
 
 .searchInput {
@@ -28,6 +28,8 @@
     color: var(--main-text-color);
     padding: 0.5em;
 }
+
+.searchTypeSelect {}
 
 .button {
     border: solid green 1px;

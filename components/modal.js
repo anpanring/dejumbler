@@ -36,10 +36,10 @@ export default function Modal({ show }) {
                 </div>
                 <div className={styles.formRow}>
                     <label>Description: </label>
-                    <textarea type="text" name="description"></textarea>
+                    <textarea className={styles.description} type="text" name="description"></textarea>
                 </div>
                 <div className={styles.formRow}>
-                    <input type="submit" value="Create List" />
+                    <input className={styles.createButton} type="submit" value="Create List" />
                 </div>
             </form>}
         </div>
