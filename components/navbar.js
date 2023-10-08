@@ -9,7 +9,7 @@ export default function Navbar() {
     const buttonRef = useRef();
     const containerRef = useRef();
 
-    function handleCreate() {
+    function toggleModal() {
         setShowModal(!showModal);
         // gsap.fromTo(buttonRef.current,
         //     {
@@ -32,13 +32,13 @@ export default function Navbar() {
                 <Link href="/all-lists">My Lists</Link>
             </div>
             <button
-                onClick={handleCreate}
+                onClick={toggleModal}
                 href="#"
                 className={styles.createButton}
                 ref={buttonRef}>
                 +
             </button>
-            <Modal className="modal" show={showModal} />
+            <Modal className="modal" show={showModal} toggleModal={toggleModal} />
         </div>
     )
 }

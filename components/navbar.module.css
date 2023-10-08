@@ -2,7 +2,8 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-top: 1em;
+    margin-top: 0.5em;
+    height: 3.5em;
 }
 
 .navbar {
@@ -23,4 +24,9 @@
 .createButton:hover {
     background-color: var(--accent-color);
     color: var(--background-color);
+}
+
+.createButton:active {
+    width: 2.5em;
+    height: 2.5em;
 }
