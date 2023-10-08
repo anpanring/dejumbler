@@ -1,4 +1,4 @@
-.formContainer {
+.modalContainer {
     position: fixed;
     border: 1px solid green;
     padding: 2em 1em 2em;
@@ -7,38 +7,6 @@
     transform: translate(-50%, -50%);
     background-color: var(--background-color);
     z-index: 101;
-}
-
-.form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.formRow {
-    display: flex;
-    gap: 0.5em;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.nameInput {
-    font-size: 1em;
-    background-color: var(--background-color);
-    flex-grow: 1;
-}
-
-.description {
-    flex-grow: 1;
-}
-
-.createButton {
-    justify-self: center;
-}
-
-.type {
-    height: auto;
-    font-size: 16px;
 }
 
 .overlay {
@@ -50,17 +18,4 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
-}
-
-.closeButton {
-    width: 2em;
-    height: 2em;
-    position: absolute;
-    top: -1em;
-    right: -1em;
-}
-
-.closeButton:hover {
-    background-color: red;
-    color: var(--background-color);
 }

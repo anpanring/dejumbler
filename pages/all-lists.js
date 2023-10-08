@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { useDrag } from "react-dnd";
+import Modal from "../components/modal";
 
 function ListBox({ data, setListData, isDragging }) {
     const [showEditOptions, setShowEditOptions] = useState(false);
@@ -44,9 +45,14 @@ function ListBox({ data, setListData, isDragging }) {
             <svg width="15px" height="15px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#000000" className={styles.kebab} onClick={() => setShowEditOptions(!showEditOptions)}>
                 <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
             </svg>
-            {showEditOptions && <a href="#" onClick={(e) => handleDelete(e, data._id)} className={styles.delete}>
-                Delete list
-            </a>}
+            <Modal show={showEditOptions} toggleModal={() => setShowEditOptions(!showEditOptions)}>
+                <div className={styles.editContainer}>
+                    <a href="#">Edit list</a>
+                    <a href="#" onClick={(e) => handleDelete(e, data._id)} className={styles.delete}>
+                        Delete list
+                    </a>
+                </div>
+            </Modal>
         </div>
     );
 }

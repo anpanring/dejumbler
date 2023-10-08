@@ -36,9 +36,13 @@
     cursor: pointer;
 }
 
+.editContainer {
+    display: flex;
+    flex-direction: column;
+}
+
 .delete {
     color: red;
-    align-self: end;
     text-decoration: none;
 }
 
