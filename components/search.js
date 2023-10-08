@@ -3,19 +3,45 @@ import React, { useEffect, useState } from "react";
 import styles from "./search.module.css";
 import Image from "next/image";
 
-function SearchResult({ data, listId, handleDataChange }) {
-    const {
-        artists,
-        images,
-        type,
-        name,
-        album
-    } = data;
+function SearchResult({ data, listId, listType, handleDataChange }) {
+    console.log(data);
+    switch (listType) {
+        case 'Music':
+            const {
+                artists,
+                images,
+                type,
+                name,
+                album
+            } = data;
+            const artistNames = artists ? artists.map((artist) => artist.name) : [];
+            const imageURLs = images
+                ? images.map((image) => image.url)
+                : album.images.map((image) => image.url);
 
-    const artistNames = artists ? artists.map((artist) => artist.name) : [];
-    const imageURLs = images
-        ? images.map((image) => image.url)
-        : album.images.map((image) => image.url);
+            return (
+                <div className={styles.searchResultsWrapper}>
+                    <Image src={imageURLs[0]} height={50} width={50} alt={name} />
+                    <button className={styles.addButton} onClick={() => addToList(data, listId)}>+</button>
+                    <div className={styles.searchResultText}>
+                        <p className={styles.title}>{name}</p>
+                        <p className={styles.artist}>{artistNames.join(', ')}</p>
+                        <p className={styles.type}>{type.charAt(0).toUpperCase() + type.substring(1)}</p>
+                    </div>
+                </div>
+            );
+        case 'Movies':
+            const { title, poster_path } = data;
+            return (
+                <div className={styles.searchResultsWrapper}>
+                    <Image src={`http://image.tmdb.org/t/p/w92${poster_path}`} width={50} height={75} alt={title} />
+                    <button className={styles.addButton} onClick={() => addToList(data, listId)}>+</button>
+                    <div className={styles.searchResultText}>
+                        <p className={styles.title}>{title}</p>
+                    </div>
+                </div>
+            );
+    }
 
     async function addToList(data, listId) {
         data.listId = listId;
@@ -33,21 +59,9 @@ function SearchResult({ data, listId, handleDataChange }) {
             .then(res => res.json())
             .then(data => handleDataChange(data));
     }
-
-    return (
-        <div className={styles.searchResultsWrapper}>
-            <Image src={imageURLs[0]} height={50} width={50} alt={name} />
-            <button className={styles.addButton} onClick={() => addToList(data, listId)}>+</button>
-            <div className={styles.searchResultText}>
-                <p className={styles.title}>{name}</p>
-                <p className={styles.artist}>{artistNames.join(', ')}</p>
-                <p className={styles.type}>{type.charAt(0).toUpperCase() + type.substring(1)}</p>
-            </div>
-        </div>
-    );
 }
 
-function SearchBar({ listId, handleDataChange }) {
+function SearchBar({ listId, listType, handleDataChange }) {
     const [results, setResults] = useState([]);
     const [type, setType] = useState('all');
     const [query, setQuery] = useState('');
@@ -55,9 +69,19 @@ function SearchBar({ listId, handleDataChange }) {
 
     useEffect(() => {
         if (query) {
-            fetch(`/api/spot/search?q=${query}&type=${type}`)
-                .then(res => res.json())
-                .then(data => setResults(data));
+            switch (listType) {
+                case "Music":
+                    fetch(`/api/spot/search?q=${query}&type=${type}`)
+                        .then(res => res.json())
+                        .then(data => setResults(data));
+                    break;
+                case "Movies":
+                    fetch(`https://api.themoviedb.org/3/search/movie?query=${query}&api_key=3770f4ac92cd31bf3489e56a9cc9c5d7`)
+                        .then(res => res.json())
+                        .then(data => setResults(data.results));
+                    break;
+            }
+
         } else setResults([]);
     }, [query, type]);
 
@@ -69,7 +93,7 @@ function SearchBar({ listId, handleDataChange }) {
                     onChange={(e) => setQuery(e.target.value)}
                     type="text"
                     name="value"
-                    placeholder="Search Spotify..."
+                    placeholder={`Search ${listType}...`}
                     required
                 />
                 <select
@@ -91,6 +115,7 @@ function SearchBar({ listId, handleDataChange }) {
                         key={result.id}
                         data={result}
                         listId={listId}
+                        listType={listType}
                         handleDataChange={handleDataChange}
                     />;
                 })}

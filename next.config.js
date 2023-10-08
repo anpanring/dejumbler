@@ -9,6 +9,12 @@ const nextConfig = {
                 port: '',
                 pathname: '/image/**',
             },
+            {
+                protocol: 'http',
+                hostname: '*.tmdb.org',
+                port: '',
+                pathname: '/t/**',
+            },
         ],
     },
     env: {

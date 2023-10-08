@@ -28,7 +28,7 @@ export default function ListPage({ listData, id }) {
                 <h3 className={styles.listType}>{data.type}</h3>
             </div>
 
-            <SearchBar listId={id} handleDataChange={handleDataChange} />
+            <SearchBar listId={id} listType={data.type} handleDataChange={handleDataChange} />
 
             <div className={styles.itemWrapper}>
                 {data.items.map((item) => {

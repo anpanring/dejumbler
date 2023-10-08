@@ -49,19 +49,24 @@ function ListItem({ data, listId, handleDataChange }) {
         setShowForm(!showForm);
     }
 
-    // let artist = data.artist ? ' - ' + data.artist : '';
     return (
         <div className={styles.listItem}>
             <Image src={data.artURL} width={50} height={50} alt={data.name} />
+
             <div className={styles.listItemText}>
                 <p className={styles.itemInfo}>{data.name}</p>
-                <p className={styles.artistRow}>{data.artist} - {data.__t}</p>
+
+                {data.artist ?
+                    <p className={styles.artistRow}>{data.artist} - {data.__t}</p>
+                    : <p className={styles.artistRow}>{data.__t}</p>}
+
                 {!showForm && <p className={styles.notes}>Notes: {notes} </p>}
                 {showForm ? <form onSubmit={handleNoteChange} className={styles.notesForm}>
                     <textarea type="text" name="notes" defaultValue={notes} className={styles.notesInput} />
                     <button className={styles.button} type="submit">Save</button>
                     <button className={styles.button} onClick={toggleEditForm}>Cancel</button>
                 </form> : null}
+
                 <div className={styles.listItemActions}>
                     <button className={styles.button} onClick={toggleEditForm}>Edit</button>
                     <button className={styles.button} onClick={handleDelete}>Remove</button>

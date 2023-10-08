@@ -25,6 +25,17 @@
     justify-content: space-between;
 }
 
+.kebab {
+    align-self: end;
+    border: none;
+    padding: 0.25em;
+}
+
+.kebab:hover {
+    fill: lightgreen;
+    cursor: pointer;
+}
+
 .delete {
     color: red;
     align-self: end;

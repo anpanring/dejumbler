@@ -2,14 +2,17 @@ import { useEffect, useState } from "react";
 import dbConnect from "../lib/mongodb";
 import Layout from "../components/layout";
 import Link from "next/link";
+import Image from "next/image";
 import List from "../models/List";
 import styles from "../styles/AllLists.module.css";
 import { useSession } from "next-auth/react";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { useDrag } from "react-dnd";
+import kebab from "../public/images/kebab.svg";
 
 function ListBox({ data, setListData, isDragging }) {
+    const [showEditOptions, setShowEditOptions] = useState(false);
     // const [{ opacity }, dragRef] = useDrag(
     //     () => ({
     //         type: "ListBox",
@@ -30,20 +33,21 @@ function ListBox({ data, setListData, isDragging }) {
                     .then((data) => {
                         return data;
                     });
-            setListData(updatedData);
+            setListData(await updatedData);
         } catch (error) { alert('Failed to delete list.'); }
     }
 
 
     return (
         <div key={data._id} className={styles.listInfo}>
-            <p>
-                <Link href={`/list/${data._id}`} >{data.name}</Link> ({data.items.length}) - {data.type}
-            </p>
+            <p><Link href={`/list/${data._id}`} >{data.name}</Link> ({data.items.length}) - {data.type}</p>
             {data.description && <p className={styles.description}>{data.description}</p>}
-            <a href="#" onClick={(e) => handleDelete(e, data._id)} className={styles.delete}>
+            <svg width="15px" height="15px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#000000" className={styles.kebab} onClick={() => setShowEditOptions(!showEditOptions)}>
+                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+            </svg>
+            {showEditOptions && <a href="#" onClick={(e) => handleDelete(e, data._id)} className={styles.delete}>
                 Delete list
-            </a>
+            </a>}
         </div>
     );
 }
