@@ -9,7 +9,6 @@ import { useSession } from "next-auth/react";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { useDrag } from "react-dnd";
-import kebab from "../public/images/kebab.svg";
 
 function ListBox({ data, setListData, isDragging }) {
     const [showEditOptions, setShowEditOptions] = useState(false);
