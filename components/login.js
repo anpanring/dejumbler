@@ -18,9 +18,4 @@ export default function Login() {
             </div >
         )
     }
-    return (
-        <div className={styles.loginWrapper}>
-            <a href="#" onClick={() => signIn()} className={styles.button}>Sign in</a>
-        </div>
-    )
 }

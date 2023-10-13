@@ -16,3 +16,9 @@
     width: 15em;
     height: 2em;
 }
+
+.loginWrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 0.25em;
+}

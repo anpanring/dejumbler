@@ -47,11 +47,23 @@ input[type="submit"]:hover {
     color: white;
 }
 
+@keyframes spin {
+    0% {
+        transform: rotateZ(360deg);
+    }
+}
+
 .loading-spinner {
-    height: 2em;
-    width: 2em;
+    height: 4em;
+    width: 4em;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -2em;
+    margin-left: -2em;
     border: 1px solid var(--accent-color);
     background-color: white;
+    animation: spin 2s infinite;
 }
 
 input,
