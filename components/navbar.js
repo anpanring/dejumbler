@@ -3,13 +3,11 @@ import styles from './navbar.module.css';
 import Modal from "./modal";
 import { useRef, useState } from "react";
 import { gsap } from "gsap";
-import { useSession } from "next-auth/react";
 
 export default function Navbar() {
     const [showModal, setShowModal] = useState(false);
     const buttonRef = useRef();
     const containerRef = useRef();
-    const session = useSession();
 
     function toggleModal() {
         setShowModal(!showModal);
@@ -33,13 +31,13 @@ export default function Navbar() {
                 <Link href="/">Home</Link> |
                 <Link href="/all-lists">My Lists</Link>
             </div>
-            {!showModal && <button
+            <button
                 onClick={toggleModal}
                 href="#"
                 className={styles.createButton}
                 ref={buttonRef}>
                 +
-            </button>}
+            </button>
             <Modal className="modal" show={showModal} toggleModal={toggleModal}>
                 <form className={styles.form} action="/api/new-list" method="POST">
                     <button className={styles.closeButton} onClick={toggleModal}>X</button>
@@ -66,5 +64,5 @@ export default function Navbar() {
                 </form>
             </Modal>
         </div>
-    );
+    )
 }

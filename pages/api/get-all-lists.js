@@ -14,7 +14,7 @@ export default async function handler(req, res) {
         const { user, expires } = session;
 
         await dbConnect();
-        let data;
+        var data;
 
         if (query.type == "Any") data = await List.find({ user: user.email });
         else {
