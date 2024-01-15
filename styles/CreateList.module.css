@@ -7,6 +7,7 @@
     transform: translate(-50%, -50%);
     background-color: var(--background-color);
     z-index: 101;
+    width: 50%;
 }
 
 .overlay {

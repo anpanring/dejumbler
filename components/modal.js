@@ -8,7 +8,7 @@ export default function Modal({ show, toggleModal, children }) {
 
     useLayoutEffect(() => {
         const ctx = gsap.context(() => {
-            console.log(boxRef);
+            // console.log(boxRef);
             gsap.to(boxRef.current, {
                 width: "+=20",
                 height: "+=20",

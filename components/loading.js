@@ -1,3 +1,5 @@
+import styles from "./loading.module.css";
+
 export default function Loading() {
-    return <div className="loading-spinner"></div>;
+    return <div className={styles.loadingSpinner}>Beep</div>;
 }

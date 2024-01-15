@@ -73,7 +73,10 @@ export const authOptions = {
                 else return null;
             }
         })
-    ]
+    ],
+    pages: {
+        signIn: '/auth/signin',
+    },
 };
 
 export default NextAuth(authOptions)

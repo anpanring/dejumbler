@@ -67,6 +67,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
     const [query, setQuery] = useState('');
     // const [apiToken, setToken] = useState(getToken());
 
+    // Add https://developer.mozilla.org/en-US/docs/Web/API/AbortController
     useEffect(() => {
         if (query) {
             switch (listType) {

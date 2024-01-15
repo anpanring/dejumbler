@@ -3,7 +3,14 @@
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    align-items: flex-end;
+    align-items: flex-start;
+    gap: 1em;
+}
+
+.subLogin {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .loading-spinner {
@@ -19,4 +26,53 @@
 .signoutButton:hover {
     color: white;
     background-color: red;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.formSub {
+    display: flex;
+    flex-direction: column;
+}
+
+.closeButton {
+    width: 2em;
+    height: 2em;
+    position: absolute;
+    top: -1em;
+    right: -1em;
+}
+
+.closeButton:hover {
+    background-color: red;
+    color: var(--background-color);
+}
+
+.button {
+    /* height: 4em; */
+}
+
+.divider {
+    margin-left: 0.75em;
+    margin-right: 0.75em;
+    font-size: 0.75em;
+}
+
+.box {
+    height: 2em;
+}
+
+.demo {
+    text-decoration: none;
+    border: solid 1px black;
+    padding: 0.25em 1em 0.25em 1em;
+}
+
+.loginOptions {
+    display: flex;
+    gap: 0.25em;
 }

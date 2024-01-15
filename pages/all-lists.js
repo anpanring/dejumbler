@@ -111,13 +111,19 @@ export default function AllLists({ lists }) {
 
 export async function getServerSideProps(context) {
     const session = await getServerSession(context.req, context.res, authOptions);
-    if (session) {
-        const { user, expires } = session;
+    if (!session) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        }
+    }
+    const { user, expires } = session;
 
-        // Get lists with direct mongoose call
-        await dbConnect();
-        const result = await List.find({ user: user.email }); // email is rly _id
+    // Get lists with direct mongoose call
+    await dbConnect();
+    const result = await List.find({ user: user.email }); // email is rly _id
 
-        return { props: { lists: JSON.stringify(result) } }
-    } else return { props: {} };
+    return { props: { lists: JSON.stringify(result) } }
 }

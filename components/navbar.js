@@ -11,18 +11,6 @@ export default function Navbar() {
 
     function toggleModal() {
         setShowModal(!showModal);
-        // gsap.fromTo(buttonRef.current,
-        //     {
-        //         width: "-=5",
-        //         height: "-=5",
-        //         duration: 0.1,
-        //     },
-        //     {
-        //         width: "+=5",
-        //         height: "+=5",
-        //         duration: 0.1,
-        //     },
-        // );
     }
 
     return (
@@ -31,13 +19,13 @@ export default function Navbar() {
                 <Link href="/">Home</Link> |
                 <Link href="/all-lists">My Lists</Link>
             </div>
-            <button
+            {!showModal && <button
                 onClick={toggleModal}
                 href="#"
                 className={styles.createButton}
                 ref={buttonRef}>
                 +
-            </button>
+            </button>}
             <Modal className="modal" show={showModal} toggleModal={toggleModal}>
                 <form className={styles.form} action="/api/new-list" method="POST">
                     <button className={styles.closeButton} onClick={toggleModal}>X</button>
