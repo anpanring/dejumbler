@@ -51,7 +51,7 @@ function ListItem({ data, listId, handleDataChange }) {
 
     return (
         <div className={styles.listItem}>
-            <Image src={data.artURL} width={50} height={50} alt={data.name} />
+            <Image className={styles.listItemArt} src={data.artURL} width={50} height={50} alt={data.name} />
 
             <div className={styles.listItemText}>
                 <p className={styles.itemInfo}>{data.name}</p>
@@ -63,14 +63,16 @@ function ListItem({ data, listId, handleDataChange }) {
                 {!showForm && <p className={styles.notes}>Notes: {notes} </p>}
                 {showForm ? <form onSubmit={handleNoteChange} className={styles.notesForm}>
                     <textarea type="text" name="notes" defaultValue={notes} className={styles.notesInput} />
-                    <button className={styles.button} type="submit">Save</button>
-                    <button className={styles.button} onClick={toggleEditForm}>Cancel</button>
+                    <div className={styles.notesEditButtons}>
+                        <button className={styles.button} type="submit">Save</button>
+                        <button className={styles.button} onClick={toggleEditForm}>Cancel</button>
+                    </div>
                 </form> : null}
 
-                <div className={styles.listItemActions}>
+                {!showForm && <div className={styles.listItemActions}>
                     <button className={styles.button} onClick={toggleEditForm}>Edit</button>
                     <button className={styles.button} onClick={handleDelete}>Remove</button>
-                </div>
+                </div>}
             </div>
         </div >
     );

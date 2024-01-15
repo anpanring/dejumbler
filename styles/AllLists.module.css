@@ -5,7 +5,7 @@
 }
 
 .listInfo {
-    padding: 5px;
+    padding: 0.5em;
     border: solid var(--main-text-color) 1px;
     display: flex;
     flex-direction: column;
