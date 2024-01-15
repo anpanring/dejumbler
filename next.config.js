@@ -9,8 +9,17 @@ const nextConfig = {
                 port: '',
                 pathname: '/image/**',
             },
+            {
+                protocol: 'http',
+                hostname: '*.tmdb.org',
+                port: '',
+                pathname: '/t/**',
+            },
         ],
     },
+    env: {
+        MONGODB_URI: process.env.MONGODB_URI,
+    }
 }
 
 module.exports = nextConfig

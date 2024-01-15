@@ -2,7 +2,6 @@
     display: flex;
     position: relative;
     align-items: center;
-    margin: 0px 0 10px 0;
     height: 4em;
     width: 90%;
 }
@@ -19,11 +18,18 @@
     display: flex;
     gap: 0.5em;
     margin-bottom: 1em;
+    height: 2em;
 }
 
 .searchInput {
     font-size: 16px;
+    border: solid 1px var(--main-text-color);
+    background-color: var(--background-color);
+    color: var(--main-text-color);
+    padding: 0.5em;
 }
+
+.searchTypeSelect {}
 
 .button {
     border: solid green 1px;
@@ -37,7 +43,7 @@
 }
 
 .resultsWrapper {
-    margin: 0 1em 1em 0;
+    margin-bottom: 1em;
 }
 
 .title {
@@ -49,7 +55,7 @@
 
 .artist {
     font-size: 0.85em;
-    color: rgb(45, 45, 45);
+    color: grey;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;

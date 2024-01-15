@@ -1,14 +1,8 @@
 .dejumblerTitle {
     /* font-family: "Blockarama", sans-serif; */
     /* font-size: 100px; */
-    height: 2em;
     margin: 0;
-}
-
-.navbar {
-    display: flex;
-    gap: 5px;
-    justify-content: flex-start;
+    width: 25%;
 }
 
 .wrapper {
@@ -26,6 +20,7 @@
 .statusBar {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
 }
 
 .textLogo {

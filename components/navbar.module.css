@@ -1,0 +1,80 @@
+.navbarContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 0.5em;
+    height: 3.5em;
+}
+
+.navbar {
+    display: flex;
+    gap: 5px;
+    justify-content: flex-start;
+}
+
+.createButton {
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+    width: 3em;
+    height: 3em;
+    background-color: var(--background-color);
+    color: var(--main-text-color);
+}
+
+.createButton:hover {
+    background-color: var(--accent-color);
+    color: var(--background-color);
+}
+
+/* .createButton:active {
+    width: 2.5em;
+    height: 2.5em;
+} */
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.5em;
+    height: 100%;
+}
+
+.formRow {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.nameInput {
+    font-size: 1em;
+    background-color: var(--background-color);
+    flex-grow: 1;
+}
+
+.description {
+    flex-grow: 1;
+}
+
+.createButtonForm {
+    justify-self: center;
+}
+
+.type {
+    height: auto;
+    font-size: 16px;
+}
+
+.closeButton {
+    width: 2em;
+    height: 2em;
+    position: absolute;
+    top: -1em;
+    right: -1em;
+}
+
+.closeButton:hover {
+    background-color: red;
+    color: var(--background-color);
+}

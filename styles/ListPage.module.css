@@ -1,13 +1,14 @@
 .button {
-    border: solid green 1px;
-    background-color: white;
+    border: solid 1px var(--accent-color);
+    background-color: var(--background-color);
+    color: var(--main-text-color);
     width: auto;
     height: 1.5em;
     cursor: pointer;
 }
 
 .button:hover {
-    background-color: green;
+    background-color: var(--accent-color);
     color: white;
 }
 
@@ -22,7 +23,7 @@
     display: flex;
     align-items: center;
     overflow: hidden;
-    border: solid black 1px;
+    border: solid var(--main-text-color) 1px;
     padding: 10px 10px 10px 10px;
 }
 
@@ -40,12 +41,12 @@
 }
 
 .listInfo {
-    margin: 30px 0 20px 0;
+    margin: 1.5em 0 1em;
 }
 
 .listTitle {
     margin: 0;
-    line-height: 0.7;
+    line-height: 1.2em;
 }
 
 .listType {
@@ -69,4 +70,12 @@
     max-width: max-content;
     font-family: 'Epilogue', sans-serif;
     line-height: 1.5;
+    background-color: var(--background-color);
+    color: var(--main-text-color);
+    border: solid 1px var(--main-text-color);
+}
+
+.artistRow {
+    font-size: 0.75em;
+    color: grey;
 }

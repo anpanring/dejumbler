@@ -6,9 +6,17 @@
 
 .listInfo {
     padding: 5px;
-    border: solid black 1px;
+    border: solid var(--main-text-color) 1px;
     display: flex;
     flex-direction: column;
+}
+
+.selectMenu {
+    border: solid 1px var(--accent-color);
+    border-radius: 5px;
+    height: 2.5em;
+    background-color: var(--background-color);
+    color: var(--main-text-color)
 }
 
 .topBar {
@@ -17,13 +25,32 @@
     justify-content: space-between;
 }
 
+.kebab {
+    align-self: end;
+    border: none;
+    padding: 0.25em;
+}
+
+.kebab:hover {
+    fill: lightgreen;
+    cursor: pointer;
+}
+
+.editContainer {
+    display: flex;
+    flex-direction: column;
+}
+
 .delete {
     color: red;
-    align-self: end;
     text-decoration: none;
 }
 
 .delete:hover {
     color: white;
     background-color: red;
+}
+
+.description {
+    font-family: cursive;
 }

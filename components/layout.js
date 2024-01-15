@@ -2,9 +2,13 @@ import Footer from './footer';
 import styles from './layout.module.css';
 import Link from 'next/link';
 import Login from './login';
+import Loading from './loading';
 import Head from 'next/head';
 import Image from 'next/image';
 import textLogo from '../public/dejumbler-text-logo.png';
+import { Suspense } from 'react';
+import Navbar from './navbar';
+import svgLogo from '../public/logo.svg';
 
 export const siteTitle = 'Dejumbler';
 
@@ -26,14 +30,10 @@ export default function Layout({ children }) {
                 {/* <div id="hd"> */}
                 {/* <img src="/dejumbler-text-logo.png" className={styles.dejumblerTitle}></img> */}
                 {/* </div> */}
-                <div className={styles.navbar}>
-                    <Link href="/">Home</Link> |
-                    <Link href="/all-lists">All Lists</Link> |
-                    <Link href="/create-list">Create a New List</Link>
-                </div>
-                <div>
+                <Navbar />
+                <Suspense fallback={<Loading />}>
                     {children}
-                </div>
+                </Suspense>
             </div>
             {/* <Footer className={styles.footer} /> */}
         </div>

@@ -1,6 +1,7 @@
 import Item from "./Item";
 import mongoose from "mongoose";
 
+console.log(mongoose.modelNames());
 if (mongoose.modelNames().includes('Album')) {
     mongoose.deleteModel('Album');
     mongoose.deleteModel('Artist');
@@ -13,7 +14,7 @@ if (Item.discriminators && 'Album' in Item.discriminators) {
     delete Item.discriminators.Song;
 }
 
-//Album inherits Item properties
+// Album inherits Item properties
 const AlbumSchema = Item.discriminator('Album', new mongoose.Schema({
     artist: { type: String, required: true },
     lengthMins: { type: Number },
@@ -21,14 +22,14 @@ const AlbumSchema = Item.discriminator('Album', new mongoose.Schema({
 }));
 // }
 
-//Artist inherits Item properties
+// Artist inherits Item properties
 // if (mongoose.models.Artist) mongoose.deleteModel("Artist");
 const ArtistSchema = Item.discriminator('Artist', new mongoose.Schema({
     genres: [String], //string array for artist's genres
 }));
 // }
 
-//Book inherits Item properties
+// Book inherits Item properties
 if (!mongoose.models.Book) {
     const BookSchema = Item.discriminator('Book', new mongoose.Schema({
         author: { type: String, required: true },
@@ -37,7 +38,7 @@ if (!mongoose.models.Book) {
     }));
 }
 
-//Movie inherits Item properties
+// Movie inherits Item properties
 if (!mongoose.models.Movie) {
     const MovieSchema = Item.discriminator('Movie', new mongoose.Schema({
         director: { type: String, required: true },
@@ -46,7 +47,7 @@ if (!mongoose.models.Movie) {
     }));
 }
 
-//Song inherits Item properties
+// Song inherits Item properties
 const SongSchema = Item.discriminator('Song', new mongoose.Schema({
     artist: { type: String, required: true },
     album: { type: String },

@@ -1,14 +1,26 @@
 import mongoose from "mongoose";
 
-//Generic Item object, contains general properties shared by all types of Items
+// Generic Item object, contains general properties shared by all types of Items
 export const ItemSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    artURL: { type: String },
+    // Name of the item
+    name: {
+        type: String,
+        required: true
+    },
+
+    // URL for artwork
+    artURL: {
+        type: String
+    },
+
+    // To-do status - in future, allow people to choose their own statuses
     status: {
         type: String, enum: ["todo", "in progress", "done"],
         default: false, required: true
     },
-    notes: { type: String }
+    notes: {
+        type: String
+    }
 }, {
     _id: true
 });

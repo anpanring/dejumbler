@@ -1,10 +1,14 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
-import Layout, { siteTitle } from '../components/layout'
-import { useSession } from 'next-auth/react'
-import Image from 'next/image'
+import Head from 'next/head';
+import Image from 'next/image';
+
+import Layout, { siteTitle } from '../components/layout';
+import Login from '../components/login';
+
 import textLogo from '../public/dejumbler-text-logo.png';
-import Login from '../components/login'
+import styles from '../styles/Home.module.css';
+
+import { useSession } from 'next-auth/react';
+
 
 export default function Home() {
     const session = useSession();
@@ -30,9 +34,6 @@ export default function Home() {
 
     return (
         <Layout>
-            <Head>
-                <title>{siteTitle}</title>
-            </Head>
             <h2>Hi {session.data.user.name}. Make lists.</h2>
         </Layout>
     );
