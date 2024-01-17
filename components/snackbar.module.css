@@ -1,0 +1,15 @@
+.snack {
+    position: fixed;
+    border: 1px solid green;
+    padding: 1em 1em 1em;
+    top: 92%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--background-color);
+    z-index: 99;
+    width: auto;
+}
+
+.message {
+    text-align: center;
+}

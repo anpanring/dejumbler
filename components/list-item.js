@@ -19,7 +19,7 @@ function ListItem({ data, listId, handleDataChange }) {
         const updatedList = fetch('/api/remove-item', fetchOptions)
             .then(res => res.json());
 
-        handleDataChange(await updatedList);
+        handleDataChange(await updatedList, data.name + ' removed from ');
     }
 
     async function handleNoteChange(e) {

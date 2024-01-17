@@ -1,9 +1,18 @@
-.searchResultsWrapper {
+.searchResultsWrapper,
+.movieSearchResultsWrapper {
     display: flex;
     position: relative;
     align-items: center;
     height: 4em;
     width: 90%;
+}
+
+.searchResultsWrapper {
+    margin: 0 0.5em 0.5em 0;
+}
+
+.movieSearchResultsWrapper {
+    margin: 0 1.5em 1.5em 0;
 }
 
 .searchResultText {

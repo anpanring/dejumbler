@@ -71,6 +71,7 @@ export default function AllLists({ lists }) {
     const parsedData = lists ? JSON.parse(lists) : [];
     const [listData, setListData] = useState(parsedData);
     const [type, setType] = useState('Any');
+    const [displayType, setDisplayType] = useState('All');
 
     useEffect(() => {
         console.log('hello');
@@ -90,13 +91,21 @@ export default function AllLists({ lists }) {
     //     </Layout>
     // );
 
+    function toggleType(e) {
+        setType(e.target.value);
+        if (e.target.value == "Any") setDisplayType("All");
+        if (e.target.value == "Movies") setDisplayType("Movie");
+        if (e.target.value == "Music") setDisplayType("Music");
+        if (e.target.value == "Books") setDisplayType("Book");
+    }
+
     return (
         <Layout>
             <div className={styles.topBar}>
-                <h2>{type} Lists ({listData.length})</h2>
+                <h2>{displayType} Lists ({listData.length})</h2>
                 <div className='form-row'>
                     <label>Filter: </label>
-                    <select className={styles.selectMenu} list="types" name="type" onChange={e => setType(e.target.value)} required>
+                    <select className={styles.selectMenu} list="types" name="type" onChange={toggleType} required>
                         <option value="Any">All</option>
                         <option value="Music">Music</option>
                         <option value="Movies">Movies</option>

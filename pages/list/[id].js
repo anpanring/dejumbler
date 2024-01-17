@@ -5,16 +5,21 @@ import Layout from "../../components/layout";
 import List from '../../models/List';
 import ListItem from '../../components/list-item';
 import SearchBar from '../../components/search';
+import Snackbar from '../../components/snackbar';
 import styles from '../../styles/ListPage.module.css';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../api/auth/[...nextauth]';
 
 export default function ListPage({ listData, id }) {
     const [data, setData] = useState(JSON.parse(listData));
+    const [songAdded, setSongAdded] = useState(false);
+    const [changeType, setChangeType] = useState('');
 
-    function handleDataChange(changedData) {
-        console.log(changedData);
+    function handleDataChange(changedData, changeType) {
+        console.log(changeType);
         setData(changedData);
+        setSongAdded(true);
+        setChangeType(changeType);
     }
 
     return (
@@ -42,6 +47,7 @@ export default function ListPage({ listData, id }) {
                     );
                 })}
             </div>
+            {songAdded && <Snackbar message={`${changeType} ${data.name}`} toggleShow={setSongAdded} />}
         </Layout>
     )
 }
