@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Layout, { siteTitle } from '../components/layout';
 import Login from '../components/login';
 
-import textLogo from '../public/dejumbler-text-logo.png';
+import textLogo from '../public/images/dejumbler-text-logo.png';
 import styles from '../styles/Home.module.css';
 
 import { useSession } from 'next-auth/react';
@@ -13,8 +13,10 @@ import { authOptions } from "./api/auth/[...nextauth]";
 
 
 export default function Home() {
+    // check session (client-side)
     const session = useSession();
 
+    // logged out page
     if (!session.data) {
         return (
             <>
@@ -34,13 +36,18 @@ export default function Home() {
         )
     }
 
+    // logged in page
     return (
         <Layout>
+            <Head>
+                <title>Home - Dejumbler</title>
+            </Head>
             <h2>Hi {session.data.user.name}. Make lists.</h2>
         </Layout>
     );
 }
 
+// check login server-side to prevent flashing login page
 export async function getServerSideProps(context) {
     return {
         props: {

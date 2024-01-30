@@ -23,10 +23,31 @@
     align-items: flex-start;
 }
 
-.textLogo {
-    width: 15em;
-    height: 2em;
+.smallLogo {
+    width: 50px;
+    height: 50px;
+    fill: var(--main-text-color);
 }
+
+/* @media (max-width: 600px) {
+    .smallLogo {
+        display: block;
+    }
+
+    .textLogo {
+        display: none;
+    }
+}
+
+@media (min-width: 600px) {
+    .smallLogo {
+        display: none;
+    }
+
+    .textLogo {
+        display: block;
+    }
+} */
 
 .footer {
     margin-top: auto;
