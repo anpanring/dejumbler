@@ -8,6 +8,8 @@ import textLogo from '../public/dejumbler-text-logo.png';
 import styles from '../styles/Home.module.css';
 
 import { useSession } from 'next-auth/react';
+import { getServerSession } from 'next-auth';
+import { authOptions } from "./api/auth/[...nextauth]";
 
 
 export default function Home() {
@@ -37,4 +39,16 @@ export default function Home() {
             <h2>Hi {session.data.user.name}. Make lists.</h2>
         </Layout>
     );
+}
+
+export async function getServerSideProps(context) {
+    return {
+        props: {
+            session: await getServerSession(
+                context.req,
+                context.res,
+                authOptions
+            )
+        }
+    }
 }

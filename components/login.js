@@ -3,6 +3,7 @@ import styles from "./login.module.css";
 import { useState, useRef, useLayoutEffect } from "react";
 import Modal from "./modal";
 import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 
 export default function Login({ csrfToken }) {
     const { data, status } = useSession();
@@ -12,18 +13,19 @@ export default function Login({ csrfToken }) {
 
     const [showModal, setShowModal] = useState(false);
 
-    const comp = useRef();
-    const boxRef = useRef();
+    const loginRef = useRef();
+    useGSAP(() => {
+        gsap.from(loginRef.current, {
+            y: "20",
+            duration: 0.1,
+        });
 
-    useLayoutEffect(() => {
-        const ctx = gsap.context(() => {
-            // console.log(boxRef);
-            gsap.from(boxRef.current, {
-                y: "20",
+        return () => {
+            gsap.to(loginRef.current, {
+                y: "-20",
                 duration: 0.1,
             });
-        }, comp);
-        return () => ctx.revert();
+        }
     }, [showModal]);
 
     function toggleModal() {
@@ -53,9 +55,9 @@ export default function Login({ csrfToken }) {
                 <a href="#" onClick={() => signIn("credentials", { username: "user", password: "password" })}>Demo</a>
             </div>}
             {showModal && <a href="#" onClick={toggleModal}>← Back</a>}
-            {showModal && <div className={styles.subLogin} ref={comp}>
+            {showModal && <div className={styles.subLogin}>
                 {/* <a href="#" onClick={toggleModal} className={styles.button}>Sign in</a> */}
-                <form className={styles.form} ref={boxRef} onSubmit={handleSubmit}>
+                <form className={styles.form} ref={loginRef} onSubmit={handleSubmit}>
                     {/* <button className={styles.closeButton} onClick={toggleModal}>X</button> */}
                     <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
                     <div className={styles.formSub}>

@@ -1,6 +1,7 @@
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 import { useLayoutEffect, useRef } from "react";
 import styles from "../styles/CreateList.module.css";
-import { gsap } from "gsap";
 
 export default function Modal({ show, toggleModal, children }) {
     const comp = useRef();
