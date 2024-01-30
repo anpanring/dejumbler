@@ -29,6 +29,7 @@ button {
 
 a {
     color: var(--accent-color);
+    width: fit-content;
 }
 
 a:hover {
@@ -60,6 +61,7 @@ textarea,
 button {
     background-color: var(--background-color);
     border: solid 1px var(--main-text-color);
+    border-radius: 0;
     color: var(--main-text-color);
 }
 

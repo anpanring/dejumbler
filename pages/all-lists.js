@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import dbConnect from "../lib/mongodb";
 import Layout from "../components/layout";
 import Link from "next/link";
+import Head from "next/head";
 import Image from "next/image";
 import List from "../models/List";
 import styles from "../styles/AllLists.module.css";
@@ -101,6 +102,9 @@ export default function AllLists({ lists }) {
 
     return (
         <Layout>
+            <Head>
+                <title>All Lists</title>
+            </Head>
             <div className={styles.topBar}>
                 <h2>{displayType} Lists ({listData.length})</h2>
                 <div className='form-row'>

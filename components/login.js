@@ -11,7 +11,7 @@ export default function Login({ csrfToken }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const [showModal, setShowModal] = useState(false);
+    const [showForm, setShowForm] = useState(false);
 
     const loginRef = useRef();
     useGSAP(() => {
@@ -26,11 +26,11 @@ export default function Login({ csrfToken }) {
                 duration: 0.1,
             });
         }
-    }, [showModal]);
+    }, [showForm]);
 
     function toggleModal() {
-        console.log(showModal);
-        setShowModal(!showModal);
+        console.log(showForm);
+        setShowForm(!showForm);
     }
 
     const handleSubmit = (e) => {
@@ -49,13 +49,13 @@ export default function Login({ csrfToken }) {
     }
     return (
         <div className={styles.loginWrapper}>
-            {!showModal && <div className={styles.loginOptions}>
+            {!showForm && <div className={styles.loginOptions}>
                 <a href="#" onClick={toggleModal}>Sign in</a>
                 <p>or</p>
                 <a href="#" onClick={() => signIn("credentials", { username: "user", password: "password" })}>Demo</a>
             </div>}
-            {showModal && <a href="#" onClick={toggleModal}>← Back</a>}
-            {showModal && <div className={styles.subLogin}>
+            {showForm && <a href="#" onClick={toggleModal}>← Back</a>}
+            {showForm && <div className={styles.subLogin}>
                 {/* <a href="#" onClick={toggleModal} className={styles.button}>Sign in</a> */}
                 <form className={styles.form} ref={loginRef} onSubmit={handleSubmit}>
                     {/* <button className={styles.closeButton} onClick={toggleModal}>X</button> */}

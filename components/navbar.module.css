@@ -58,12 +58,15 @@
 }
 
 .createButtonForm {
-    justify-self: center;
+    height: 2em;
+    font-size: 1em;
+    margin: auto;
+    margin-top: 1em;
 }
 
 .type {
     height: auto;
-    font-size: 16px;
+    font-size: 1em;
 }
 
 .closeButton {

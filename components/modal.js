@@ -1,23 +1,19 @@
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { useLayoutEffect, useRef } from "react";
+import { useRef } from "react";
 import styles from "../styles/CreateList.module.css";
 
 export default function Modal({ show, toggleModal, children }) {
     const comp = useRef();
     const boxRef = useRef();
 
-    useLayoutEffect(() => {
-        const ctx = gsap.context(() => {
-            // console.log(boxRef);
-            gsap.to(boxRef.current, {
-                width: "+=20",
-                height: "+=20",
-                duration: 0.1,
-            });
-        }, comp);
-        return () => ctx.revert();
-    });
+    useGSAP(() => {
+        gsap.from(boxRef.current, {
+            width: "-=20",
+            height: "-=20",
+            duration: 0.1,
+        });
+    }, [toggleModal])
 
     return show ? (
         <div ref={comp}>
