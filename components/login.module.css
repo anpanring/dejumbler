@@ -52,10 +52,6 @@
     color: var(--background-color);
 }
 
-.button {
-    /* height: 4em; */
-}
-
 .divider {
     margin-left: 0.75em;
     margin-right: 0.75em;
@@ -64,6 +60,7 @@
 
 .box {
     height: 2em;
+    font-size: 1em;
 }
 
 .demo {
