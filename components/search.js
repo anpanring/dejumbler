@@ -1,11 +1,8 @@
-import getToken from "../lib/spotify";
 import React, { useEffect, useState } from "react";
 import styles from "./search.module.css";
 import Image from "next/image";
-import Snackbar from "./snackbar";
 
 function SearchResult({ data, listId, listType, handleDataChange }) {
-    console.log(data);
     switch (listType) {
         case 'Music':
             const {
@@ -19,8 +16,8 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
             const imageURLs = images
                 ? images.map((image) => image.url)
                 : album.images.map((image) => image.url);
-
-            return (
+            
+                return (
                 <div className={styles.searchResultsWrapper}>
                     <Image src={imageURLs[0]} height={50} width={50} alt={name} />
                     <button className={styles.addButton} onClick={() => addToList(data, listId, name)}>+</button>
@@ -32,8 +29,9 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
                 </div>
             );
         case 'Movies':
-            console.log(data);
+            // console.log(data);
             const { title, poster_path, overview } = data;
+            
             return (
                 <div className={styles.movieSearchResultsWrapper}>
                     <Image src={`http://image.tmdb.org/t/p/w92${poster_path}`} width={50} height={75} alt={title} />
@@ -69,26 +67,40 @@ function SearchBar({ listId, listType, handleDataChange }) {
     const [type, setType] = useState('all');
     const [query, setQuery] = useState('');
     const [searching, setSearching] = useState(false);
-    // const [apiToken, setToken] = useState(getToken());
 
     // Add https://developer.mozilla.org/en-US/docs/Web/API/AbortController
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         if (query) {
             setSearching(true);
             switch (listType) {
                 case "Music":
-                    fetch(`/api/spot/search?q=${query}&type=${type}`)
+                    fetch(`/api/spot/search?q=${query}&type=${type}`, { signal })
                         .then(res => res.json())
-                        .then(data => setResults(data));
+                        .then(data => setResults(data))
+                        .catch(err => {
+                            if(err.name === 'AbortError') console.log('Request aborted');
+                            else console.log('Error: ', err);
+                        });
                     break;
                 case "Movies":
-                    fetch(`https://api.themoviedb.org/3/search/movie?query=${query}&api_key=3770f4ac92cd31bf3489e56a9cc9c5d7`)
+                    fetch(`https://api.themoviedb.org/3/search/movie?query=${query}&api_key=3770f4ac92cd31bf3489e56a9cc9c5d7`, { signal })
                         .then(res => res.json())
-                        .then(data => setResults(data.results.slice(0, 6)));
+                        .then(data => setResults(data.results.slice(0, 6)))
+                        .catch(err => {
+                            if(err.name === 'AbortError') console.log('Request aborted');
+                            else console.log('Error: ', err);
+                        });
                     break;
             }
             setSearching(false);
         } else setResults([]);
+
+        return () => {
+            controller.abort();
+        };
     }, [query, type]);
 
     return (
@@ -125,6 +137,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                         handleDataChange={handleDataChange}
                     />;
                 })}
+                {searching && <p>Searching...</p>}
             </div>
         </div>
     );

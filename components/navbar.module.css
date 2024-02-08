@@ -51,10 +51,12 @@
     font-size: 1em;
     background-color: var(--background-color);
     flex-grow: 1;
+    width: 100%;
 }
 
 .description {
     flex-grow: 1;
+    font-size: 1em;
 }
 
 .createButtonForm {
