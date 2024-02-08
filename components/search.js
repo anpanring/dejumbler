@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
+
 import styles from "./search.module.css";
-import Image from "next/image";
 
 function SearchResult({ data, listId, listType, handleDataChange }) {
     switch (listType) {
@@ -19,7 +19,7 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
             
                 return (
                 <div className={styles.searchResultsWrapper}>
-                    <Image src={imageURLs[0]} height={50} width={50} alt={name} />
+                    <img src={imageURLs[0]} height={50} width={50} alt={name} />
                     <button className={styles.addButton} onClick={() => addToList(data, listId, name)}>+</button>
                     <div className={styles.searchResultText}>
                         <p className={styles.title}>{name}</p>
@@ -34,7 +34,7 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
             
             return (
                 <div className={styles.movieSearchResultsWrapper}>
-                    <Image src={`http://image.tmdb.org/t/p/w92${poster_path}`} width={50} height={75} alt={title} />
+                    <img src={`http://image.tmdb.org/t/p/w92${poster_path}`} width={50} height={75} alt={title} />
                     <button className={styles.addButton} onClick={() => addToList(data, listId, title)}>+</button>
                     <div className={styles.searchResultText}>
                         <p className={styles.title}>{title}</p>

@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import React, { useState } from "react";
 import styles from '../styles/ListPage.module.css';
 
@@ -51,7 +50,7 @@ function ListItem({ data, listId, handleDataChange }) {
 
     return (
         <div className={styles.listItem}>
-            <Image className={styles.listItemArt} src={data.artURL} width={50} height={50} alt={data.name} />
+            <img className={styles.listItemArt} src={data.artURL} width={50} height={50} alt={data.name} />
 
             <div className={styles.listItemText}>
                 <p className={styles.itemInfo}>{data.name}</p>

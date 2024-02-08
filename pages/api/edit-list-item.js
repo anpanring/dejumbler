@@ -6,7 +6,7 @@ export default async function handler(req, res) {
         const data = req.body;
         console.log(data);
 
-        List.findOneAndUpdate(
+        return List.findOneAndUpdate(
             { _id: data.listId, "items._id": data.itemId },
             { $set: { "items.$.notes": data.updatedNotes } })
             .then(() => res.status(200).json({ notes: data.updatedNotes }))
