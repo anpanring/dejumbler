@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
+
 import dbConnect from "../lib/mongodb";
+import List from "../models/List";
+
 import Layout from "../components/layout";
+import Modal from "../components/modal";
+
 import Link from "next/link";
 import Head from "next/head";
-import Image from "next/image";
-import List from "../models/List";
-import styles from "../styles/AllLists.module.css";
-import { useSession } from "next-auth/react";
+
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./api/auth/[...nextauth]";
+
 import { useDrag } from "react-dnd";
-import Modal from "../components/modal";
+
+import styles from "../styles/AllLists.module.css";
+
 
 function ListBox({ data, setListData, isDragging }) {
     const [showEditOptions, setShowEditOptions] = useState(false);

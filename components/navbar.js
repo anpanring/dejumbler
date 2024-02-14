@@ -29,7 +29,7 @@ export default function Navbar() {
             <Modal className="modal" show={showModal} toggleModal={toggleModal}>
                 <form className={styles.form} action="/api/new-list" method="POST">
                     <button className={styles.closeButton} onClick={toggleModal}>X</button>
-                    <div className={styles.formRow}>
+                    <div className={styles.formTypeRow}>
                         <label>Type: </label>
                         <select className={styles.type} id="types" list="types" name="type" required>
                             <option value="Any">Any</option>

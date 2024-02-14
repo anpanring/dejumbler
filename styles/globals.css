@@ -14,6 +14,16 @@ body {
     /* background-image: url('../public/images/noise.png'); */
 }
 
+html[data-theme='light'] {
+    --background-color: white;
+    --main-text-color: black;
+}
+
+html[data-theme='dark'] {
+    --background-color: black;
+    --main-text-color: white;
+}
+
 p {
     margin: 0;
 }

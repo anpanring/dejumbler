@@ -28,7 +28,7 @@ export default function Home() {
                     <meta name="google-site-verification" content="n5dZdc1QljJ4k39BSCkZAbhnJS5CjIdAo6OHVqD_c-Y" />
                 </Head>
                 <div className={styles.container}>
-                    <Image className={styles.textLogo} src={textLogo} alt="Dejumbler text logo" />
+                    <Image src={textLogo} className={styles.textLogo} alt="Dejumbler text logo" />
                     <h2 className={styles.description}>The Dejumbler is a platform that helps you use lists to manage the media you consume.</h2>
                     <Login />
                 </div>
