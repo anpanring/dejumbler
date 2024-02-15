@@ -29,6 +29,7 @@
     align-self: end;
     border: none;
     padding: 0.25em;
+    fill: var(--main-text-color);
 }
 
 .kebab:hover {

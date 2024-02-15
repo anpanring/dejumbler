@@ -1,9 +1,19 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+
+type ResponseData = {
+    message: string;
+}
+
+// schemas
 import { Album, Artist, Song } from "../../models/Types";
-import dbConnect from "../../lib/mongodb";
 import List from "../../models/List";
 
-export default async function handler(req, res) {
+import dbConnect from "../../lib/mongodb";
 
+export default async function handler(
+    req: NextApiRequest,
+    res: NextApiResponse<ResponseData>
+) {
     const {
         listId,
         artists,
@@ -13,7 +23,10 @@ export default async function handler(req, res) {
         album
     } = req.body;
 
+    // process artists
     const artistNames = artists ? artists.map((artist) => artist.name) : [];
+
+    // process images
     const imageURLs = images ? images.map((image) => image.url) : album.images.map((image) => image.url);
 
     let newItem;
