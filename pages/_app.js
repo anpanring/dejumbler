@@ -13,14 +13,14 @@ export default function App({
         <SessionProvider session={session}>
             <Component {...pageProps} />
             <Analytics />
-            <Script id={'set-theme'}>
+            {session && <Script id={'set-theme'}>
                 {`
                     const theme = localStorage.getItem('theme');
                     if(theme) {
                         document.documentElement.setAttribute('data-theme', theme);
                     }
                 `}
-            </Script>
+            </Script>}
         </SessionProvider>
     )
 }
