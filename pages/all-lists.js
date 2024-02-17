@@ -5,6 +5,7 @@ import List from "../models/List";
 
 import Layout from "../components/layout";
 import Modal from "../components/modal";
+import Snackbar from "../components/snackbar";
 
 import Link from "next/link";
 import Head from "next/head";
@@ -15,10 +16,13 @@ import { authOptions } from "./api/auth/[...nextauth]";
 import { useDrag } from "react-dnd";
 
 import styles from "../styles/AllLists.module.css";
+import { set } from "mongoose";
 
 
-function ListBox({ data, setListData, isDragging }) {
+function ListBox({ data, setListData, isDragging, listModified, setListModified}) {
     const [showEditOptions, setShowEditOptions] = useState(false);
+    const [confirmDelete, setConfirmDelete] = useState(false);
+
     // const [{ opacity }, dragRef] = useDrag(
     //     () => ({
     //         type: "ListBox",
@@ -51,23 +55,40 @@ function ListBox({ data, setListData, isDragging }) {
             <svg width="15px" height="15px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#000000" className={styles.kebab} onClick={() => setShowEditOptions(!showEditOptions)}>
                 <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
             </svg>
-            <Modal show={showEditOptions} toggleModal={() => setShowEditOptions(!showEditOptions)}>
+            {showEditOptions && !confirmDelete && <Modal toggleModal={() => setShowEditOptions(!showEditOptions)}>
                 <div className={styles.editContainer}>
                     <a href="#">Edit list</a>
-                    <a href="#" onClick={(e) => handleDelete(e, data._id)} className={styles.delete}>
+
+                    <a href="#" onClick={() => setConfirmDelete(!confirmDelete)} className={styles.delete}>
                         Delete list
                     </a>
                 </div>
-            </Modal>
+            </Modal>}
+            {confirmDelete && <Modal toggleModal={() => {
+                setConfirmDelete(false);
+                setShowEditOptions(false);
+            }}>
+                <div className={styles.editContainer}>
+                    <p>Are you sure you want to delete <strong>{data.name}</strong>?</p>
+                    <a href="#" onClick={(e) => {
+                        handleDelete(e, data._id);
+                        setListModified(true);
+                    }
+                    } className={styles.delete}>
+                        Delete list
+                    </a>
+                </div>
+            </Modal>}
+            {/* {listModified && <Snackbar message={`modified ${data.name}`} toggleShow={setListModified} />} */}
         </div>
     );
 }
 
-function ListContainer({ lists, setListData }) {
+function ListContainer({ lists, setListData, listModified, setListModified }) {
     return (
         <div className={styles.allListsContainer}>
             {lists.map((list) => {
-                return <ListBox data={list} setListData={setListData} key={list._id} />;
+                return <ListBox data={list} setListData={setListData} key={list._id} listModified={listModified} setListModified={setListModified}/>;
             })}
         </div>
     );
@@ -78,9 +99,9 @@ export default function AllLists({ lists }) {
     const [listData, setListData] = useState(parsedData);
     const [type, setType] = useState('Any');
     const [displayType, setDisplayType] = useState('All');
+    const [listModified, setListModified] = useState(false);
 
     useEffect(() => {
-        console.log('hello');
         async function populateList() {
             const res = await fetch(`/api/get-all-lists?type=${type}`);
             const data = await res.json();
@@ -122,7 +143,8 @@ export default function AllLists({ lists }) {
                     </select>
                 </div>
             </div>
-            <ListContainer lists={listData} setListData={setListData} />
+            <ListContainer lists={listData} setListData={setListData} listModified={listModified} setListModified={setListModified}/>
+            {listModified && <Snackbar message={`Deleted list`} toggleShow={setListModified} />}
         </Layout>
     );
 }

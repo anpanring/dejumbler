@@ -29,8 +29,9 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
                 </div>
             );
         case 'Movies':
-            // console.log(data);
+            console.log(data);
             const { title, poster_path, overview } = data;
+            data.type = 'movie';
             
             return (
                 <div className={styles.movieSearchResultsWrapper}>

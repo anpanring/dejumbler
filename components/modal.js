@@ -19,12 +19,12 @@ export default function Modal({ show, toggleModal, children }) {
         });
     }, [toggleModal]);
 
-    return show ? (
+    return (
         <div ref={comp}>
             <div className={styles.overlay} onClick={toggleModal}></div>
             <div className={styles.modalContainer} ref={modal}>
                 {children}
             </div>
         </div>
-    ) : <></>;
+    );
 }
