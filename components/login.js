@@ -49,16 +49,7 @@ export default function Login({ csrfToken }) {
         }
     }
 
-    if (data) {
-        const userData = data.user;
-        return (
-            <div className={styles.loggedInWrapper}>
-                <p>Signed in as: {userData.name}</p>
-                <a href="#" onClick={() => signOut()} className={styles.signoutButton}>Sign out</a>
-            </div >
-        )
-    }
-    return (
+    return !data && (
         <div className={styles.loginWrapper}>
             {!showForm && <div className={styles.loginOptions}>
                 <a href="#" onClick={toggleModal}>Sign in</a>
