@@ -16,12 +16,17 @@ import { authOptions } from "./api/auth/[...nextauth]";
 import { useDrag } from "react-dnd";
 
 import styles from "../styles/AllLists.module.css";
+import formStyles from '../components/navbar.module.css';
 import { set } from "mongoose";
 
 
-function ListBox({ data, setListData, isDragging, listModified, setListModified}) {
+function ListBox({ data, setListData, isDragging, listModified, setListModified }) {
     const [showEditOptions, setShowEditOptions] = useState(false);
+    const [editMode, setEditMode] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
+    
+    const [name, setName] = useState(data.name);
+    const [description, setDescription] = useState(data.description);
 
     // const [{ opacity }, dragRef] = useDrag(
     //     () => ({
@@ -47,39 +52,88 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified}
         } catch (error) { alert('Failed to delete list.'); }
     }
 
+    function close() {
+        setConfirmDelete(false);
+        setShowEditOptions(false);
+        setEditMode(false);
+    }
+
+    async function handleListUpdate(e) {
+        e.preventDefault();
+
+        const itemInfo = {
+            listId: data._id,
+            updatedName: e.target.name.value,
+            updatedDescription: e.target.description.value
+        }
+
+        const fetchOptions = {
+            method: 'POST',
+            headers: { "Content-Type": 'application/json' },
+            body: JSON.stringify(itemInfo),
+        };
+
+        fetch('/api/edit-list', fetchOptions)
+            .then(response => response.json())
+            .then((data) => {
+                close();
+                setName(data.name);
+                setDescription(data.description);
+            });
+    }
 
     return (
         <div key={data._id} className={styles.listInfo}>
-            <p><Link href={`/list/${data._id}`} >{data.name}</Link> ({data.items.length}) - {data.type}</p>
-            {data.description && <p className={styles.description}>{data.description}</p>}
+            <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p>
+            {data.description && <p className={styles.description}>{description}</p>}
             <svg width="15px" height="15px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#000000" className={styles.kebab} onClick={() => setShowEditOptions(!showEditOptions)}>
                 <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
             </svg>
-            {showEditOptions && !confirmDelete && <Modal toggleModal={() => setShowEditOptions(!showEditOptions)}>
-                <div className={styles.editContainer}>
-                    <a href="#">Edit list</a>
+            {showEditOptions && !confirmDelete && !editMode &&
+                <Modal toggleModal={() => setShowEditOptions(!showEditOptions)}>
+                    <div className={styles.editContainer}>
+                        <button onClick={() => setEditMode(true)}>
+                            Edit list
+                        </button>
 
-                    <a href="#" onClick={() => setConfirmDelete(!confirmDelete)} className={styles.delete}>
-                        Delete list
-                    </a>
-                </div>
-            </Modal>}
-            {confirmDelete && <Modal toggleModal={() => {
-                setConfirmDelete(false);
-                setShowEditOptions(false);
-            }}>
-                <div className={styles.editContainer}>
-                    <p>Are you sure you want to delete <strong>{data.name}</strong>?</p>
-                    <a href="#" onClick={(e) => {
-                        handleDelete(e, data._id);
-                        setListModified(true);
-                    }
-                    } className={styles.delete}>
-                        Delete list
-                    </a>
-                </div>
-            </Modal>}
-            {/* {listModified && <Snackbar message={`modified ${data.name}`} toggleShow={setListModified} />} */}
+                        <button onClick={() => setConfirmDelete(true)} className={styles.delete}>
+                            Delete list
+                        </button>
+                    </div>
+                </Modal>}
+            {confirmDelete &&
+                <Modal toggleModal={close}>
+                    <div className={styles.editContainer}>
+                        <p>Are you sure you want to delete <u><strong>{name}</strong></u>?</p>
+                        <button onClick={(e) => {
+                            close();
+                            handleDelete(e, data._id);
+                            setListModified(true);
+                        }
+                        } className={styles.delete}>
+                            Delete list
+                        </button>
+                        <button onClick={close}>
+                            Cancel
+                        </button>
+                    </div>
+                </Modal>}
+            {editMode &&
+                <Modal toggleModal={close}>
+                    <form className={formStyles.form} onSubmit={handleListUpdate} method="POST">
+                        <div className={formStyles.formRow}>
+                            <label>Name: </label>
+                            <input type="text" name="name" defaultValue={name} required />
+                        </div>
+                        <div className={formStyles.formRow}>
+                            <label>Description: </label>
+                            <textarea type="text" name="description" defaultValue={description}></textarea>
+                        </div>
+                        <div className={formStyles.formRow}>
+                            <input type="submit" value="Save edits" />
+                        </div>
+                    </form>
+                </Modal>}
         </div>
     );
 }
@@ -88,7 +142,7 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
     return (
         <div className={styles.allListsContainer}>
             {lists.map((list) => {
-                return <ListBox data={list} setListData={setListData} key={list._id} listModified={listModified} setListModified={setListModified}/>;
+                return <ListBox data={list} setListData={setListData} key={list._id} listModified={listModified} setListModified={setListModified} />;
             })}
         </div>
     );
@@ -143,7 +197,7 @@ export default function AllLists({ lists }) {
                     </select>
                 </div>
             </div>
-            <ListContainer lists={listData} setListData={setListData} listModified={listModified} setListModified={setListModified}/>
+            <ListContainer lists={listData} setListData={setListData} listModified={listModified} setListModified={setListModified} />
             {listModified && <Snackbar message={`Deleted list`} toggleShow={setListModified} />}
         </Layout>
     );
