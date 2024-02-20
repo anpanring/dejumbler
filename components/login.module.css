@@ -19,7 +19,7 @@
     border: solid green 1px;
 }
 
-.signoutButton {
+.signoutButton, .error {
     color: red;
 }
 

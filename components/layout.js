@@ -6,12 +6,16 @@ import Loading from './loading';
 import Login from './login';
 import Navbar from './navbar';
 
-import { changeMode } from '../lib/toggleMode';
-
 import styles from './layout.module.css';
 
 export const siteTitle = 'Dejumbler';
 export default function Layout({ children }) {
+    function changeMode() {
+        const color = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', color);
+        localStorage.setItem('theme', color);
+    }
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.flexContainer}>

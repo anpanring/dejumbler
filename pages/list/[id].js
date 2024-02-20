@@ -1,25 +1,32 @@
 import { useState } from 'react';
-import dbConnect from '../../lib/mongodb';
+
 import Head from 'next/head';
+
 import Layout from "../../components/layout";
-import List from '../../models/List';
 import ListItem from '../../components/list-item';
 import SearchBar from '../../components/search';
 import Snackbar from '../../components/snackbar';
+
+import dbConnect from '../../lib/mongodb';
+import List from '../../models/List';
+
 import styles from '../../styles/ListPage.module.css';
+
+import { useSession } from 'next-auth/react';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../api/auth/[...nextauth]';
 
 export default function ListPage({ listData, id }) {
+    const session = useSession();
+
     const [data, setData] = useState(JSON.parse(listData));
     const [songAdded, setSongAdded] = useState(false);
     const [changeType, setChangeType] = useState('');
 
     function handleDataChange(changedData, changeType) {
-        console.log(changeType);
-        setData(changedData);
-        setSongAdded(true);
-        setChangeType(changeType);
+        setData(changedData);               // all list items
+        setSongAdded(true);                 // controls showing of snackbar
+        setChangeType(changeType);          // when adding/removing items
     }
 
     return (
@@ -55,6 +62,7 @@ export default function ListPage({ listData, id }) {
 export async function getServerSideProps(context) {
     const session = await getServerSession(context.req, context.res, authOptions);
 
+    // redirect anyone not logged in
     if (!session) {
         return {
             redirect: {
@@ -64,8 +72,20 @@ export async function getServerSideProps(context) {
         }
     }
 
+    // fetch list
     await dbConnect();
     const data = await List.findById(context.params.id);
+
+    // verify list belongs to user
+    if (session.user.email !== data.user.toString()) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        }
+    }
+
     const listData = JSON.stringify(data);
     return { props: { listData, id: context.params.id } };
 }

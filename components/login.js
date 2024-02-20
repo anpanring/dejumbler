@@ -10,6 +10,7 @@ export default function Login({ csrfToken }) {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState(false);
 
     const [showForm, setShowForm] = useState(false);
 
@@ -31,11 +32,21 @@ export default function Login({ csrfToken }) {
     function toggleModal() {
         console.log(showForm);
         setShowForm(!showForm);
+        setError(false);
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        signIn("credentials", { username: username, password: password });
+        const { error, ok } = await signIn("credentials", { redirect: false, username: username, password: password });
+        if (error) {
+            setError(true);
+            loginRef.current.reset();
+        } else if (ok) {
+            const theme = localStorage.getItem('theme');
+            if (theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
+        }
     }
 
     if (data) {
@@ -56,17 +67,22 @@ export default function Login({ csrfToken }) {
             </div>}
             {showForm && <a href="#" onClick={toggleModal}>← Back</a>}
             {showForm && <div className={styles.subLogin}>
-                {/* <a href="#" onClick={toggleModal} className={styles.button}>Sign in</a> */}
                 <form className={styles.form} ref={loginRef} onSubmit={handleSubmit}>
-                    {/* <button className={styles.closeButton} onClick={toggleModal}>X</button> */}
                     <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
                     <div className={styles.formSub}>
-                        <input className={styles.box} name="username" type="text" placeholder="Username" required onChange={(e) => setUsername(e.target.value)} />
+                        <input className={styles.box} name="username" type="text" placeholder="Username" required onChange={(e) => {
+                            setUsername(e.target.value)
+                            setError(false);
+                        }} />
                     </div>
                     <div className={styles.formSub}>
-                        <input className={styles.box} name="password" type="password" placeholder="Password" required onChange={(e) => setPassword(e.target.value)} />
+                        <input className={styles.box} name="password" type="password" placeholder="Password" required onChange={(e) => {
+                            setPassword(e.target.value);
+                            setError(false);
+                        }} />
                     </div>
                     <button className={styles.box} type="submit">Sign in</button>
+                    {error && <p className={styles.error}>Invalid username or password</p>}
                 </form>
             </div>}
             {/* <p>OR</p> */}

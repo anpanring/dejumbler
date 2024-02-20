@@ -64,13 +64,6 @@
     font-size: 1em;
 }
 
-.createButtonForm {
-    height: 2em;
-    font-size: 1em;
-    margin: auto;
-    margin-top: 1em;
-}
-
 .type {
     height: auto;
     font-size: 1em;
@@ -87,4 +80,11 @@
 .closeButton:hover {
     background-color: red;
     color: var(--background-color);
+}
+
+.submitButton {
+    font-size: 1em;
+    width: 90%;
+    height: 2em;
+    margin: auto;
 }

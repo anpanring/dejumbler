@@ -29,6 +29,7 @@
     align-self: end;
     border: none;
     padding: 0.25em;
+    fill: var(--main-text-color);
 }
 
 .kebab:hover {
@@ -39,6 +40,16 @@
 .editContainer {
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    text-align: center;
+}
+
+.editButton { 
+    font-size: 1em;
+    width: 90%;
+    height: 2em;
+    margin: auto;
 }
 
 .delete {
@@ -53,4 +64,10 @@
 
 .description {
     font-family: cursive;
+}
+
+.formInput {
+    font-size: 1em;
+    font-family: 'Epilogue', sans-serif;
+    height: 1.5em;
 }

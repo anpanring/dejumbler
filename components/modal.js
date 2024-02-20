@@ -5,22 +5,26 @@ import styles from "../styles/CreateList.module.css";
 
 export default function Modal({ show, toggleModal, children }) {
     const comp = useRef();
-    const boxRef = useRef();
+    const modal = useRef();
+
+    gsap.config({
+        nullTargetWarn: false,
+    });
 
     useGSAP(() => {
-        gsap.from(boxRef.current, {
+        gsap.from(modal.current, {
             width: "-=20",
             height: "-=20",
             duration: 0.1,
         });
-    }, [toggleModal])
+    }, [toggleModal]);
 
-    return show ? (
+    return (
         <div ref={comp}>
             <div className={styles.overlay} onClick={toggleModal}></div>
-            <div className={styles.modalContainer} ref={boxRef}>
+            <div className={styles.modalContainer} ref={modal}>
                 {children}
             </div>
         </div>
-    ) : <></>;
+    );
 }

@@ -26,7 +26,7 @@ export default function Navbar() {
                 ref={buttonRef}>
                 +
             </button>}
-            <Modal className="modal" show={showModal} toggleModal={toggleModal}>
+            {showModal && <Modal className="modal" toggleModal={toggleModal}>
                 <form className={styles.form} action="/api/new-list" method="POST">
                     <button className={styles.closeButton} onClick={toggleModal}>X</button>
                     <div className={styles.formTypeRow}>
@@ -47,10 +47,10 @@ export default function Navbar() {
                         <textarea className={styles.description} type="text" name="description"></textarea>
                     </div>
                     <div className={styles.formRow}>
-                        <input className={styles.createButtonForm} type="submit" value="Create List" />
+                        <input className={styles.submitButton} type="submit" value="Create List" />
                     </div>
                 </form>
-            </Modal>
+            </Modal>}
         </div>
     )
 }
