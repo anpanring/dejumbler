@@ -7,8 +7,8 @@
 
 .navbar {
     display: flex;
-    gap: 5px;
-    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5em;
 }
 
 .createButton {
@@ -88,12 +88,6 @@
     width: 90%;
     height: 2em;
     margin: auto;
-}
-
-.profileSettings {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
 }
 
 .smallLogo {

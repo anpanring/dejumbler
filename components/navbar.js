@@ -16,32 +16,30 @@ export default function Navbar({ changeMode, showProfile, setShowProfile }) {
     return (
         <div className={styles.navbarContainer} ref={containerRef}>
             <div className={styles.navbar}>
-                <div className={styles.profileSettings}>
-                    <svg onClick={changeMode} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.5 283.5" className={styles.smallLogo}>
-                        <path
-                            d="M0 0v283.5h283.5V0H0Zm221.55 108.55h-16v-40h16v40Z"
-                            style={{
-                                strokeWidth: 0,
-                            }}
-                        />
-                    </svg>
-                    <Link className={styles.link} href="/">
-                        <span className={`material-symbols-outlined ${styles.icon}`}>
-                            home
-                        </span>
-                    </Link>
-                    <Link className={styles.link} href="/all-lists">
-                        <span className={`material-symbols-outlined ${styles.icon}`}>
-                            format_list_bulleted
-                        </span>
-                    </Link>
-                    <span onClick={() => setShowProfile(!showProfile)} className={`material-symbols-outlined ${styles.icon}`}>
-                        person
-                    </span>
+                <svg onClick={changeMode} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.5 283.5" className={styles.smallLogo}>
+                    <path
+                        d="M0 0v283.5h283.5V0H0Zm221.55 108.55h-16v-40h16v40Z"
+                        style={{
+                            strokeWidth: 0,
+                        }}
+                    />
+                </svg>
+                <Link className={styles.link} href="/">
                     <span className={`material-symbols-outlined ${styles.icon}`}>
-                        settings
+                        home
                     </span>
-                </div>
+                </Link>
+                <Link className={styles.link} href="/all-lists">
+                    <span className={`material-symbols-outlined ${styles.icon}`}>
+                        format_list_bulleted
+                    </span>
+                </Link>
+                <span onClick={() => setShowProfile(!showProfile)} className={`material-symbols-outlined ${styles.icon}`}>
+                    person
+                </span>
+                <span className={`material-symbols-outlined ${styles.icon}`}>
+                    settings
+                </span>
             </div>
             {!showModal &&
                 <span
