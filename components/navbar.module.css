@@ -2,7 +2,8 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    height: 3.5em;
+    margin-top: 1em;
+    margin-bottom: 1em;
 }
 
 .navbar {
@@ -122,18 +123,14 @@
         'FILL' 0,
         'wght' 200,
         'GRAD' 0,
-        'opsz' 24;
+        'opsz' 40;
+    font-size: 40px;
     border: solid 1px var(--main-text-color);
 }
 
 .icon:hover {
-    cursor: pointer;
-    font-variation-settings:
-        'FILL' 0,
-        'wght' 200,
-        'GRAD' 0,
-        'opsz' 24;
     background-color: var(--accent-color);
+    color: var(--background-color);
 }
 
 .link {
