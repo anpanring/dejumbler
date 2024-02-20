@@ -47,7 +47,7 @@ export default function Navbar() {
                         <textarea className={styles.description} type="text" name="description"></textarea>
                     </div>
                     <div className={styles.formRow}>
-                        <input className={styles.createButtonForm} type="submit" value="Create List" />
+                        <input className={styles.submitButton} type="submit" value="Create List" />
                     </div>
                 </form>
             </Modal>}

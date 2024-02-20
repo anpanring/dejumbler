@@ -67,12 +67,21 @@ input[type="submit"]:hover {
 
 input,
 select,
-textarea,
 button {
     background-color: var(--background-color);
     border: solid 1px var(--main-text-color);
     border-radius: 0;
     color: var(--main-text-color);
+}
+
+textarea {
+    background-color: var(--background-color);
+    border: solid 1px var(--main-text-color);
+    border-radius: 0;
+    color: var(--main-text-color);
+    font-size: 1em;
+    font-family: 'Epilogue', sans-serif;
+    height: 4em;
 }
 
 button:hover {

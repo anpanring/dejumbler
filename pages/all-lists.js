@@ -92,11 +92,11 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified 
             {showEditOptions && !confirmDelete && !editMode &&
                 <Modal toggleModal={() => setShowEditOptions(!showEditOptions)}>
                     <div className={styles.editContainer}>
-                        <button onClick={() => setEditMode(true)}>
+                        <button className={styles.editButton} onClick={() => setEditMode(true)}>
                             Edit list
                         </button>
 
-                        <button onClick={() => setConfirmDelete(true)} className={styles.delete}>
+                        <button className={`${styles.editButton} ${styles.delete}`} onClick={() => setConfirmDelete(true)}>
                             Delete list
                         </button>
                     </div>
@@ -109,11 +109,11 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified 
                             close();
                             handleDelete(e, data._id);
                             setListModified(true);
-                        }
-                        } className={styles.delete}>
+                        }} className={`${styles.editButton} ${styles.delete}`}>
                             Delete list
                         </button>
-                        <button onClick={close}>
+
+                        <button className={styles.editButton} onClick={close}>
                             Cancel
                         </button>
                     </div>
@@ -123,14 +123,14 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified 
                     <form className={formStyles.form} onSubmit={handleListUpdate} method="POST">
                         <div className={formStyles.formRow}>
                             <label>Name: </label>
-                            <input type="text" name="name" defaultValue={name} required />
+                            <input className={styles.formInput} type="text" name="name" defaultValue={name} required />
                         </div>
                         <div className={formStyles.formRow}>
                             <label>Description: </label>
                             <textarea type="text" name="description" defaultValue={description}></textarea>
                         </div>
                         <div className={formStyles.formRow}>
-                            <input type="submit" value="Save edits" />
+                            <input className={styles.editButton} type="submit" value="Save edits" />
                         </div>
                     </form>
                 </Modal>}
