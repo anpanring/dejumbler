@@ -91,7 +91,7 @@ button:hover {
     color: white;
 }
 
-.material-symbols-outlined {
+span.material-symbols-outlined {
     font-family: 'Material Symbols Outlined';
     font-weight: normal;
     font-style: normal;
