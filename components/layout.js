@@ -32,10 +32,6 @@ export default function Layout({ children }) {
                     <meta name="twitter:card" content="summary_large_image" />
                     <meta name="google-site-verification" content="n5dZdc1QljJ4k39BSCkZAbhnJS5CjIdAo6OHVqD_c-Y" />
                 </Head>
-                {/* <div className={styles.statusBar}>
-                    
-                    {/* <Login /> */}
-                {/* </div> */}
                 {showProfile && data &&
                     <Modal toggleModal={() => setShowProfile(!showProfile)}>
                         <div className={styles.loggedInWrapper}>

@@ -123,7 +123,6 @@
         'wght' 200,
         'GRAD' 0,
         'opsz' 24;
-    font-size: 40px;
     border: solid 1px var(--main-text-color);
 }
 
@@ -140,4 +139,5 @@
 .link {
     color: var(--main-text-color);
     height: 42px;
+    width: 42px;
 }
