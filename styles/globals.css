@@ -11,6 +11,8 @@ body {
     height: 98%;
     background-color: var(--background-color);
     color: var(--main-text-color);
+    display: flex;
+    flex-direction: column;
     /* background-image: url('../public/images/noise.png'); */
 }
 
@@ -82,9 +84,29 @@ textarea {
     font-size: 1em;
     font-family: 'Epilogue', sans-serif;
     height: 4em;
+    padding-top: 0.35em;
+    padding-bottom: 0.35em;
 }
 
 button:hover {
     background-color: var(--accent-color);
     color: white;
+}
+
+span.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 40px;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+}
+
+footer {
+    height: 2.5rem;
 }

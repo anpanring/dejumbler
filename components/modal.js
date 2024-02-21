@@ -1,9 +1,9 @@
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import styles from "../styles/CreateList.module.css";
 
-export default function Modal({ show, toggleModal, children }) {
+export default function Modal({ toggleModal, children }) {
     const comp = useRef();
     const modal = useRef();
 
@@ -18,6 +18,18 @@ export default function Modal({ show, toggleModal, children }) {
             duration: 0.1,
         });
     }, [toggleModal]);
+
+    useEffect(() => {
+        document.addEventListener("keydown", (e) => {
+            if(e.key === "Escape") toggleModal();
+        });
+
+        return () => {
+            document.removeEventListener("keydown", (e) => {
+                if(e.key === "Escape") toggleModal();
+            });
+        }
+    })
 
     return (
         <div ref={comp}>

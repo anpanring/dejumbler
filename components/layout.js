@@ -1,15 +1,20 @@
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 
 import Head from 'next/head';
 
 import Loading from './loading';
 import Login from './login';
 import Navbar from './navbar';
+import Modal from './modal';
+
+import { useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 
 import styles from './layout.module.css';
 
 export const siteTitle = 'Dejumbler';
 export default function Layout({ children }) {
+
     function changeMode() {
         const color = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', color);
@@ -25,23 +30,15 @@ export default function Layout({ children }) {
                     <meta name="twitter:card" content="summary_large_image" />
                     <meta name="google-site-verification" content="n5dZdc1QljJ4k39BSCkZAbhnJS5CjIdAo6OHVqD_c-Y" />
                 </Head>
-                <div className={styles.statusBar}>
-                    <svg onClick={changeMode} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.5 283.5" className={styles.smallLogo}>
-                        <path
-                            d="M0 0v283.5h283.5V0H0Zm221.55 108.55h-16v-40h16v40Z"
-                            style={{
-                                strokeWidth: 0,
-                            }}
-                        />
-                    </svg>
-                    <Login />
-                </div>
-                <Navbar />
+
+                <Navbar changeMode={changeMode} />
                 <Suspense fallback={<Loading />}>
                     {children}
                 </Suspense>
             </div>
-            {/* <Footer className={styles.footer} /> */}
+            {/* <footer className={styles.footer}>
+                footer
+            </footer> */}
         </div>
     );
 }

@@ -5,7 +5,7 @@ type ResponseData = {
 }
 
 // schemas
-import { Album, Artist, Movie, Song } from "../../models/Types";
+import { Album, Artist, Movie, Song, Book } from "../../models/Types";
 import List from "../../models/List";
 
 import dbConnect from "../../lib/mongodb";
@@ -27,8 +27,23 @@ export default async function handler(
             name: title,
             artURL: `http://image.tmdb.org/t/p/w92${poster_path}`
         });
-    } else {
+    } else if (req.body.type === 'book') {
+        const { 
+            title: bookTitle, 
+            author_name, 
+            first_publish_year, 
+            cover_edition_key, 
+            subject 
+        } = req.body;
 
+        newItem = new Book({
+            name: bookTitle,
+            author: author_name.join(', '),
+            artURL: `https://covers.openlibrary.org/b/olid/${cover_edition_key}-M.jpg`,
+            year: first_publish_year,
+            genres: subject.slice(0, 6)
+        });
+    } else {
         const {
             artists,
             images,

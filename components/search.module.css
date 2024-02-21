@@ -39,13 +39,13 @@
 }
 
 .button {
-    border: solid green 1px;
+    border: solid var(--accent-color) 1px;
     background-color: white;
     width: auto;
 }
 
 .button:hover {
-    background-color: green;
+    background-color: var(--accent-color);
     color: white;
 }
 
@@ -80,12 +80,12 @@
     top: 3em;
     left: 3em;
     background: white;
-    color: green;
-    border: 1px solid green;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
     text-align: center;
 }
 
 .addButton:hover {
-    background: green;
+    background: var(--accent-color);
     color: white;
 }

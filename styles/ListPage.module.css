@@ -1,5 +1,4 @@
 .button {
-    border: solid 1px var(--accent-color);
     background-color: var(--background-color);
     color: var(--main-text-color);
     width: auto;

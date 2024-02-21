@@ -16,8 +16,8 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
             const imageURLs = images
                 ? images.map((image) => image.url)
                 : album.images.map((image) => image.url);
-            
-                return (
+
+            return (
                 <div className={styles.searchResultsWrapper}>
                     <img src={imageURLs[0]} height={50} width={50} alt={name} />
                     <button className={styles.addButton} onClick={() => addToList(data, listId, name)}>+</button>
@@ -32,7 +32,7 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
             console.log(data);
             const { title, poster_path, overview } = data;
             data.type = 'movie';
-            
+
             return (
                 <div className={styles.movieSearchResultsWrapper}>
                     <img src={`http://image.tmdb.org/t/p/w92${poster_path}`} width={50} height={75} alt={title} />
@@ -40,6 +40,21 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
                     <div className={styles.searchResultText}>
                         <p className={styles.title}>{title}</p>
                         <p className={styles.type}>{overview.slice(0, 120)}...</p>
+                    </div>
+                </div>
+            );
+        case 'Books':
+            const { title: bookTitle, author_name, first_publish_year, cover_edition_key, subject } = data;
+            data.type = 'book';
+
+            return (
+                <div className={styles.movieSearchResultsWrapper}>
+                    <img src={`https://covers.openlibrary.org/b/olid/${cover_edition_key}-M.jpg`} width={50} height={75} alt={bookTitle} />
+                    <button className={styles.addButton} onClick={() => addToList(data, listId, bookTitle)}>+</button>
+                    <div className={styles.searchResultText}>
+                        <p className={styles.title}>{bookTitle}</p>
+                        {author_name && <p className={styles.artist}>{author_name.join(', ')} - {first_publish_year}</p>}
+                        {subject && <p className={styles.type}>{subject.slice(0, 6).join(', ')}</p>}
                     </div>
                 </div>
             );
@@ -82,7 +97,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                         .then(res => res.json())
                         .then(data => setResults(data))
                         .catch(err => {
-                            if(err.name === 'AbortError') console.log('Request aborted');
+                            if (err.name === 'AbortError') console.log('Request aborted');
                             else console.log('Error: ', err);
                         });
                     break;
@@ -91,7 +106,16 @@ function SearchBar({ listId, listType, handleDataChange }) {
                         .then(res => res.json())
                         .then(data => setResults(data.results.slice(0, 6)))
                         .catch(err => {
-                            if(err.name === 'AbortError') console.log('Request aborted');
+                            if (err.name === 'AbortError') console.log('Request aborted');
+                            else console.log('Error: ', err);
+                        });
+                    break;
+                case "Books":
+                    fetch(`https://openlibrary.org/search.json?q=${query}&limit=5`, { signal })
+                        .then(res => res.json())
+                        .then(data => setResults(data.docs))
+                        .catch(err => {
+                            if (err.name === 'AbortError') console.log('Request aborted');
                             else console.log('Error: ', err);
                         });
                     break;
@@ -115,7 +139,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                     placeholder={`Search ${listType}...`}
                     required
                 />
-                <select
+                {listType !== 'Movies' && listType !== 'Books' && <select
                     onChange={(e) => setType(e.target.value)}
                     className={styles.searchTypeSelect}
                     list="types"
@@ -126,7 +150,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                     <option value="track">Track</option>
                     <option value="artist">Artist</option>
                     <option value="album">Album</option>
-                </select>
+                </select>}
             </form>
             <div className={styles.resultsWrapper}>
                 {results.map((result) => {
@@ -138,6 +162,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                         handleDataChange={handleDataChange}
                     />;
                 })}
+                {listType === 'Movies' && <p>*results from <a href="https://www.themoviedb.org/?language=en-US">The Movie Database (TMDB)</a></p>}
                 {searching && <p>Searching...</p>}
             </div>
         </div>

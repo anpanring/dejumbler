@@ -10,47 +10,31 @@
     flex-direction: column;
     justify-content: space-between;
     padding: 10px;
+    padding-top: 4rem;
+    flex: 1;
 }
 
 .flexContainer {
     display: flex;
     flex-direction: column;
+    flex: 1;
 }
 
-.statusBar {
+.loggedInWrapper {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
 }
 
-.smallLogo {
-    width: 50px;
-    height: 50px;
-    fill: var(--main-text-color);
-    cursor: pointer;
+.signoutButton {
+    font-size: 1em;
+    width: 90%;
+    height: 2em;
+    margin: auto;
 }
 
-/* @media (max-width: 600px) {
-    .smallLogo {
-        display: block;
-    }
-
-    .textLogo {
-        display: none;
-    }
-}
-
-@media (min-width: 600px) {
-    .smallLogo {
-        display: none;
-    }
-
-    .textLogo {
-        display: block;
-    }
-} */
-
-.footer {
-    margin-top: auto;
-    color: red;
+.signoutButton:hover {
+    background-color: red;
+    color: var(--main-text-color);
 }
