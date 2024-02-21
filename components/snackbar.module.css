@@ -1,6 +1,6 @@
 .snack {
     position: fixed;
-    border: 1px solid green;
+    border: 1px solid var(--accent-color);
     padding: 1em 1em 1em;
     top: 92%;
     left: 50%;

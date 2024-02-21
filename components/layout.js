@@ -14,8 +14,6 @@ import styles from './layout.module.css';
 
 export const siteTitle = 'Dejumbler';
 export default function Layout({ children }) {
-    const { data, status } = useSession();
-    const [showProfile, setShowProfile] = useState(false);
 
     function changeMode() {
         const color = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -32,14 +30,8 @@ export default function Layout({ children }) {
                     <meta name="twitter:card" content="summary_large_image" />
                     <meta name="google-site-verification" content="n5dZdc1QljJ4k39BSCkZAbhnJS5CjIdAo6OHVqD_c-Y" />
                 </Head>
-                {showProfile && data &&
-                    <Modal toggleModal={() => setShowProfile(!showProfile)}>
-                        <div className={styles.loggedInWrapper}>
-                            <p>Signed in as: <u><strong>{data.user.name}</strong></u></p>
-                            <button href="#" onClick={() => signOut()} className={styles.signoutButton}>Sign out</button>
-                        </div>
-                    </Modal>}
-                <Navbar changeMode={changeMode} showProfile={showProfile} setShowProfile={setShowProfile}/>
+                
+                <Navbar changeMode={changeMode} />
                 <Suspense fallback={<Loading />}>
                     {children}
                 </Suspense>
