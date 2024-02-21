@@ -37,7 +37,7 @@ export default function Login({ csrfToken }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { error, ok } = await signIn("credentials", { redirect: false, username: username, password: password });
+        const { error, ok } = await signIn("credentials", { callbackUrl: '/all-lists', username: username, password: password });
         if (error) {
             setError(true);
             loginRef.current.reset();
@@ -52,11 +52,11 @@ export default function Login({ csrfToken }) {
     return !data && (
         <div className={styles.loginWrapper}>
             {!showForm && <div className={styles.loginOptions}>
-                <a href="#" onClick={toggleModal}>Sign in</a>
+                <button className={styles.button} onClick={toggleModal}>Sign in</button>
                 <p>or</p>
-                <a href="#" onClick={() => signIn("credentials", { username: "user", password: "password" })}>Demo</a>
+                <button className={styles.button} onClick={() => signIn("credentials", { username: "user", password: "password" })}>Demo</button>
             </div>}
-            {showForm && <a href="#" onClick={toggleModal}>← Back</a>}
+            {showForm && <button className={styles.button} onClick={toggleModal}>← Back</button>}
             {showForm && <div className={styles.subLogin}>
                 <form className={styles.form} ref={loginRef} onSubmit={handleSubmit}>
                     <input name="csrfToken" type="hidden" defaultValue={csrfToken} />

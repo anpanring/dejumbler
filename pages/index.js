@@ -42,13 +42,23 @@ export default function Home() {
             <Head>
                 <title>Home - Dejumbler</title>
             </Head>
-            <h2>Hi {session.data.user.name}. Make lists.</h2>
+            <h2>Hi {session.data.user.name}!</h2>
+            <h3>Your Recent Lists</h3>
         </Layout>
     );
 }
 
 // check login server-side to prevent flashing login page
 export async function getServerSideProps(context) {
+    const session = await getServerSession(context.req, context.res, authOptions);
+    if (session) {
+        return {
+            redirect: {
+                destination: '/all-lists',
+                permanent: true,
+            },
+        }
+    }
     return {
         props: {
             session: await getServerSession(

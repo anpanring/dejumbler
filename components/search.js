@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import styles from "./search.module.css";
 
@@ -84,6 +84,8 @@ function SearchBar({ listId, listType, handleDataChange }) {
     const [query, setQuery] = useState('');
     const [searching, setSearching] = useState(false);
 
+    const formRef = useRef();
+
     // Add https://developer.mozilla.org/en-US/docs/Web/API/AbortController
     useEffect(() => {
         const controller = new AbortController();
@@ -130,15 +132,22 @@ function SearchBar({ listId, listType, handleDataChange }) {
 
     return (
         <div>
-            <form className={styles.searchBar}>
-                <input
-                    className={styles.searchInput}
-                    onChange={(e) => setQuery(e.target.value)}
-                    type="text"
-                    name="value"
-                    placeholder={`Search ${listType}...`}
-                    required
-                />
+            <form className={styles.searchBar} >
+                {/* <div className={styles.searchInputWrapper}> */}
+                    <input
+                        className={styles.searchInput}
+                        onChange={(e) => setQuery(e.target.value)}
+                        type="text"
+                        name="value"
+                        placeholder={`Search ${listType}...`}
+                        ref={formRef}
+                        required
+                    />
+                    {/* <button className={styles.clearButton} onClick={() => {
+                        formRef.current.value = "";
+                        setResults([]);
+                    }}>X</button> */}
+                {/* </div> */}
                 {listType !== 'Movies' && listType !== 'Books' && <select
                     onChange={(e) => setType(e.target.value)}
                     className={styles.searchTypeSelect}

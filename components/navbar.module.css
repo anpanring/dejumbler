@@ -152,7 +152,6 @@
 .colorPicker {
     display: flex;
     gap: 0.25em;
-    justify-content: space-between;
 }
 
 .color {

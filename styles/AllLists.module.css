@@ -1,7 +1,15 @@
+.wideview {
+    display: flex;
+    flex-direction: row;
+    height: 75vh;
+}
+
 .allListsContainer {
     display: flex;
     flex-direction: column;
     gap: 1em;
+    flex: 1;
+    overflow-y: scroll;
 }
 
 .listInfo {
@@ -70,4 +78,19 @@
     font-size: 1em;
     font-family: 'Epilogue', sans-serif;
     height: 1.5em;
+}
+
+.currentListContainer {
+    flex-grow: 1.5;
+    /* border: solid 1px var(--main-text-color); */
+    margin-left: 1em;
+    /* padding: 0.5em; */
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    overflow-y: scroll;
+}
+
+.selected {
+    background-color: lightgreen;
 }

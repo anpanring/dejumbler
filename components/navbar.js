@@ -38,11 +38,11 @@ export default function Navbar({ changeMode }) {
                             }}
                         />
                     </svg>
-                    <Link className={styles.link} href="/">
+                    {/* <Link className={styles.link} href="/">
                         <span className={`material-symbols-outlined ${styles.icon}`}>
                             home
                         </span>
-                    </Link>
+                    </Link> */}
                     <Link className={styles.link} href="/all-lists">
                         <span className={`material-symbols-outlined ${styles.icon}`}>
                             format_list_bulleted

@@ -21,10 +21,8 @@
 .listItem {
     display: flex;
     align-items: center;
-    overflow: hidden;
     border: solid var(--main-text-color) 1px;
     /* padding: 10px 10px 10px 10px; */
-    width: 100%;
 }
 
 .listItemArt {

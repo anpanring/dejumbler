@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 
 import dbConnect from "../lib/mongodb";
 import List from "../models/List";
@@ -6,6 +6,8 @@ import List from "../models/List";
 import Layout from "../components/layout";
 import Modal from "../components/modal";
 import Snackbar from "../components/snackbar";
+import ListItem from "../components/list-item";
+import SearchBar from "../components/search";
 
 import Link from "next/link";
 import Head from "next/head";
@@ -17,16 +19,29 @@ import { useDrag } from "react-dnd";
 
 import styles from "../styles/AllLists.module.css";
 import formStyles from '../components/navbar.module.css';
-import { set } from "mongoose";
 
+function useWindowSize() {
+    const [size, setSize] = useState([0, 0]);
+    useEffect(() => {
+        function updateSize() {
+            setSize([window.innerWidth, window.innerHeight]);
+        }
+        window.addEventListener('resize', updateSize);
+        updateSize();
+        return () => window.removeEventListener('resize', updateSize);
+    }, []);
+    return size;
+}
 
-function ListBox({ data, setListData, isDragging, listModified, setListModified }) {
+function ListBox({ data, setListData, isDragging, listModified, setListModified, setCurrentList, selected }) {
     const [showEditOptions, setShowEditOptions] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
-    
+
     const [name, setName] = useState(data.name);
     const [description, setDescription] = useState(data.description);
+
+    const [width, height] = useWindowSize();
 
     // const [{ opacity }, dragRef] = useDrag(
     //     () => ({
@@ -83,9 +98,12 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified 
     }
 
     return (
-        <div key={data._id} className={styles.listInfo}>
-            <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p>
+        <div key={data._id} className={`${styles.listInfo} ${selected && width >= 430 ? styles.selected : ''}`}>
+            {width < 430 && <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p>}
+            {width >= 430 && <p><Link href="#" onClick={() => setCurrentList(data._id)} >{name}</Link> ({data.items.length}) - {data.type}</p>}
+            {/* <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p> */}
             {data.description && <p className={styles.description}>{description}</p>}
+            {selected && <div className={styles.selected}></div>}
             <svg width="15px" height="15px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#000000" className={styles.kebab} onClick={() => setShowEditOptions(!showEditOptions)}>
                 <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
             </svg>
@@ -139,11 +157,53 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified 
 }
 
 function ListContainer({ lists, setListData, listModified, setListModified }) {
+    const [currentList, setCurrentList] = useState(null);
+    const [width, height] = useWindowSize();
+
+    const [currentListData, setCurrentListData] = useState(null);
+
+    useEffect(() => {
+        if (currentList !== null) {
+            async function populateList() {
+                const res = await fetch(`/api/get-list?id=${currentList}`);
+                const data = await res.json();
+                console.log(data);
+                setCurrentListData(await data);
+            }
+            populateList();
+        }
+    }, [currentList])
+
     return (
-        <div className={styles.allListsContainer}>
-            {lists.map((list) => {
-                return <ListBox data={list} setListData={setListData} key={list._id} listModified={listModified} setListModified={setListModified} />;
-            })}
+        <div className={styles.wideview}>
+            {/* Left */}
+            <section className={styles.allListsContainer}>
+                {lists.map((list) => {
+                    return <ListBox
+                        data={list}
+                        setListData={setListData}
+                        key={list._id}
+                        listModified={listModified}
+                        setListModified={setListModified}
+                        setCurrentList={setCurrentList}
+                        selected={list._id == currentList ? true : false}
+                    />;
+                })}
+            </section>
+            {/* Right */}
+            {currentList && width >= 430 &&
+                <section className={styles.currentListContainer}>
+                    {/* <h2>{currentListData.name}</h2> */}
+                    {currentListData && <SearchBar listId={currentList} listType={currentListData.type} handleDataChange={setCurrentListData} />}
+                    {currentListData && currentListData.items.map((item) => {
+                        return <ListItem
+                            data={item}
+                            listId={currentList}
+                            key={item._id}
+                            handleDataChange={setCurrentListData}
+                        />
+                    })}
+                </section>}
         </div>
     );
 }
@@ -154,6 +214,8 @@ export default function AllLists({ lists }) {
     const [type, setType] = useState('Any');
     const [displayType, setDisplayType] = useState('All');
     const [listModified, setListModified] = useState(false);
+
+    const [width, height] = useWindowSize();
 
     useEffect(() => {
         async function populateList() {
