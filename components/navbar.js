@@ -2,7 +2,7 @@ import Link from "next/link";
 import styles from './navbar.module.css';
 import Modal from "./modal";
 import { useRef, useState } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 const colors = ['red', 'orange', 'yellow', 'green', 'lightblue', 'indigo', 'violet'];
 

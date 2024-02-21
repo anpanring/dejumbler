@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import styles from '../styles/ListPage.module.css';
 
 function ListItem({ data, listId, handleDataChange }) {
@@ -40,15 +41,60 @@ function ListItem({ data, listId, handleDataChange }) {
             .then(response => response.json())
             .then((data) => {
                 setNotes(data.notes);
-                toggleEditForm();
+                setShowForm(!showForm);
             });
     }
 
-    function toggleEditForm() {
-        setShowForm(!showForm);
-    }
+    if (data.__t === 'Movie') {
+        return (
+            <div className={styles.listItem}>
+                <img className={styles.listItemArt} src={data.artURL} width={50} alt={data.name} />
 
-    return (
+                <div className={styles.listItemText}>
+                    <p className={styles.itemInfo}>{data.name}</p>
+
+                    {!showForm && <p className={styles.notes}>Notes: {notes} </p>}
+                    {showForm ? <form onSubmit={handleNoteChange} className={styles.notesForm}>
+                        <textarea type="text" name="notes" defaultValue={notes} className={styles.notesInput} />
+                        <div className={styles.notesEditButtons}>
+                            <button className={styles.button} type="submit">Save</button>
+                            <button className={styles.button} onClick={() => setShowForm(!showForm)}>Cancel</button>
+                        </div>
+                    </form> : null}
+
+                    {!showForm && <div className={styles.listItemActions}>
+                        <button className={styles.button} onClick={() => setShowForm(!showForm)}>Edit</button>
+                        <button className={styles.button} onClick={handleDelete}>Remove</button>
+                    </div>}
+                </div>
+            </div >
+        );
+    } else if (data.__t === 'Book') {
+        return (
+            <div className={styles.listItem}>
+                <img className={styles.listItemArt} src={data.artURL} width={50} alt={data.name} />
+
+                <div className={styles.listItemText}>
+                    <p className={styles.itemInfo}>{data.name}</p>
+                    <p className={styles.artistRow}>{data.author} ({data.year})</p>
+
+                    {!showForm && <p className={styles.notes}>Notes: {notes} </p>}
+                    {showForm ? <form onSubmit={handleNoteChange} className={styles.notesForm}>
+                        <textarea type="text" name="notes" defaultValue={notes} className={styles.notesInput} />
+                        <div className={styles.notesEditButtons}>
+                            <button className={styles.button} type="submit">Save</button>
+                            <button className={styles.button} onClick={() => setShowForm(!showForm)}>Cancel</button>
+                        </div>
+                    </form> : null}
+
+                    {!showForm && <div className={styles.listItemActions}>
+                        <button className={styles.button} onClick={() => setShowForm(!showForm)}>Edit</button>
+                        <button className={styles.button} onClick={handleDelete}>Remove</button>
+                    </div>}
+                </div>
+            </div >
+        );
+    } else return ( // Music
         <div className={styles.listItem}>
             <img className={styles.listItemArt} src={data.artURL} width={50} height={50} alt={data.name} />
 
@@ -64,12 +110,12 @@ function ListItem({ data, listId, handleDataChange }) {
                     <textarea type="text" name="notes" defaultValue={notes} className={styles.notesInput} />
                     <div className={styles.notesEditButtons}>
                         <button className={styles.button} type="submit">Save</button>
-                        <button className={styles.button} onClick={toggleEditForm}>Cancel</button>
+                        <button className={styles.button} onClick={() => setShowForm(!showForm)}>Cancel</button>
                     </div>
                 </form> : null}
 
                 {!showForm && <div className={styles.listItemActions}>
-                    <button className={styles.button} onClick={toggleEditForm}>Edit</button>
+                    <button className={styles.button} onClick={() => setShowForm(!showForm)}>Edit</button>
                     <button className={styles.button} onClick={handleDelete}>Remove</button>
                 </div>}
             </div>

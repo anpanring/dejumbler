@@ -11,16 +11,13 @@
     justify-content: space-between;
     padding: 10px;
     padding-top: 4rem;
+    flex: 1;
 }
 
 .flexContainer {
     display: flex;
     flex-direction: column;
-}
-
-.footer {
-    margin-top: auto;
-    color: red;
+    flex: 1;
 }
 
 .loggedInWrapper {

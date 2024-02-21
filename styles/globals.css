@@ -11,6 +11,8 @@ body {
     height: 98%;
     background-color: var(--background-color);
     color: var(--main-text-color);
+    display: flex;
+    flex-direction: column;
     /* background-image: url('../public/images/noise.png'); */
 }
 
@@ -103,5 +105,8 @@ span.material-symbols-outlined {
     word-wrap: normal;
     white-space: nowrap;
     direction: ltr;
-  }
-  
+}
+
+footer {
+    height: 2.5rem;
+}

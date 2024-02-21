@@ -30,13 +30,15 @@ export default function Layout({ children }) {
                     <meta name="twitter:card" content="summary_large_image" />
                     <meta name="google-site-verification" content="n5dZdc1QljJ4k39BSCkZAbhnJS5CjIdAo6OHVqD_c-Y" />
                 </Head>
-                
+
                 <Navbar changeMode={changeMode} />
                 <Suspense fallback={<Loading />}>
                     {children}
                 </Suspense>
             </div>
-            {/* <Footer className={styles.footer} /> */}
+            {/* <footer className={styles.footer}>
+                footer
+            </footer> */}
         </div>
     );
 }
