@@ -1,7 +1,11 @@
-import Link from "next/link";
-import styles from './navbar.module.css';
-import Modal from "./modal";
 import { useRef, useState } from "react";
+
+import Link from "next/link";
+
+import styles from './navbar.module.css';
+
+import Modal from "./modal";
+
 import { useSession, signOut } from "next-auth/react";
 
 const colors = ['red', 'orange', 'yellow', 'green', 'lightblue', 'indigo', 'violet'];
@@ -107,6 +111,9 @@ export default function Navbar({ changeMode }) {
                                 return <div key={color} style={{ backgroundColor: color}} className={styles.color} onClick={() => changeAccentColor(color)}></div>
                             })}
                         </div>
+                        {/* <div>
+                            <button onClick={changeMode}>Toggle Theme</button>
+                        </div> */}
                     </div>
                 </Modal>
             }

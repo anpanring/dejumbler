@@ -4,6 +4,7 @@ import { useState, useRef, useLayoutEffect } from "react";
 import Modal from "./modal";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useRouter } from "next/router";
 
 export default function Login({ csrfToken }) {
     const { data, status } = useSession();
@@ -13,6 +14,8 @@ export default function Login({ csrfToken }) {
     const [error, setError] = useState(false);
 
     const [showForm, setShowForm] = useState(false);
+
+    const router = useRouter();
 
     const loginRef = useRef();
     useGSAP(() => {
@@ -37,11 +40,20 @@ export default function Login({ csrfToken }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { error, ok } = await signIn("credentials", { callbackUrl: '/all-lists', username: username, password: password });
+
+        const { error, ok } = await signIn(
+            "credentials",
+            {
+                username: username,
+                password: password,
+                // callbackUrl: '/all-lists',
+                redirect: false,
+            });
         if (error) {
             setError(true);
             loginRef.current.reset();
         } else if (ok) {
+            router.push("/all-lists");
             const theme = localStorage.getItem('theme');
             if (theme) {
                 document.documentElement.setAttribute('data-theme', theme);
@@ -54,7 +66,10 @@ export default function Login({ csrfToken }) {
             {!showForm && <div className={styles.loginOptions}>
                 <button className={styles.button} onClick={toggleModal}>Sign in</button>
                 <p>or</p>
-                <button className={styles.button} onClick={() => signIn("credentials", { username: "user", password: "password" })}>Demo</button>
+                <button className={styles.button} onClick={() => signIn("credentials", {
+                    username: "user",
+                    password: "password"
+                })}>Demo</button>
             </div>}
             {showForm && <button className={styles.button} onClick={toggleModal}>← Back</button>}
             {showForm && <div className={styles.subLogin}>

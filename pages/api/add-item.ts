@@ -1,9 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-type ResponseData = {
-    message: string;
-}
-
 // schemas
 import { Album, Artist, Movie, Song, Book } from "../../models/Types";
 import List from "../../models/List";
@@ -12,10 +8,10 @@ import dbConnect from "../../lib/mongodb";
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<ResponseData>
+    res: NextApiResponse<Object[]>
 ) {
     let listId = req.body.listId;
-    
+
     let newItem;
     if (req.body.type === 'movie') {
         const {
@@ -28,12 +24,12 @@ export default async function handler(
             artURL: `http://image.tmdb.org/t/p/w92${poster_path}`
         });
     } else if (req.body.type === 'book') {
-        const { 
-            title: bookTitle, 
-            author_name, 
-            first_publish_year, 
-            cover_edition_key, 
-            subject 
+        const {
+            title: bookTitle,
+            author_name,
+            first_publish_year,
+            cover_edition_key,
+            subject
         } = req.body;
 
         newItem = new Book({
@@ -82,10 +78,12 @@ export default async function handler(
     }
 
     await dbConnect();
-    const updatedList = await List.findOneAndUpdate(
-        { _id: listId }, // query for list
-        { $push: { items: newItem } }, // add new item
-        { new: true }, // return updated list
-    );
+    const updatedList: Object[] =
+        await List.findOneAndUpdate(
+            { _id: listId },                // query for list
+            { $push: { items: newItem } },  // add new item
+            { new: true },                  // return updated list
+        );
+
     res.status(200).json(updatedList);
 }

@@ -10,7 +10,6 @@ export default async function handler(req, res) {
     } = req;
 
     const session = await getServerSession(req, res, authOptions);
-    console.log(query);
     if (session) {
         const { user, expires } = session;
 

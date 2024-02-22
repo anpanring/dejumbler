@@ -1,4 +1,4 @@
-import { useEffect, useState, useLayoutEffect } from "react";
+import { useEffect, useState } from "react";
 
 import dbConnect from "../lib/mongodb";
 import List from "../models/List";
@@ -38,6 +38,7 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
     const [editMode, setEditMode] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
 
+    // list name and description
     const [name, setName] = useState(data.name);
     const [description, setDescription] = useState(data.description);
 
@@ -167,17 +168,16 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
             async function populateList() {
                 const res = await fetch(`/api/get-list?id=${currentList}`);
                 const data = await res.json();
-                console.log(data);
                 setCurrentListData(await data);
             }
             populateList();
         }
-    }, [currentList])
+    }, [currentList]);
 
     return (
-        <div className={styles.wideview}>
+        <div className={`${styles.wideview} ${width < 430 ? styles.mobileview : ''}`}>
             {/* Left */}
-            <section className={styles.allListsContainer}>
+            <section className={`${styles.allListsContainer} ${currentList == null || width < 430 ? styles.wide : ''}`}>
                 {lists.map((list) => {
                     return <ListBox
                         data={list}
@@ -193,8 +193,15 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
             {/* Right */}
             {currentList && width >= 430 &&
                 <section className={styles.currentListContainer}>
-                    {/* <h2>{currentListData.name}</h2> */}
-                    {currentListData && <SearchBar listId={currentList} listType={currentListData.type} handleDataChange={setCurrentListData} />}
+                    <div className={styles.flexSpaceBetween}>
+                        {currentListData &&
+                            <SearchBar listId={currentList} listType={currentListData.type} handleDataChange={setCurrentListData} />}
+                        {currentListData &&
+                            <button className={styles.closeCurrentList} onClick={() => {
+                                setCurrentList(null);
+                                setCurrentListData(null);
+                            }}>X</button>}
+                    </div>
                     {currentListData && currentListData.items.map((item) => {
                         return <ListItem
                             data={item}
@@ -203,6 +210,7 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
                             handleDataChange={setCurrentListData}
                         />
                     })}
+                    {/* {songAdded && <Snackbar message={`${changeType} ${data.name}`} toggleShow={setSongAdded} />} */}
                 </section>}
         </div>
     );
@@ -275,6 +283,7 @@ export async function getServerSideProps(context) {
             },
         }
     }
+
     const { user, expires } = session;
 
     // Get lists with direct mongoose call
