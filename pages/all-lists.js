@@ -15,11 +15,15 @@ import Head from "next/head";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./api/auth/[...nextauth]";
 
+// TODO: implement drag and drop
 import { useDrag } from "react-dnd";
 
 import styles from "../styles/AllLists.module.css";
 import formStyles from '../components/navbar.module.css';
 
+const mobileWidth = 600;
+
+// Custom hook for live window size
 function useWindowSize() {
     const [size, setSize] = useState([0, 0]);
     useEffect(() => {
@@ -33,6 +37,7 @@ function useWindowSize() {
     return size;
 }
 
+// List
 function ListBox({ data, setListData, isDragging, listModified, setListModified, setCurrentList, selected }) {
     const [showEditOptions, setShowEditOptions] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -43,17 +48,6 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
     const [description, setDescription] = useState(data.description);
 
     const [width, height] = useWindowSize();
-
-    // const [{ opacity }, dragRef] = useDrag(
-    //     () => ({
-    //         type: "ListBox",
-    //         item: { id: data._id },
-    //         collect: (monitor) => ({
-    //             opacity: monitor.isDragging() ? 0.5 : 1
-    //         })
-    //     }),
-    //     []
-    // )
 
     async function handleDelete(e, id) {
         e.preventDefault();
@@ -100,8 +94,8 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
 
     return (
         <div key={data._id} className={`${styles.listInfo} ${selected && width >= 430 ? styles.selected : ''}`}>
-            {width < 430 && <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p>}
-            {width >= 430 && <p><Link href="#" onClick={() => setCurrentList(data._id)} >{name}</Link> ({data.items.length}) - {data.type}</p>}
+            {width < mobileWidth && <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p>}
+            {width >= mobileWidth && <p><Link href="#" onClick={() => setCurrentList(data._id)} >{name}</Link> ({data.items.length}) - {data.type}</p>}
             {/* <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p> */}
             {data.description && <p className={styles.description}>{description}</p>}
             {selected && <div className={styles.selected}></div>}
@@ -157,11 +151,14 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
     );
 }
 
-function ListContainer({ lists, setListData, listModified, setListModified }) {
+// List Container
+function ListContainer({ lists, setListData, listModified, setListModified, setCurrentListModified }) {
     const [currentList, setCurrentList] = useState(null);
     const [width, height] = useWindowSize();
 
     const [currentListData, setCurrentListData] = useState(null);
+    const [songAdded, setSongAdded] = useState(false);
+    const [changeType, setChangeType] = useState('');
 
     useEffect(() => {
         if (currentList !== null) {
@@ -174,10 +171,16 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
         }
     }, [currentList]);
 
+    function handleDataChange(changedData, changeType) {
+        setCurrentListData(changedData);               // all list items
+        setSongAdded(true);                 // controls showing of snackbar
+        setChangeType(changeType);          // when adding/removing items
+    }
+
     return (
-        <div className={`${styles.wideview} ${width < 430 ? styles.mobileview : ''}`}>
+        <div className={`${styles.wideview} ${width < mobileWidth ? styles.mobileview : ''}`}>
             {/* Left */}
-            <section className={`${styles.allListsContainer} ${currentList == null || width < 430 ? styles.wide : ''}`}>
+            <section className={`${styles.allListsContainer} ${currentList == null || width < mobileWidth ? styles.wide : ''}`}>
                 {lists.map((list) => {
                     return <ListBox
                         data={list}
@@ -191,11 +194,11 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
                 })}
             </section>
             {/* Right */}
-            {currentList && width >= 430 &&
+            {currentList && width >= mobileWidth &&
                 <section className={styles.currentListContainer}>
                     <div className={styles.flexSpaceBetween}>
                         {currentListData &&
-                            <SearchBar listId={currentList} listType={currentListData.type} handleDataChange={setCurrentListData} />}
+                            <SearchBar listId={currentList} listType={currentListData.type} handleDataChange={handleDataChange} />}
                         {currentListData &&
                             <button className={styles.closeCurrentList} onClick={() => {
                                 setCurrentList(null);
@@ -207,23 +210,22 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
                             data={item}
                             listId={currentList}
                             key={item._id}
-                            handleDataChange={setCurrentListData}
+                            handleDataChange={handleDataChange}
                         />
                     })}
-                    {/* {songAdded && <Snackbar message={`${changeType} ${data.name}`} toggleShow={setSongAdded} />} */}
+                    {songAdded && <Snackbar message={`${changeType} ${currentListData.name}`} toggleShow={setSongAdded} />}
                 </section>}
         </div>
     );
 }
 
+// Main page for now
 export default function AllLists({ lists }) {
-    const parsedData = lists ? JSON.parse(lists) : [];
-    const [listData, setListData] = useState(parsedData);
+    const [listData, setListData] = useState(lists ? JSON.parse(lists) : []);
     const [type, setType] = useState('Any');
     const [displayType, setDisplayType] = useState('All');
     const [listModified, setListModified] = useState(false);
-
-    const [width, height] = useWindowSize();
+    const [currentListModified, setCurrentListModified] = useState(false);
 
     useEffect(() => {
         async function populateList() {
@@ -233,14 +235,6 @@ export default function AllLists({ lists }) {
         }
         populateList();
     }, [type]);
-
-
-    // // Block non-logged in users - need to check if correct user too
-    // if (!session.data) return (
-    //     <Layout>
-    //         <h2>You must be signed in to see lists.</h2>
-    //     </Layout>
-    // );
 
     function toggleType(e) {
         setType(e.target.value);
@@ -255,6 +249,7 @@ export default function AllLists({ lists }) {
             <Head>
                 <title>All Lists</title>
             </Head>
+
             <div className={styles.topBar}>
                 <h2>{displayType} Lists ({listData.length})</h2>
                 <div className='form-row'>
@@ -267,14 +262,19 @@ export default function AllLists({ lists }) {
                     </select>
                 </div>
             </div>
+
             <ListContainer lists={listData} setListData={setListData} listModified={listModified} setListModified={setListModified} />
+
             {listModified && <Snackbar message={`Deleted list`} toggleShow={setListModified} />}
+            {currentListModified && <Snackbar message={`Deleted list`} toggleShow={setCurrentListModified} />}
         </Layout>
     );
 }
 
 export async function getServerSideProps(context) {
     const session = await getServerSession(context.req, context.res, authOptions);
+
+    // Block non-logged in users
     if (!session) {
         return {
             redirect: {

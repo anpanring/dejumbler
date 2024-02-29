@@ -86,6 +86,7 @@ textarea {
     height: 4em;
     padding-top: 0.35em;
     padding-bottom: 0.35em;
+    resize: none;
 }
 
 button:hover {
