@@ -122,6 +122,7 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
                             close();
                             handleDelete(e, data._id);
                             setListModified(true);
+                            if(selected) setCurrentList(null);
                         }} className={`${styles.editButton} ${styles.delete}`}>
                             Delete list
                         </button>
