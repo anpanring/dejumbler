@@ -72,10 +72,9 @@ export default function Navbar({ changeMode }) {
                     <div className={styles.formTypeRow}>
                         <label>Type: </label>
                         <select className={styles.type} id="types" list="types" name="type" required>
-                            <option value="Any">Any</option>
+                            <option value="Music">Music</option>
                             <option value="Books">Books</option>
                             <option value="Movies">Movies</option>
-                            <option value="Music">Music</option>
                         </select>
                     </div>
                     <div className={styles.formRow}>
@@ -105,10 +104,10 @@ export default function Navbar({ changeMode }) {
                         <p>Accent Color</p>
                         <div className={styles.colorPicker}>
                             {colors.map((color) => {
-                                if(color === accentColor) {
-                                    return <div key={color} style={{ backgroundColor: color}} className={`${styles.color} ${styles.selectedColor}`} onClick={() => changeAccentColor(color)}></div>
+                                if (color === accentColor) {
+                                    return <div key={color} style={{ backgroundColor: color }} className={`${styles.color} ${styles.selectedColor}`} onClick={() => changeAccentColor(color)}></div>
                                 }
-                                return <div key={color} style={{ backgroundColor: color}} className={styles.color} onClick={() => changeAccentColor(color)}></div>
+                                return <div key={color} style={{ backgroundColor: color }} className={styles.color} onClick={() => changeAccentColor(color)}></div>
                             })}
                         </div>
                         {/* <div>
