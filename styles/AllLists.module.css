@@ -1,7 +1,24 @@
+.wideview {
+    display: flex;
+    flex-direction: row;
+    height: 75vh;
+}
+
+.mobileview {
+    height: auto;
+}
+
 .allListsContainer {
     display: flex;
     flex-direction: column;
     gap: 1em;
+    /* flex: 1; */
+    width: 35%;
+    overflow-y: scroll;
+}
+
+.wide {
+    width: 100%;
 }
 
 .listInfo {
@@ -70,4 +87,38 @@
     font-size: 1em;
     font-family: 'Epilogue', sans-serif;
     height: 1.5em;
+}
+
+.currentListContainer {
+    /* flex-grow: 1.5; */
+    width: 65%;
+    /* border: solid 1px var(--main-text-color); */
+    margin-left: 1em;
+    /* padding: 0.5em; */
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    overflow-y: scroll;
+}
+
+.selected {
+    background-color: color-mix(in srgb, var(--accent-color) 25%, white);
+}
+
+html[data-theme='dark'] .selected {
+    background-color: color-mix(in srgb, var(--accent-color) 50%, black);
+}
+
+.flexSpaceBetween {
+    display: flex;
+    justify-content: space-between;
+}
+
+.closeCurrentList {
+    height: 2em;
+    width: 2em;
+}
+
+.closeCurrentList:hover {
+    background-color: red;
 }

@@ -6,6 +6,8 @@ import List from "../models/List";
 import Layout from "../components/layout";
 import Modal from "../components/modal";
 import Snackbar from "../components/snackbar";
+import ListItem from "../components/list-item";
+import SearchBar from "../components/search";
 
 import Link from "next/link";
 import Head from "next/head";
@@ -13,31 +15,39 @@ import Head from "next/head";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./api/auth/[...nextauth]";
 
+// TODO: implement drag and drop
 import { useDrag } from "react-dnd";
 
 import styles from "../styles/AllLists.module.css";
 import formStyles from '../components/navbar.module.css';
-import { set } from "mongoose";
 
+const mobileWidth = 600;
 
-function ListBox({ data, setListData, isDragging, listModified, setListModified }) {
+// Custom hook for live window size
+function useWindowSize() {
+    const [size, setSize] = useState([0, 0]);
+    useEffect(() => {
+        function updateSize() {
+            setSize([window.innerWidth, window.innerHeight]);
+        }
+        window.addEventListener('resize', updateSize);
+        updateSize();
+        return () => window.removeEventListener('resize', updateSize);
+    }, []);
+    return size;
+}
+
+// List
+function ListBox({ data, setListData, isDragging, listModified, setListModified, setCurrentList, selected }) {
     const [showEditOptions, setShowEditOptions] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
-    
+
+    // list name and description
     const [name, setName] = useState(data.name);
     const [description, setDescription] = useState(data.description);
 
-    // const [{ opacity }, dragRef] = useDrag(
-    //     () => ({
-    //         type: "ListBox",
-    //         item: { id: data._id },
-    //         collect: (monitor) => ({
-    //             opacity: monitor.isDragging() ? 0.5 : 1
-    //         })
-    //     }),
-    //     []
-    // )
+    const [width, height] = useWindowSize();
 
     async function handleDelete(e, id) {
         e.preventDefault();
@@ -83,9 +93,12 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified 
     }
 
     return (
-        <div key={data._id} className={styles.listInfo}>
-            <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p>
+        <div key={data._id} className={`${styles.listInfo} ${selected && width >= 430 ? styles.selected : ''}`}>
+            {width < mobileWidth && <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p>}
+            {width >= mobileWidth && <p><Link href="#" onClick={() => setCurrentList(data._id)} >{name}</Link> ({data.items.length}) - {data.type}</p>}
+            {/* <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p> */}
             {data.description && <p className={styles.description}>{description}</p>}
+            {selected && <div className={styles.selected}></div>}
             <svg width="15px" height="15px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#000000" className={styles.kebab} onClick={() => setShowEditOptions(!showEditOptions)}>
                 <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
             </svg>
@@ -109,6 +122,7 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified 
                             close();
                             handleDelete(e, data._id);
                             setListModified(true);
+                            if(selected) setCurrentList(null);
                         }} className={`${styles.editButton} ${styles.delete}`}>
                             Delete list
                         </button>
@@ -138,22 +152,81 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified 
     );
 }
 
-function ListContainer({ lists, setListData, listModified, setListModified }) {
+// List Container
+function ListContainer({ lists, setListData, listModified, setListModified, setCurrentListModified }) {
+    const [currentList, setCurrentList] = useState(null);
+    const [width, height] = useWindowSize();
+
+    const [currentListData, setCurrentListData] = useState(null);
+    const [songAdded, setSongAdded] = useState(false);
+    const [changeType, setChangeType] = useState('');
+
+    useEffect(() => {
+        if (currentList !== null) {
+            async function populateList() {
+                const res = await fetch(`/api/get-list?id=${currentList}`);
+                const data = await res.json();
+                setCurrentListData(await data);
+            }
+            populateList();
+        }
+    }, [currentList]);
+
+    function handleDataChange(changedData, changeType) {
+        setCurrentListData(changedData);               // all list items
+        setSongAdded(true);                 // controls showing of snackbar
+        setChangeType(changeType);          // when adding/removing items
+    }
+
     return (
-        <div className={styles.allListsContainer}>
-            {lists.map((list) => {
-                return <ListBox data={list} setListData={setListData} key={list._id} listModified={listModified} setListModified={setListModified} />;
-            })}
+        <div className={`${styles.wideview} ${width < mobileWidth ? styles.mobileview : ''}`}>
+            {/* Left */}
+            <section className={`${styles.allListsContainer} ${currentList == null || width < mobileWidth ? styles.wide : ''}`}>
+                {lists.map((list) => {
+                    return <ListBox
+                        data={list}
+                        setListData={setListData}
+                        key={list._id}
+                        listModified={listModified}
+                        setListModified={setListModified}
+                        setCurrentList={setCurrentList}
+                        selected={list._id == currentList ? true : false}
+                    />;
+                })}
+            </section>
+            {/* Right */}
+            {currentList && width >= mobileWidth &&
+                <section className={styles.currentListContainer}>
+                    <div className={styles.flexSpaceBetween}>
+                        {currentListData &&
+                            <SearchBar listId={currentList} listType={currentListData.type} handleDataChange={handleDataChange} />}
+                        {currentListData &&
+                            <button className={styles.closeCurrentList} onClick={() => {
+                                setCurrentList(null);
+                                setCurrentListData(null);
+                            }}>X</button>}
+                    </div>
+                    {currentListData && currentListData.items.map((item) => {
+                        return <ListItem
+                            data={item}
+                            listId={currentList}
+                            key={item._id}
+                            handleDataChange={handleDataChange}
+                        />
+                    })}
+                    {songAdded && <Snackbar message={`${changeType} ${currentListData.name}`} toggleShow={setSongAdded} />}
+                </section>}
         </div>
     );
 }
 
+// Main page for now
 export default function AllLists({ lists }) {
-    const parsedData = lists ? JSON.parse(lists) : [];
-    const [listData, setListData] = useState(parsedData);
+    const [listData, setListData] = useState(lists ? JSON.parse(lists) : []);
     const [type, setType] = useState('Any');
     const [displayType, setDisplayType] = useState('All');
     const [listModified, setListModified] = useState(false);
+    const [currentListModified, setCurrentListModified] = useState(false);
 
     useEffect(() => {
         async function populateList() {
@@ -163,14 +236,6 @@ export default function AllLists({ lists }) {
         }
         populateList();
     }, [type]);
-
-
-    // // Block non-logged in users - need to check if correct user too
-    // if (!session.data) return (
-    //     <Layout>
-    //         <h2>You must be signed in to see lists.</h2>
-    //     </Layout>
-    // );
 
     function toggleType(e) {
         setType(e.target.value);
@@ -185,6 +250,7 @@ export default function AllLists({ lists }) {
             <Head>
                 <title>All Lists</title>
             </Head>
+
             <div className={styles.topBar}>
                 <h2>{displayType} Lists ({listData.length})</h2>
                 <div className='form-row'>
@@ -197,14 +263,19 @@ export default function AllLists({ lists }) {
                     </select>
                 </div>
             </div>
+
             <ListContainer lists={listData} setListData={setListData} listModified={listModified} setListModified={setListModified} />
+
             {listModified && <Snackbar message={`Deleted list`} toggleShow={setListModified} />}
+            {currentListModified && <Snackbar message={`Deleted list`} toggleShow={setCurrentListModified} />}
         </Layout>
     );
 }
 
 export async function getServerSideProps(context) {
     const session = await getServerSession(context.req, context.res, authOptions);
+
+    // Block non-logged in users
     if (!session) {
         return {
             redirect: {
@@ -213,6 +284,7 @@ export async function getServerSideProps(context) {
             },
         }
     }
+
     const { user, expires } = session;
 
     // Get lists with direct mongoose call

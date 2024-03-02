@@ -4,6 +4,7 @@ import { useState, useRef, useLayoutEffect } from "react";
 import Modal from "./modal";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useRouter } from "next/router";
 
 export default function Login({ csrfToken }) {
     const { data, status } = useSession();
@@ -13,6 +14,8 @@ export default function Login({ csrfToken }) {
     const [error, setError] = useState(false);
 
     const [showForm, setShowForm] = useState(false);
+
+    const router = useRouter();
 
     const loginRef = useRef();
     useGSAP(() => {
@@ -37,11 +40,20 @@ export default function Login({ csrfToken }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { error, ok } = await signIn("credentials", { redirect: false, username: username, password: password });
+
+        const { error, ok } = await signIn(
+            "credentials",
+            {
+                username: username,
+                password: password,
+                // callbackUrl: '/all-lists',
+                redirect: false,
+            });
         if (error) {
             setError(true);
             loginRef.current.reset();
         } else if (ok) {
+            router.push("/all-lists");
             const theme = localStorage.getItem('theme');
             if (theme) {
                 document.documentElement.setAttribute('data-theme', theme);
@@ -52,11 +64,14 @@ export default function Login({ csrfToken }) {
     return !data && (
         <div className={styles.loginWrapper}>
             {!showForm && <div className={styles.loginOptions}>
-                <a href="#" onClick={toggleModal}>Sign in</a>
+                <button className={styles.button} onClick={toggleModal}>Sign in</button>
                 <p>or</p>
-                <a href="#" onClick={() => signIn("credentials", { username: "user", password: "password" })}>Demo</a>
+                <button className={styles.button} onClick={() => signIn("credentials", {
+                    username: "user",
+                    password: "password"
+                })}>Demo</button>
             </div>}
-            {showForm && <a href="#" onClick={toggleModal}>← Back</a>}
+            {showForm && <button className={styles.button} onClick={toggleModal}>← Back</button>}
             {showForm && <div className={styles.subLogin}>
                 <form className={styles.form} ref={loginRef} onSubmit={handleSubmit}>
                     <input name="csrfToken" type="hidden" defaultValue={csrfToken} />

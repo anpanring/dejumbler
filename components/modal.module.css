@@ -7,8 +7,20 @@
     transform: translate(-50%, -50%);
     background-color: var(--background-color);
     z-index: 101;
-    width: 50%;
 }
+
+@media (width < 600px) {
+    .modalContainer {
+        width: 50%;
+    }
+}
+
+@media (width >= 600px) {
+    .modalContainer {
+        width: 30%;
+    }
+}
+
 
 .overlay {
     /* display: none; */

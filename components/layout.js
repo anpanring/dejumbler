@@ -36,9 +36,6 @@ export default function Layout({ children }) {
                     {children}
                 </Suspense>
             </div>
-            {/* <footer className={styles.footer}>
-                footer
-            </footer> */}
         </div>
     );
 }

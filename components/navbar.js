@@ -1,7 +1,11 @@
-import Link from "next/link";
-import styles from './navbar.module.css';
-import Modal from "./modal";
 import { useRef, useState } from "react";
+
+import Link from "next/link";
+
+import styles from './navbar.module.css';
+
+import Modal from "./modal";
+
 import { useSession, signOut } from "next-auth/react";
 
 const colors = ['red', 'orange', 'yellow', 'green', 'lightblue', 'indigo', 'violet'];
@@ -38,11 +42,11 @@ export default function Navbar({ changeMode }) {
                             }}
                         />
                     </svg>
-                    <Link className={styles.link} href="/">
+                    {/* <Link className={styles.link} href="/">
                         <span className={`material-symbols-outlined ${styles.icon}`}>
                             home
                         </span>
-                    </Link>
+                    </Link> */}
                     <Link className={styles.link} href="/all-lists">
                         <span className={`material-symbols-outlined ${styles.icon}`}>
                             format_list_bulleted
@@ -68,10 +72,9 @@ export default function Navbar({ changeMode }) {
                     <div className={styles.formTypeRow}>
                         <label>Type: </label>
                         <select className={styles.type} id="types" list="types" name="type" required>
-                            <option value="Any">Any</option>
+                            <option value="Music">Music</option>
                             <option value="Books">Books</option>
                             <option value="Movies">Movies</option>
-                            <option value="Music">Music</option>
                         </select>
                     </div>
                     <div className={styles.formRow}>
@@ -101,12 +104,15 @@ export default function Navbar({ changeMode }) {
                         <p>Accent Color</p>
                         <div className={styles.colorPicker}>
                             {colors.map((color) => {
-                                if(color === accentColor) {
-                                    return <div key={color} style={{ backgroundColor: color}} className={`${styles.color} ${styles.selectedColor}`} onClick={() => changeAccentColor(color)}></div>
+                                if (color === accentColor) {
+                                    return <div key={color} style={{ backgroundColor: color }} className={`${styles.color} ${styles.selectedColor}`} onClick={() => changeAccentColor(color)}></div>
                                 }
-                                return <div key={color} style={{ backgroundColor: color}} className={styles.color} onClick={() => changeAccentColor(color)}></div>
+                                return <div key={color} style={{ backgroundColor: color }} className={styles.color} onClick={() => changeAccentColor(color)}></div>
                             })}
                         </div>
+                        {/* <div>
+                            <button onClick={changeMode}>Toggle Theme</button>
+                        </div> */}
                     </div>
                 </Modal>
             }

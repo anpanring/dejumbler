@@ -5,6 +5,7 @@
     align-items: center;
     height: 4em;
     width: 90%;
+    z-index: 0;
 }
 
 .searchResultsWrapper {
@@ -28,6 +29,14 @@
     gap: 0.5em;
     margin-bottom: 1em;
     height: 2em;
+}
+
+.searchInputWrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    height: 2em;
+    align-items: center;
 }
 
 .searchInput {
@@ -88,4 +97,12 @@
 .addButton:hover {
     background: var(--accent-color);
     color: white;
+}
+
+.clearButton {
+    width: fit-content;
+    height: fit-content;
+    position: absolute;
+    left: 17em;
+    z-index: 98;
 }
