@@ -5,6 +5,7 @@ import Layout, { siteTitle } from '../components/layout';
 import Login from '../components/login';
 
 import textLogo from '../public/images/dejumbler-text-logo.png';
+import logo from '../public/images/dejumbler-logo.png';
 import styles from '../styles/Home.module.css';
 
 import { useSession } from 'next-auth/react';
@@ -15,6 +16,15 @@ import { authOptions } from "./api/auth/[...nextauth]";
 export default function Home() {
     // check session (client-side)
     const session = useSession();
+
+    if (session.status === 'loading') {
+        return (
+            <div className={styles.loadingContainer}>
+                <Image src={logo} className={styles.loadingLogo} alt='logo' />
+                {/* <h3>Loading...</h3> */}
+            </div>
+        );
+    }
 
     // logged out page
     if (!session.data) {
@@ -61,11 +71,7 @@ export async function getServerSideProps(context) {
     }
     return {
         props: {
-            session: await getServerSession(
-                context.req,
-                context.res,
-                authOptions
-            )
+            session: session
         }
     }
 }
