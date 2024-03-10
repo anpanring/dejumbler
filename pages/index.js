@@ -51,6 +51,19 @@ export default function Home() {
 
     else {
         router.push('/all-lists');
+        return (
+            <div className={styles.loadingContainer}>
+                <Image src={logo} className={styles.loadingLogo} alt='logo' />
+                {/* <h3>Loading...</h3> */}
+            </div>
+            // <Layout>
+            //     <Head>
+            //         <title>Home - Dejumbler</title>
+            //     </Head>
+            //     <h2>Hi {session.data.user.name}!</h2>
+            //     <h3>Your Recent Lists</h3>
+            // </Layout>
+        );
     }
 
     // logged in page
