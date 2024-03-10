@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 import Layout, { siteTitle } from '../components/layout';
 import Login from '../components/login';
@@ -16,6 +17,8 @@ import { useSession } from 'next-auth/react';
 export default function Home() {
     // check session (client-side)
     const session = useSession();
+
+    const router = useRouter();
 
     if (session.status === 'loading') {
         return (
@@ -46,16 +49,20 @@ export default function Home() {
         )
     }
 
+    else {
+        router.push('/all-lists');
+    }
+
     // logged in page
-    return (
-        <Layout>
-            <Head>
-                <title>Home - Dejumbler</title>
-            </Head>
-            <h2>Hi {session.data.user.name}!</h2>
-            <h3>Your Recent Lists</h3>
-        </Layout>
-    );
+    // return (
+    //     <Layout>
+    //         <Head>
+    //             <title>Home - Dejumbler</title>
+    //         </Head>
+    //         <h2>Hi {session.data.user.name}!</h2>
+    //         <h3>Your Recent Lists</h3>
+    //     </Layout>
+    // );
 }
 
 // check login server-side to prevent flashing login page
