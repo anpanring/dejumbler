@@ -9,8 +9,8 @@ import logo from '../public/images/dejumbler-logo.png';
 import styles from '../styles/Home.module.css';
 
 import { useSession } from 'next-auth/react';
-import { getServerSession } from 'next-auth';
-import { authOptions } from "./api/auth/[...nextauth]";
+// import { getServerSession } from 'next-auth';
+// import { authOptions } from "./api/auth/[...nextauth]";
 
 
 export default function Home() {
@@ -59,19 +59,19 @@ export default function Home() {
 }
 
 // check login server-side to prevent flashing login page
-export async function getServerSideProps(context) {
-    const session = await getServerSession(context.req, context.res, authOptions);
-    if (session) {
-        return {
-            redirect: {
-                destination: '/all-lists',
-                permanent: true,
-            },
-        }
-    }
-    return {
-        props: {
-            session: session
-        }
-    }
-}
+// export async function getServerSideProps(context) {
+//     const session = await getServerSession(context.req, context.res, authOptions);
+//     if (session) {
+//         return {
+//             redirect: {
+//                 destination: '/all-lists',
+//                 permanent: true,
+//             },
+//         }
+//     }
+//     return {
+//         props: {
+//             session: session
+//         }
+//     }
+// }
