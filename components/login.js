@@ -68,7 +68,8 @@ export default function Login({ csrfToken }) {
                 <p>or</p>
                 <button className={styles.button} onClick={() => signIn("credentials", {
                     username: "user",
-                    password: "password"
+                    password: "password",
+                    redirect: false,
                 })}>Demo</button>
             </div>}
             {showForm && <button className={styles.button} onClick={toggleModal}>← Back</button>}
