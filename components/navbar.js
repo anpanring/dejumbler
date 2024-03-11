@@ -28,6 +28,7 @@ export default function Navbar({ changeMode }) {
     function changeAccentColor(color) {
         document.documentElement.style.setProperty('--accent-color', color);
         setAccentColor(color);
+        localStorage.setItem('accent', color);
     }
 
     return (

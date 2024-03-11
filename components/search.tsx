@@ -82,7 +82,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
     const [results, setResults] = useState([]);
     const [type, setType] = useState('all');
     const [query, setQuery] = useState('');
-    const [searching, setSearching] = useState(false);
+    const [searching, setSearching] = useState<boolean>(false);
 
     const formRef = useRef();
 
@@ -133,25 +133,18 @@ function SearchBar({ listId, listType, handleDataChange }) {
     return (
         <div>
             <form className={styles.searchBar} >
-                {/* <div className={styles.searchInputWrapper}> */}
-                    <input
-                        className={styles.searchInput}
-                        onChange={(e) => setQuery(e.target.value)}
-                        type="text"
-                        name="value"
-                        placeholder={`Search ${listType}...`}
-                        ref={formRef}
-                        required
-                    />
-                    {/* <button className={styles.clearButton} onClick={() => {
-                        formRef.current.value = "";
-                        setResults([]);
-                    }}>X</button> */}
-                {/* </div> */}
+                <input
+                    className={styles.searchInput}
+                    onChange={(e) => setQuery(e.target.value)}
+                    type="text"
+                    name="value"
+                    placeholder={`Search ${listType}...`}
+                    ref={formRef}
+                    required
+                />
                 {listType !== 'Movies' && listType !== 'Books' && <select
                     onChange={(e) => setType(e.target.value)}
                     className={styles.searchTypeSelect}
-                    list="types"
                     name="type"
                     required
                 >
@@ -163,6 +156,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
             </form>
             <div className={styles.resultsWrapper}>
                 {results.map((result) => {
+                    console.log(result);
                     return <SearchResult
                         key={result.id}
                         data={result}

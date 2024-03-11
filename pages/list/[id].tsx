@@ -16,10 +16,13 @@ import { useSession } from 'next-auth/react';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../api/auth/[...nextauth]';
 
+import { IList } from '../../models/definitions.types';
+import { HydratedDocument, Query } from "mongoose";
+
 export default function ListPage({ listData, id }) {
     const session = useSession();
 
-    const [data, setData] = useState(JSON.parse(listData));
+    const [data, setData] = useState<IList>(JSON.parse(listData));
     const [songAdded, setSongAdded] = useState(false);
     const [changeType, setChangeType] = useState('');
 
@@ -36,23 +39,26 @@ export default function ListPage({ listData, id }) {
             </Head>
 
             <div className={styles.listInfo}>
-                <h2 className={styles.listTitle}>{data.name}</h2>
-                <h3 className={styles.listType}>{data.type}</h3>
+                <h2 className={styles.listTitle}>{data.name} </h2>
+                <h3 className={styles.listType}>{data.type} </h3>
             </div>
 
             <SearchBar listId={id} listType={data.type} handleDataChange={handleDataChange} />
 
             <div className={styles.itemWrapper}>
-                {data.items.map((item) => {
-                    return (
-                        <ListItem
-                            data={item}
-                            listId={id}
-                            key={item._id}
-                            handleDataChange={handleDataChange}
-                        />
-                    );
-                })}
+                {
+                    data.items.map((item) => {
+                        return (
+                            <ListItem
+                                data={item}
+                                listId={id}
+                                type={data.type}
+                                key={item.artURL || item.name}
+                                handleDataChange={handleDataChange}
+                            />
+                        );
+                    })
+                }
             </div>
             {songAdded && <Snackbar message={`${changeType} ${data.name}`} toggleShow={setSongAdded} />}
         </Layout>
@@ -74,7 +80,7 @@ export async function getServerSideProps(context) {
 
     // fetch list
     await dbConnect();
-    const data = await List.findById(context.params.id);
+    const data: IList = await List.findById(context.params.id);
 
     // verify list belongs to user
     if (session.user.email !== data.user.toString()) {

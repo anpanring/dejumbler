@@ -31,6 +31,8 @@ export default function Home() {
 
     // logged out page
     if (!session.data) {
+        document.documentElement.setAttribute('data-theme', "light");
+        document.documentElement.style.setProperty("--accent-color", "green");
         return (
             <>
                 <Head>
