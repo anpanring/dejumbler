@@ -20,6 +20,7 @@ import { useDrag } from "react-dnd";
 
 import styles from "../styles/AllLists.module.css";
 import formStyles from '../components/navbar.module.css';
+import { set } from "mongoose";
 
 const mobileWidth = 600;
 
@@ -122,7 +123,7 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
                             close();
                             handleDelete(e, data._id);
                             setListModified(true);
-                            if(selected) setCurrentList(null);
+                            if (selected) setCurrentList(null);
                         }} className={`${styles.editButton} ${styles.delete}`}>
                             Delete list
                         </button>
@@ -160,15 +161,18 @@ function ListContainer({ lists, setListData, listModified, setListModified, setC
     const [currentListData, setCurrentListData] = useState(null);
     const [songAdded, setSongAdded] = useState(false);
     const [changeType, setChangeType] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (currentList !== null) {
+            setLoading(true);
             async function populateList() {
                 const res = await fetch(`/api/get-list?id=${currentList}`);
                 const data = await res.json();
                 setCurrentListData(await data);
             }
             populateList();
+            setLoading(false);
         }
     }, [currentList]);
 
@@ -195,6 +199,7 @@ function ListContainer({ lists, setListData, listModified, setListModified, setC
                 })}
             </section>
             {/* Right */}
+            {loading && <p>Loading...</p>}
             {currentList && width >= mobileWidth &&
                 <section className={styles.currentListContainer}>
                     <div className={styles.flexSpaceBetween}>
