@@ -2,6 +2,7 @@
     --accent-color: green;
     --background-color: white;
     --main-text-color: black;
+    --navbar-height: 82px;
 }
 
 html,
@@ -13,6 +14,7 @@ body {
     color: var(--main-text-color);
     display: flex;
     flex-direction: column;
+    margin: 0;
     /* background-image: url('../public/images/noise.png'); */
 }
 
@@ -31,6 +33,7 @@ p {
 }
 
 h2 {
+    font-size: 1.5em;
     margin: 1em 0 1em;
 }
 

@@ -4,6 +4,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { Album, Artist, Movie, Song, Book } from "../../models/Types";
 import List from "../../models/List";
 
+// TS types
+import { IAlbum, IArtist, IBook, IItem, IMovie, ISong } from "../../models/definitions.types";
+import { HydratedDocument } from "mongoose";
+
 import dbConnect from "../../lib/mongodb";
 
 export default async function handler(
@@ -12,17 +16,18 @@ export default async function handler(
 ) {
     let listId = req.body.listId;
 
-    let newItem;
+    let newItem: HydratedDocument<IItem>;
     if (req.body.type === 'movie') {
         const {
             title,
             poster_path,
         } = req.body;
 
-        newItem = new Movie({
+        const newMovie: HydratedDocument<IMovie> = new Movie({
             name: title,
             artURL: `http://image.tmdb.org/t/p/w92${poster_path}`
         });
+        newItem = newMovie;
     } else if (req.body.type === 'book') {
         const {
             title: bookTitle,
@@ -32,13 +37,14 @@ export default async function handler(
             subject
         } = req.body;
 
-        newItem = new Book({
+        const newBook: HydratedDocument<IBook> = new Book({
             name: bookTitle,
             author: author_name.join(', '),
             artURL: `https://covers.openlibrary.org/b/olid/${cover_edition_key}-M.jpg`,
             year: first_publish_year,
             genres: subject.slice(0, 6)
         });
+        newItem = newBook;
     } else {
         const {
             artists,
@@ -55,30 +61,33 @@ export default async function handler(
         const imageURLs = images ? images.map((image) => image.url) : album.images.map((image) => image.url);
 
         if (type === 'artist') {
-            newItem = new Artist({
+            const newArtist: HydratedDocument<IArtist> = new Artist<IArtist>({
                 name: name,
                 artURL: imageURLs[0],
                 status: "todo"
             });
+            newItem = newArtist;
         } else if (type === 'track') {
-            newItem = new Song({
+            const newSong: HydratedDocument<ISong> = new Song<ISong>({
                 name: name,
                 artist: artistNames.join(', '),
                 artURL: imageURLs[0],
                 status: "todo"
             });
+            newItem = newSong;
         } else {
-            newItem = new Album({
+            const newAlbum: HydratedDocument<IAlbum> = new Album<IAlbum>({
                 name: name,
                 artist: artistNames.join(', '),
                 artURL: imageURLs[0],
                 status: "todo"
             });
+            newItem = newAlbum;
         }
     }
 
     await dbConnect();
-    const updatedList: Object[] =
+    const updatedList: IItem[] =
         await List.findOneAndUpdate(
             { _id: listId },                // query for list
             { $push: { items: newItem } },  // add new item

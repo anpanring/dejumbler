@@ -65,6 +65,8 @@ export default function Login({ csrfToken }) {
         <div className={styles.loginWrapper}>
             {!showForm && <div className={styles.loginOptions}>
                 <button className={styles.button} onClick={toggleModal}>Sign in</button>
+                {/* <p>or</p>
+                <button className={styles.button} onClick={toggleModal}>Register</button> */}
                 <p>or</p>
                 <button className={styles.button} onClick={() => signIn("credentials", {
                     username: "user",
@@ -72,7 +74,9 @@ export default function Login({ csrfToken }) {
                     redirect: false,
                 })}>Demo</button>
             </div>}
+
             {showForm && <button className={styles.button} onClick={toggleModal}>← Back</button>}
+
             {showForm && <div className={styles.subLogin}>
                 <form className={styles.form} ref={loginRef} onSubmit={handleSubmit}>
                     <input name="csrfToken" type="hidden" defaultValue={csrfToken} />

@@ -27,6 +27,7 @@
 }
 
 .loadingLogo {
+    fill: var(--main-text-color);
     animation: spin 2s ease-in-out infinite;
     height: 3em;
     width: 3em;
