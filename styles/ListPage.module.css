@@ -16,6 +16,7 @@
     flex-direction: column;
     flex-wrap: wrap;
     gap: 10px;
+    padding-bottom: 1em;
 }
 
 .listItem {
@@ -27,6 +28,8 @@
 
 .listItemArt {
     margin-left: 1em;
+    width: 50px;
+    height: auto;
 }
 
 .listItemText {

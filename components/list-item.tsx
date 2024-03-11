@@ -51,7 +51,7 @@ function ListItem({ data, listId, handleDataChange, type }) {
     if (type === "Movies") {
         return (
             <div className={styles.listItem} >
-                <img className={styles.listItemArt} src={data.artURL} width={50} alt={data.name} />
+                <img className={styles.listItemArt} src={data.artURL} alt={data.name} />
 
                 <div className={styles.listItemText}>
                     <p className={styles.itemInfo}> {data.name} </p>
@@ -80,7 +80,7 @@ function ListItem({ data, listId, handleDataChange, type }) {
     } else if (type === "Books") {
         return (
             <div className={styles.listItem} >
-                <img className={styles.listItemArt} src={data.artURL} width={50} alt={data.name} />
+                <img className={styles.listItemArt} src={data.artURL} alt={data.name} />
 
                 <div className={styles.listItemText}>
                     <p className={styles.itemInfo}> {data.name} </p>
@@ -110,7 +110,7 @@ function ListItem({ data, listId, handleDataChange, type }) {
     } else {
         return ( // Music
             <div className={styles.listItem} >
-                <img className={styles.listItemArt} src={data.artURL} width={50} height={50} alt={data.name} />
+                <img className={styles.listItemArt} src={data.artURL} alt={data.name} />
 
                 <div className={styles.listItemText}>
                     <p className={styles.itemInfo}> {data.name} </p>
