@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 
 import styles from "./search.module.css";
 
@@ -79,6 +79,7 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
 }
 
 function SearchBar({ listId, listType, handleDataChange }) {
+
     const [results, setResults] = useState([]);
     const [type, setType] = useState('all');
     const [query, setQuery] = useState('');
@@ -93,6 +94,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
 
         if (query) {
             setSearching(true);
+            console.log('searching...')
             switch (listType) {
                 case "Music":
                     fetch(`/api/spot/search?q=${query}&type=${type}`, { signal })
@@ -123,6 +125,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                     break;
             }
             setSearching(false);
+            console.log('done searching');
         } else setResults([]);
 
         return () => {
@@ -142,6 +145,11 @@ function SearchBar({ listId, listType, handleDataChange }) {
                     ref={formRef}
                     required
                 />
+                {/* <button className={styles.clearButton}>
+                    <span className={`material-symbols-outlined ${styles.clearButtonIcon}`}>
+                        close
+                    </span>
+                </button> */}
                 {listType !== 'Movies' && listType !== 'Books' && <select
                     onChange={(e) => setType(e.target.value)}
                     className={styles.searchTypeSelect}

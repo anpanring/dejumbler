@@ -47,6 +47,29 @@
     padding: 0.5em;
 }
 
+.searchInput:focus {
+    outline: none;
+    border: solid 1px var(--accent-color);
+}
+
+.clearButton {
+    width: fit-content;
+    height: fit-content;
+    position: absolute;
+    z-index: 98;
+    border: none;
+    background-color: transparent;
+    margin-left: 15.5em;
+}
+
+.clearButton:hover {
+    background-color: transparent;
+}
+
+span.clearButtonIcon {
+    font-size: 20px;
+}
+
 .button {
     border: solid var(--accent-color) 1px;
     background-color: white;
@@ -97,12 +120,4 @@
 .addButton:hover {
     background: var(--accent-color);
     color: white;
-}
-
-.clearButton {
-    width: fit-content;
-    height: fit-content;
-    position: absolute;
-    left: 17em;
-    z-index: 98;
 }
