@@ -1,7 +1,6 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import styles from "./login.module.css";
-import { useState, useRef, useLayoutEffect } from "react";
-import Modal from "./modal";
+import { useState, useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useRouter } from "next/router";

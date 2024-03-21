@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 import dbConnect from "../lib/mongodb";
 import List from "../models/List";
 
-import Layout from "../components/layout";
+import Layout, { WindowSizeContext } from "../components/layout";
 import Modal from "../components/modal";
 import Snackbar from "../components/snackbar";
 import ListItem from "../components/list-item";
@@ -18,28 +18,21 @@ import { authOptions } from "./api/auth/[...nextauth]";
 // TODO: implement drag and drop
 import { useDrag } from "react-dnd";
 
+import useWindowSize from "../lib/useWindowSize";
+
 import styles from "../styles/AllLists.module.css";
 import formStyles from '../components/navbar.module.css';
 import { set } from "mongoose";
 
 const mobileWidth = 600;
 
-// Custom hook for live window size
-function useWindowSize() {
-    const [size, setSize] = useState([0, 0]);
-    useEffect(() => {
-        function updateSize() {
-            setSize([window.innerWidth, window.innerHeight]);
-        }
-        window.addEventListener('resize', updateSize);
-        updateSize();
-        return () => window.removeEventListener('resize', updateSize);
-    }, []);
-    return size;
-}
+export const CurrentListContext = createContext(null);
 
 // List
-function ListBox({ data, setListData, isDragging, listModified, setListModified, setCurrentList, selected }) {
+function ListBox({ data, setListData, isDragging, listModified, setListModified, selected }) {
+    const {currentList, setCurrentList} = useContext(CurrentListContext);
+    const { width, height } = useContext(WindowSizeContext);
+
     const [showEditOptions, setShowEditOptions] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
@@ -47,8 +40,6 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
     // list name and description
     const [name, setName] = useState(data.name);
     const [description, setDescription] = useState(data.description);
-
-    const [width, height] = useWindowSize();
 
     async function handleDelete(e, id) {
         e.preventDefault();
@@ -154,8 +145,11 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
 }
 
 // List Container
-function ListContainer({ lists, setListData, listModified, setListModified, setCurrentListModified }) {
+function ListContainer({ lists, setListData, listModified, setListModified }) {
+    // state for context! d
     const [currentList, setCurrentList] = useState(null);
+    
+    // detecting wide mode
     const [width, height] = useWindowSize();
 
     const [currentListData, setCurrentListData] = useState(null);
@@ -177,59 +171,64 @@ function ListContainer({ lists, setListData, listModified, setListModified, setC
     }, [currentList]);
 
     function handleDataChange(changedData, changeType) {
-        setCurrentListData(changedData);               // all list items
-        setSongAdded(true);                 // controls showing of snackbar
-        setChangeType(changeType);          // when adding/removing items
+        setCurrentListData(changedData);        // all list items
+        setSongAdded(true);                     // controls showing of snackbar
+        setChangeType(changeType);              // when adding/removing items
     }
 
     return (
-        <div className={`${styles.wideview} ${width < mobileWidth ? styles.mobileview : ''}`}>
-            {/* Left */}
-            <section className={`${styles.allListsContainer} ${currentList == null || width < mobileWidth ? styles.wide : ''}`}>
-                {lists.map((list) => {
-                    return <ListBox
-                        data={list}
-                        setListData={setListData}
-                        key={list._id}
-                        listModified={listModified}
-                        setListModified={setListModified}
-                        setCurrentList={setCurrentList}
-                        selected={list._id == currentList ? true : false}
-                    />;
-                })}
-            </section>
-            {/* Right */}
-            {loading && <p>Loading...</p>}
-            {currentList && width >= mobileWidth &&
-                <section className={styles.currentListContainer}>
-                    <div className={styles.flexSpaceBetween}>
-                        {currentListData &&
-                            <SearchBar listId={currentList} listType={currentListData.type} handleDataChange={handleDataChange} />}
-                        {currentListData &&
-                            <button className={styles.closeCurrentList} onClick={() => {
-                                setCurrentList(null);
-                                setCurrentListData(null);
-                            }}>X</button>}
-                    </div>
-                    {currentListData && currentListData.items.map((item) => {
-                        return <ListItem
-                            data={item}
-                            listId={currentList}
-                            key={item._id}
-                            handleDataChange={handleDataChange}
-                        />
+        <CurrentListContext.Provider value={{currentList, setCurrentList}}>
+            <div className={`${styles.wideview} ${width < mobileWidth ? styles.mobileview : ''}`}>
+                {/* Left */}
+                <section className={`${styles.allListsContainer} ${currentList == null || width < mobileWidth ? styles.wide : ''}`}>
+                    {lists.map((list) => {
+                        return <ListBox
+                            data={list}
+                            setListData={setListData}
+                            key={list._id}
+                            listModified={listModified}
+                            setListModified={setListModified}
+                            setCurrentList={setCurrentList}
+                            selected={list._id == currentList ? true : false}
+                        />;
                     })}
-                    {songAdded && <Snackbar message={`${changeType} ${currentListData.name}`} toggleShow={setSongAdded} />}
-                </section>}
-        </div>
+                </section>
+                {/* Right */}
+                {loading && <p>Loading...</p>}
+                {currentList && width >= mobileWidth &&
+                    <section className={styles.currentListContainer}>
+                        <div className={styles.flexSpaceBetween}>
+                            {currentListData &&
+                                <SearchBar listId={currentList} listType={currentListData.type} handleDataChange={handleDataChange} />}
+                            {currentListData &&
+                                <button className={styles.closeCurrentList} onClick={() => {
+                                    setCurrentList(null);
+                                    setCurrentListData(null);
+                                }}>X</button>}
+                        </div>
+                        {currentListData && currentListData.items.map((item) => {
+                            return <ListItem
+                                data={item}
+                                listId={currentList}
+                                key={item._id}
+                                handleDataChange={handleDataChange}
+                            />
+                        })}
+                        {songAdded && <Snackbar message={`${changeType} ${currentListData.name}`} toggleShow={setSongAdded} />}
+                    </section>}
+            </div>
+        </CurrentListContext.Provider>
     );
 }
 
 // Main page for now
 export default function AllLists({ lists }) {
     const [listData, setListData] = useState(lists ? JSON.parse(lists) : []);
+
     const [type, setType] = useState('Any');
     const [displayType, setDisplayType] = useState('All');
+
+    // control snackbars
     const [listModified, setListModified] = useState(false);
     const [currentListModified, setCurrentListModified] = useState(false);
 
@@ -253,7 +252,7 @@ export default function AllLists({ lists }) {
     return (
         <Layout>
             <Head>
-                <title>All Lists</title>
+                <title>Dejumbler - All Lists</title>
             </Head>
 
             <div className={styles.topBar}>

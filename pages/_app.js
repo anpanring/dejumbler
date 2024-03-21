@@ -14,6 +14,8 @@ export default function App({
     pageProps: { session, ...pageProps },
 }) {
     // const { data: authSession, status } = useSession();
+
+    // runs on every page!!
     useEffect(() => {
         // if (session) {
         const theme = localStorage.getItem('theme');

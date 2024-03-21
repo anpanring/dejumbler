@@ -22,10 +22,25 @@ export default function Home() {
 
     if (session.status === 'loading') {
         return (
-            <div className={styles.loadingContainer}>
-                <Image src={logo} className={styles.loadingLogo} alt='logo' />
-                {/* <h3>Loading...</h3> */}
-            </div>
+            <>
+                <Head>
+                    <title>{siteTitle}</title>
+                    <meta name="description" content="Clean your brain out with the Dejumbler." />
+                    <meta name="og:title" content={siteTitle} />
+                    <meta name="twitter:card" content="summary_large_image" />
+                    <meta name="google-site-verification" content="n5dZdc1QljJ4k39BSCkZAbhnJS5CjIdAo6OHVqD_c-Y" />
+                </Head>
+                <div className={styles.loadingContainer}>
+                    <svg className={styles.loadingLogo} alt='logo' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.5 283.5">
+                        <path
+                            d="M0 0v283.5h283.5V0H0Zm221.55 108.55h-16v-40h16v40Z"
+                            style={{
+                                strokeWidth: 0,
+                            }}
+                        />
+                    </svg>
+                </div>
+            </>
         );
     }
 
