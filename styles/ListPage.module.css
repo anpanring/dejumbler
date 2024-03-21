@@ -66,10 +66,12 @@
     margin-top: 0.5em;
 }
 
-.notesForm {
-    display: flex;
-    gap: 0.5em;
-    align-items: flex-end;
+@media (width >= 600px) {
+    .notesForm {
+        display: flex;
+        gap: 0.5em;
+        align-items: flex-end;
+    }
 }
 
 .notesInput {
@@ -87,6 +89,19 @@
     display: flex;
     flex-direction: column;
     gap: 0.25em;
+}
+
+@media (width < 600px) {
+    .notesForm {
+        flex-direction: column;
+        gap: 0.25em;
+    }
+
+    .notesEditButtons {
+        display: flex;
+        flex-direction: row;
+        gap: 0.25em;
+    }
 }
 
 .artistRow {

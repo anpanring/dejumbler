@@ -21,5 +21,5 @@ export default async function handler(
         await dbConnect();
         const data = await List.findById(query.id);
         res.status(200).json(data);
-    } else res.status(401);
+    } else res.status(401).send([]);
 };
