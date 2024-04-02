@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         console.log(user);
 
         new List({
-            user: ObjectId(user.email),
+            user: ObjectId(user.id),
             name: info.name,
             type: info.type,
             description: info.description,

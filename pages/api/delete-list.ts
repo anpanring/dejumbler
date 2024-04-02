@@ -20,7 +20,7 @@ export default async function handler(
 
         const data: Object[] = await dbConnect()
             .then(() => List.findByIdAndDelete(query.id))
-            .then(() => List.find({ user: user.email }));
+            .then(() => List.find({ user: user.id }));
 
         res.status(200).json(data);
     } else res.status(401);

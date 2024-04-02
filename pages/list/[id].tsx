@@ -83,7 +83,7 @@ export async function getServerSideProps(context) {
     const data: IList = await List.findById(context.params.id);
 
     // verify list belongs to user
-    if (session.user.email !== data.user.toString()) {
+    if (session.user.id !== data.user.toString()) {
         return {
             redirect: {
                 destination: '/',
