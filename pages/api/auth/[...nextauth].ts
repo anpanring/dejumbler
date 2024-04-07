@@ -1,12 +1,11 @@
 import NextAuth from "next-auth";
 import type { NextAuthOptions } from "next-auth";
-// import GithubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import dbConnect from "../../../lib/mongodb";
 import User from "../../../models/User";
 
-import { compare, hash } from "bcrypt";
+import { compare } from "bcrypt";
 
 type LoggedInUser = {
     id: string;
@@ -16,7 +15,6 @@ type LoggedInUser = {
 }
 
 export const authOptions: NextAuthOptions = {
-    // Configure one or more authentication providers
     session: {
         // Set to jwt in order to CredentialsProvider works properly
         strategy: 'jwt'
@@ -34,10 +32,6 @@ export const authOptions: NextAuthOptions = {
         },
     },
     providers: [
-        // GithubProvider({
-        //     clientId: process.env.GITHUB_ID,
-        //     clientSecret: process.env.GITHUB_SECRET,
-        // }),
         CredentialsProvider({
             name: 'username and password',
             credentials: {
@@ -45,11 +39,9 @@ export const authOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req): Promise<LoggedInUser | null> {
-                console.log("authorizing user...");
-
                 await dbConnect();
 
-                const user = await User.findOne({ username: credentials.username });
+                const user = await User.findOne({ username: credentials?.username });
 
                 if (!user) return null;
 
@@ -60,7 +52,7 @@ export const authOptions: NextAuthOptions = {
                     image: ""
                 }
 
-                const match = await compare(credentials.password, user.password);
+                const match = await compare(credentials?.password, user.password);
                 if (match) return currUser;
                 else return null;
             }
@@ -71,15 +63,11 @@ export const authOptions: NextAuthOptions = {
     },
     callbacks: {
         async jwt({ token, user, account, profile }) {
-            console.log('jwt callback');
-            console.log(token, user, account, profile);
             if (user) token.id = user.id;
             return token;
         },
         async session({ session, token, user }) {
-            console.log('session callback');
             session.user.id = token.id;
-            console.log(session, token, user);
             return session;
         }
     }

@@ -1,9 +1,10 @@
 import { Schema, Types, model, models } from "mongoose";
 import { ItemSchema } from "./Item";
+import { IList } from "./definitions.types";
 
 const URLSlugs = require('mongoose-url-slugs')
 
-const ListSchema = new Schema({
+const ListSchema = new Schema<IList>({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
@@ -27,4 +28,4 @@ const ListSchema = new Schema({
 
 ListSchema.plugin(URLSlugs('name'));
 
-export default models.List || model('List', ListSchema);
+export default models.List || model<IList>('List', ListSchema);

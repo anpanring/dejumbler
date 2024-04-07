@@ -29,8 +29,8 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
                 </div>
             );
         case 'Movies':
-            console.log(data);
-            const { title, poster_path, overview } = data;
+            // console.log(data);
+            const { title, poster_path, overview, director, year } = data;
             data.type = 'movie';
 
             return (
@@ -39,6 +39,7 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
                     <button className={styles.addButton} onClick={() => addToList(data, listId, title)}>+</button>
                     <div className={styles.searchResultText}>
                         <p className={styles.title}>{title}</p>
+                        <p className={styles.artist}>{director && `Dir. ${director}`} {year && `(${year})`}</p>
                         <p className={styles.type}>{overview.slice(0, 120)}...</p>
                     </div>
                 </div>
@@ -108,7 +109,27 @@ function SearchBar({ listId, listType, handleDataChange }) {
                 case "Movies":
                     fetch(`https://api.themoviedb.org/3/search/movie?query=${query}&api_key=3770f4ac92cd31bf3489e56a9cc9c5d7`, { signal })
                         .then(res => res.json())
-                        .then(data => setResults(data.results.slice(0, 6)))
+                        .then(data => {
+                            const results = data.results.slice(0, 6);
+                            return results.map(async (result) => {
+                                const director = await fetch(`https://api.themoviedb.org/3/movie/${result.id}/credits?api_key=3770f4ac92cd31bf3489e56a9cc9c5d7`)
+                                    .then(response => response.json())
+                                    .then((jsonData) => jsonData.crew.filter(({ job }) => job === 'Director'));
+
+                                const year = await fetch(`https://api.themoviedb.org/3/movie/${result.id}/release_dates?api_key=3770f4ac92cd31bf3489e56a9cc9c5d7`)
+                                    .then(response => response.json())
+                                    .then((jsonData) => jsonData.results.find(({ iso_3166_1 }) => iso_3166_1 === 'US')?.release_dates[0]?.release_date.slice(0, 4));
+                                result.director = director[0]?.name;
+                                result.year = year;
+                                return result;
+                            });
+                            // console.log(resultsWithDirectors);
+                            // setResults(resultsWithDirectors);
+                        })
+                        .then(async resultsWithDirectors => {
+                            const results = await Promise.all(resultsWithDirectors);
+                            setResults(results);
+                        })
                         .catch(err => {
                             if (err.name === 'AbortError') console.log('Request aborted');
                             else console.log('Error: ', err);
@@ -164,7 +185,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
             </form>
             <div className={styles.resultsWrapper}>
                 {results.map((result) => {
-                    console.log(result);
+                    // console.log(result);
                     return <SearchResult
                         key={result.id}
                         data={result}

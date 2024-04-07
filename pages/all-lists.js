@@ -22,7 +22,6 @@ import useWindowSize from "../lib/useWindowSize";
 
 import styles from "../styles/AllLists.module.css";
 import formStyles from '../components/navbar.module.css';
-import { set } from "mongoose";
 
 const mobileWidth = 600;
 
@@ -30,7 +29,7 @@ export const CurrentListContext = createContext(null);
 
 // List
 function ListBox({ data, setListData, isDragging, listModified, setListModified, selected }) {
-    const {currentList, setCurrentList} = useContext(CurrentListContext);
+    const { currentList, setCurrentList } = useContext(CurrentListContext);
     const { width, height } = useContext(WindowSizeContext);
 
     const [showEditOptions, setShowEditOptions] = useState(false);
@@ -94,6 +93,8 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
             <svg width="15px" height="15px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#000000" className={styles.kebab} onClick={() => setShowEditOptions(!showEditOptions)}>
                 <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
             </svg>
+
+            {/* List options modal */}
             {showEditOptions && !confirmDelete && !editMode &&
                 <Modal toggleModal={() => setShowEditOptions(!showEditOptions)}>
                     <div className={styles.editContainer}>
@@ -106,6 +107,8 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
                         </button>
                     </div>
                 </Modal>}
+
+            {/* Delete modal */}
             {confirmDelete &&
                 <Modal toggleModal={close}>
                     <div className={styles.editContainer}>
@@ -124,6 +127,8 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
                         </button>
                     </div>
                 </Modal>}
+
+            {/* Edit modal */}
             {editMode &&
                 <Modal toggleModal={close}>
                     <form className={formStyles.form} onSubmit={handleListUpdate} method="POST">
@@ -146,9 +151,9 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
 
 // List Container
 function ListContainer({ lists, setListData, listModified, setListModified }) {
-    // state for context! d
+    // state for context!
     const [currentList, setCurrentList] = useState(null);
-    
+
     // detecting wide mode
     const [width, height] = useWindowSize();
 
@@ -177,7 +182,7 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
     }
 
     return (
-        <CurrentListContext.Provider value={{currentList, setCurrentList}}>
+        <CurrentListContext.Provider value={{ currentList, setCurrentList }}>
             <div className={`${styles.wideview} ${width < mobileWidth ? styles.mobileview : ''}`}>
                 {/* Left */}
                 <section className={`${styles.allListsContainer} ${currentList == null || width < mobileWidth ? styles.wide : ''}`}>
@@ -193,6 +198,7 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
                         />;
                     })}
                 </section>
+
                 {/* Right */}
                 {loading && <p>Loading...</p>}
                 {currentList && width >= mobileWidth &&
@@ -212,6 +218,7 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
                                 listId={currentList}
                                 key={item._id}
                                 handleDataChange={handleDataChange}
+                                type={currentListData.type}
                             />
                         })}
                         {songAdded && <Snackbar message={`${changeType} ${currentListData.name}`} toggleShow={setSongAdded} />}

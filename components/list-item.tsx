@@ -55,6 +55,7 @@ function ListItem({ data, listId, handleDataChange, type }) {
 
                 <div className={styles.listItemText}>
                     <p className={styles.itemInfo}> {data.name} </p>
+                    <p className={styles.artistRow}>{data.director && `Dir. ${data.director}`} {data.year && `(${data.year})`}</p>
 
                     {
                         !showForm && <p className={styles.notes}> Notes: {notes} </p>}
@@ -84,7 +85,7 @@ function ListItem({ data, listId, handleDataChange, type }) {
 
                 <div className={styles.listItemText}>
                     <p className={styles.itemInfo}> {data.name} </p>
-                    <p className={styles.artistRow} > {data.author}({data.year}) </p>
+                    <p className={styles.artistRow}>{data.author} ({data.year})</p>
 
                     {
                         !showForm && <p className={styles.notes}> Notes: {notes} </p>}

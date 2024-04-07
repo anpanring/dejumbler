@@ -1,14 +1,9 @@
-import { createContext, Suspense, useState } from 'react';
+import { createContext, Suspense } from 'react';
 
 import Head from 'next/head';
 
 import Loading from './loading';
-import Login from './login';
 import Navbar from './navbar';
-import Modal from './modal';
-
-import { useSession } from 'next-auth/react';
-import { signOut } from 'next-auth/react';
 
 import styles from './layout.module.css';
 

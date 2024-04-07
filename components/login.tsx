@@ -1,3 +1,5 @@
+'use client';
+
 import { getCsrfToken, useSession, signIn } from "next-auth/react";
 
 import styles from "./login.module.css";
@@ -26,7 +28,7 @@ export default function Login({ csrfToken }) {
 
     const router = useRouter();
 
-    const loginRef = useRef(null);
+    const loginRef = useRef<HTMLFormElement | null>(null);
     useGSAP(() => {
         gsap.from(loginRef.current, {
             y: "20",
@@ -49,7 +51,7 @@ export default function Login({ csrfToken }) {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        const { error, ok } = await signIn(
+        const signInResponse = await signIn(
             "credentials",
             {
                 username: username,
@@ -57,10 +59,10 @@ export default function Login({ csrfToken }) {
                 // callbackUrl: '/all-lists',
                 redirect: false,
             });
-        if (error) {
+        if (signInResponse?.error) {
             setError("Invalid username or password");
-            loginRef.current.reset();
-        } else if (ok) {
+            loginRef.current?.reset();
+        } else if (signInResponse?.ok) {
             router.push("/all-lists");
             const theme = localStorage.getItem('theme');
             if (theme) document.documentElement.setAttribute('data-theme', theme);
@@ -81,7 +83,7 @@ export default function Login({ csrfToken }) {
             }),
         }).then(async (res) => {
             if (res.status === 200) {
-                const obj = await signIn(
+                const signInResponse = await signIn(
                     "credentials",
                     {
                         username: username,
@@ -89,18 +91,18 @@ export default function Login({ csrfToken }) {
                         // callbackUrl: '/all-lists',
                         redirect: false,
                     });
-                console.log(obj);
-                if (obj.error) {
+                // console.log(obj);
+                if (signInResponse?.error) {
                     setError(error);
-                    loginRef.current.reset();
-                } else if (obj.ok) {
+                    loginRef.current?.reset();
+                } else if (signInResponse?.ok) {
                     router.push("/all-lists");
                     const theme = localStorage.getItem('theme');
                     if (theme) document.documentElement.setAttribute('data-theme', theme);
                 }
             } else {
                 setError("User already exists");
-                loginRef.current.reset();
+                loginRef.current?.reset();
             }
         });
     }
@@ -141,7 +143,7 @@ export default function Login({ csrfToken }) {
             </div>}
 
             {mode === Mode.REGISTER && <div className={styles.subLogin}>
-            <button className={`${styles.button} ${styles.backButton}`} onClick={back}>← Back</button>
+                <button className={`${styles.button} ${styles.backButton}`} onClick={back}>← Back</button>
                 <form className={styles.form} ref={loginRef} onSubmit={handleRegister}>
                     <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
                     <div className={styles.formSub}>
