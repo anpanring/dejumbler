@@ -16,10 +16,10 @@ export default async function handler(req, res) {
         await dbConnect();
         var data;
 
-        if (query.type == "Any") data = await List.find({ user: user.email });
+        if (query.type == "Any") data = await List.find({ user: user.id });
         else {
             const listType = query.type.charAt(0).toUpperCase() + query.type.slice(1);
-            data = await List.find({ type: listType, user: user.email });
+            data = await List.find({ type: listType, user: user.id });
         }
         res.status(200).json(data);
     } else res.status(401).send();

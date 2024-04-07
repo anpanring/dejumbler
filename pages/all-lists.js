@@ -268,6 +268,8 @@ export default function AllLists({ lists }) {
                 </div>
             </div>
 
+            {/* {listData.length == 0 && <h1>Make some lists!</h1>} */}
+
             <ListContainer lists={listData} setListData={setListData} listModified={listModified} setListModified={setListModified} />
 
             {listModified && <Snackbar message={`Deleted list`} toggleShow={setListModified} />}
@@ -293,7 +295,7 @@ export async function getServerSideProps(context) {
 
     // Get lists with direct mongoose call
     await dbConnect();
-    const result = await List.find({ user: user.email }); // email is rly _id
+    const result = await List.find({ user: user.id }); // email is rly _id
 
     return { props: { lists: JSON.stringify(result) } }
 }

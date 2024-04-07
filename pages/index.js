@@ -2,16 +2,13 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-import Layout, { siteTitle } from '../components/layout';
+import { siteTitle } from '../components/layout';
 import Login from '../components/login';
 
 import textLogo from '../public/images/dejumbler-text-logo.png';
-import logo from '../public/images/dejumbler-logo.png';
 import styles from '../styles/Home.module.css';
 
 import { useSession } from 'next-auth/react';
-// import { getServerSession } from 'next-auth';
-// import { authOptions } from "./api/auth/[...nextauth]";
 
 
 export default function Home() {
