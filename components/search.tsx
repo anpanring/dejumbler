@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState, useRef, useContext } from "react";
 
 import styles from "./search.module.css";
@@ -81,12 +82,12 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
 
 function SearchBar({ listId, listType, handleDataChange }) {
 
-    const [results, setResults] = useState([]);
+    const [results, setResults] = useState<Object[]>([]);
     const [type, setType] = useState('all');
     const [query, setQuery] = useState('');
     const [searching, setSearching] = useState<boolean>(false);
 
-    const formRef = useRef();
+    const formRef = useRef(null);
 
     // Add https://developer.mozilla.org/en-US/docs/Web/API/AbortController
     useEffect(() => {
@@ -123,8 +124,6 @@ function SearchBar({ listId, listType, handleDataChange }) {
                                 result.year = year;
                                 return result;
                             });
-                            // console.log(resultsWithDirectors);
-                            // setResults(resultsWithDirectors);
                         })
                         .then(async resultsWithDirectors => {
                             const results = await Promise.all(resultsWithDirectors);
@@ -187,7 +186,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                 {results.map((result) => {
                     // console.log(result);
                     return <SearchResult
-                        key={result.id}
+                        key={result.toString()}
                         data={result}
                         listId={listId}
                         listType={listType}

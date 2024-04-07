@@ -89,7 +89,7 @@ export default async function handler(
     }
 
     await dbConnect();
-    const updatedList: IItem[] =
+    const updatedList =
         await List.findOneAndUpdate(
             { _id: listId },                // query for list
             { $push: { items: newItem } },  // add new item
