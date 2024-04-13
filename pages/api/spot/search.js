@@ -40,7 +40,6 @@ export default async function handler(req, res) {
         .then(res => res.json())
         .then((data) => {
             if (data.error) {
-                console.log(data.error);
                 return 401;
             }
             else return data;
@@ -49,8 +48,6 @@ export default async function handler(req, res) {
     if (data == 401) res.status(401).send();
 
     else {
-        // console.log(data);
-
         let list = [];
         if (query.type == 'all') {
             data.albums.items.slice(0, 2).map(album => list.push(album));
@@ -58,8 +55,6 @@ export default async function handler(req, res) {
             data.artists.items.slice(0, 2).map(artist => list.push(artist));
         }
         else list = data[`${query.type}s`].items;
-
-        // console.log(list);
 
         res.status(200).json(list);
     }

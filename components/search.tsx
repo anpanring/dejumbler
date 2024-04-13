@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState, useRef, useContext } from "react";
 
 import styles from "./search.module.css";
@@ -29,8 +30,7 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
                 </div>
             );
         case 'Movies':
-            console.log(data);
-            const { title, poster_path, overview } = data;
+            const { title, poster_path, overview, director, year } = data;
             data.type = 'movie';
 
             return (
@@ -39,6 +39,7 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
                     <button className={styles.addButton} onClick={() => addToList(data, listId, title)}>+</button>
                     <div className={styles.searchResultText}>
                         <p className={styles.title}>{title}</p>
+                        <p className={styles.artist}>{director && `Dir. ${director}`} {year && `(${year})`}</p>
                         <p className={styles.type}>{overview.slice(0, 120)}...</p>
                     </div>
                 </div>
@@ -80,12 +81,12 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
 
 function SearchBar({ listId, listType, handleDataChange }) {
 
-    const [results, setResults] = useState([]);
+    const [results, setResults] = useState<Object[]>([]);
     const [type, setType] = useState('all');
     const [query, setQuery] = useState('');
     const [searching, setSearching] = useState<boolean>(false);
 
-    const formRef = useRef();
+    const formRef = useRef(null);
 
     // Add https://developer.mozilla.org/en-US/docs/Web/API/AbortController
     useEffect(() => {
@@ -94,7 +95,6 @@ function SearchBar({ listId, listType, handleDataChange }) {
 
         if (query) {
             setSearching(true);
-            console.log('searching...')
             switch (listType) {
                 case "Music":
                     fetch(`/api/spot/search?q=${query}&type=${type}`, { signal })
@@ -108,7 +108,25 @@ function SearchBar({ listId, listType, handleDataChange }) {
                 case "Movies":
                     fetch(`https://api.themoviedb.org/3/search/movie?query=${query}&api_key=3770f4ac92cd31bf3489e56a9cc9c5d7`, { signal })
                         .then(res => res.json())
-                        .then(data => setResults(data.results.slice(0, 6)))
+                        .then(data => {
+                            const results = data.results.slice(0, 6);
+                            return results.map(async (result) => {
+                                const director = await fetch(`https://api.themoviedb.org/3/movie/${result.id}/credits?api_key=3770f4ac92cd31bf3489e56a9cc9c5d7`)
+                                    .then(response => response.json())
+                                    .then((jsonData) => jsonData.crew.filter(({ job }) => job === 'Director'));
+
+                                const year = await fetch(`https://api.themoviedb.org/3/movie/${result.id}/release_dates?api_key=3770f4ac92cd31bf3489e56a9cc9c5d7`)
+                                    .then(response => response.json())
+                                    .then((jsonData) => jsonData.results.find(({ iso_3166_1 }) => iso_3166_1 === 'US')?.release_dates[0]?.release_date.slice(0, 4));
+                                result.director = director[0]?.name;
+                                result.year = year;
+                                return result;
+                            });
+                        })
+                        .then(async resultsWithDirectors => {
+                            const results = await Promise.all(resultsWithDirectors);
+                            setResults(results);
+                        })
                         .catch(err => {
                             if (err.name === 'AbortError') console.log('Request aborted');
                             else console.log('Error: ', err);
@@ -141,7 +159,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                     onChange={(e) => setQuery(e.target.value)}
                     type="text"
                     name="value"
-                    placeholder={`Search ${listType}...`}
+                    placeholder={`Search ${listType.toLowerCase()} to add...`}
                     ref={formRef}
                     required
                 />
@@ -164,16 +182,17 @@ function SearchBar({ listId, listType, handleDataChange }) {
             </form>
             <div className={styles.resultsWrapper}>
                 {results.map((result) => {
-                    console.log(result);
                     return <SearchResult
-                        key={result.id}
+                        key={result.toString()}
                         data={result}
                         listId={listId}
                         listType={listType}
                         handleDataChange={handleDataChange}
                     />;
                 })}
-                {listType === 'Movies' && <p>*results from <a href="https://www.themoviedb.org/?language=en-US">The Movie Database (TMDB)</a></p>}
+                {listType === 'Movies' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">The Movie Database (TMDB) API</a></p>}
+                {listType === 'Music' && <p>*results from <a href="https://developer.spotify.com/documentation/web-api" rel="noreferrer" target="_blank">Spotify API</a></p>}
+                {listType === 'Books' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">Open Library API</a></p>}
                 {searching && <p>Searching...</p>}
             </div>
         </div>

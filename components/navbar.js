@@ -48,7 +48,7 @@ export default function Navbar({ changeMode }) {
                             home
                         </span>
                     </Link> */}
-                    <Link className={styles.link} href="/all-lists">
+                    <Link className={styles.link} href="/all-lists" aria-label="All Lists">
                         <span className={`material-symbols-outlined ${styles.icon}`}>
                             format_list_bulleted
                         </span>

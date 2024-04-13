@@ -12,7 +12,6 @@ export default async function handler(req, res) {
     const session = await getServerSession(req, res, authOptions);
     if (session) {
         const { user, expires } = session;
-        console.log(user);
 
         new List({
             user: ObjectId(user.id),

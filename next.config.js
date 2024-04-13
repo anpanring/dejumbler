@@ -20,6 +20,11 @@ const nextConfig = {
     env: {
         MONGODB_URI: process.env.MONGODB_URI,
     },
+    logging: {
+        fetches: {
+            fullUrl: true,
+        }
+    }
 }
 
 module.exports = nextConfig

@@ -1,0 +1,13 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+export default function handler(
+    req: NextApiRequest,
+    res: NextApiResponse
+) {
+    const { id } = req.query
+    res.send(`Post: ${id}`)
+
+    // edit
+
+    // delete
+}

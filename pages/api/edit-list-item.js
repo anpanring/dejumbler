@@ -4,7 +4,6 @@ import List from "../../models/List";
 export default async function handler(req, res) {
     await dbConnect().then(() => {
         const data = req.body;
-        console.log(data);
 
         return List.findOneAndUpdate(
             { _id: data.listId, "items._id": data.itemId },

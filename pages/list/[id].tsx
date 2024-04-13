@@ -80,7 +80,7 @@ export async function getServerSideProps(context) {
 
     // fetch list
     await dbConnect();
-    const data: IList = await List.findById(context.params.id);
+    const data = await List.findById(context.params.id);
 
     // verify list belongs to user
     if (session.user.id !== data.user.toString()) {
