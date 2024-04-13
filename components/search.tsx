@@ -30,7 +30,6 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
                 </div>
             );
         case 'Movies':
-            // console.log(data);
             const { title, poster_path, overview, director, year } = data;
             data.type = 'movie';
 
@@ -96,7 +95,6 @@ function SearchBar({ listId, listType, handleDataChange }) {
 
         if (query) {
             setSearching(true);
-            console.log('searching...')
             switch (listType) {
                 case "Music":
                     fetch(`/api/spot/search?q=${query}&type=${type}`, { signal })
@@ -161,7 +159,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                     onChange={(e) => setQuery(e.target.value)}
                     type="text"
                     name="value"
-                    placeholder={`Search ${listType}...`}
+                    placeholder={`Search ${listType.toLowerCase()} to add...`}
                     ref={formRef}
                     required
                 />
@@ -184,7 +182,6 @@ function SearchBar({ listId, listType, handleDataChange }) {
             </form>
             <div className={styles.resultsWrapper}>
                 {results.map((result) => {
-                    // console.log(result);
                     return <SearchResult
                         key={result.toString()}
                         data={result}
@@ -193,7 +190,9 @@ function SearchBar({ listId, listType, handleDataChange }) {
                         handleDataChange={handleDataChange}
                     />;
                 })}
-                {listType === 'Movies' && <p>*results from <a href="https://www.themoviedb.org/?language=en-US">The Movie Database (TMDB)</a></p>}
+                {listType === 'Movies' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">The Movie Database (TMDB) API</a></p>}
+                {listType === 'Music' && <p>*results from <a href="https://developer.spotify.com/documentation/web-api" rel="noreferrer" target="_blank">Spotify API</a></p>}
+                {listType === 'Books' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">Open Library API</a></p>}
                 {searching && <p>Searching...</p>}
             </div>
         </div>

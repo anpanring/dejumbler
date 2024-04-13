@@ -5,7 +5,7 @@ import { IAlbum, IArtist, IBook, IMovie, ISong } from "./definitions.types";
 
 const options = { discriminatorKey: 'kind' };
 
-console.log("Mongoose Models: ", mongoose.modelNames());
+// console.log("Mongoose Models: ", mongoose.modelNames());
 if (mongoose.modelNames().includes('Album')) {
     mongoose.deleteModel('Album');
     mongoose.deleteModel('Artist');

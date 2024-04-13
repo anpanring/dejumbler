@@ -10,7 +10,6 @@ export default function Snackbar({ message, toggleShow }) {
     useGSAP(async () => {
         // const ctx = gsap.context(async () => {
         let tl = gsap.timeline();
-        console.log('showing snackbar')
         await tl.from(boxRef.current, {
             y: 20,
             opacity: 100,
@@ -22,7 +21,6 @@ export default function Snackbar({ message, toggleShow }) {
             duration: 0.1,
             delay: 2,
         });
-        console.log('done');
         toggleShow(false);
     });
 

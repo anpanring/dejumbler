@@ -91,7 +91,6 @@ export default function Login({ csrfToken }) {
                         // callbackUrl: '/all-lists',
                         redirect: false,
                     });
-                // console.log(obj);
                 if (signInResponse?.error) {
                     setError(error);
                     loginRef.current?.reset();

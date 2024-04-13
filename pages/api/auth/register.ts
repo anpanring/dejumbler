@@ -8,11 +8,7 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<{ message: string }>
 ) {
-    console.log("registering user...");
     const { username, password } = req.body;
-
-    console.log(username);
-    console.log(password);
 
     await dbConnect();
     
@@ -26,8 +22,6 @@ export default async function handler(
     else {
         bcrypt.genSalt(10, function (err, salt) {
             bcrypt.hash(password, salt, async function (err, hash) {
-                console.log(hash);
-                console.log(password);
 
                 // Store hash in your password DB.
                 const newUser = new User({
