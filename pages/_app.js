@@ -15,18 +15,6 @@ export default function App({
 }) {
     // const { data: authSession, status } = useSession();
 
-    // runs on every page!!
-    useEffect(() => {
-        // if (session) {
-        const theme = localStorage.getItem('theme');
-        const accent = localStorage.getItem('accent');
-        if (theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            document.documentElement.style.setProperty("--accent-color", accent);
-        }
-        // }
-    })
-
     return (
         <SessionProvider session={session}>
             <Component {...pageProps} />
