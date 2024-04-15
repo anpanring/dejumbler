@@ -1,4 +1,4 @@
-import { createContext, Suspense } from 'react';
+import { createContext, Suspense, useEffect } from 'react';
 
 import Head from 'next/head';
 
@@ -19,6 +19,17 @@ export default function Layout({ children }) {
         document.documentElement.setAttribute('data-theme', color);
         localStorage.setItem('theme', color);
     }
+
+    useEffect(() => {
+        // if (session) {
+        const theme = localStorage.getItem('theme');
+        const accent = localStorage.getItem('accent');
+        if (theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.style.setProperty("--accent-color", accent);
+        }
+        // }
+    })
 
     return (
         <WindowSizeContext.Provider value={{ width, height }}>

@@ -1,20 +1,25 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+
 import { ObjectId } from "bson";
 import dbConnect from "../../lib/mongodb";
 import List from "../../models/List";
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
 
-export default async function handler(req, res) {
-    await dbConnect();
-
+export default async function handler(
+    req: NextApiRequest,
+    res: NextApiResponse
+) {
     const info = req.body;
 
     const session = await getServerSession(req, res, authOptions);
     if (session) {
         const { user, expires } = session;
 
+        await dbConnect();
         new List({
-            user: ObjectId(user.id),
+            user: new ObjectId(user.id),
             name: info.name,
             type: info.type,
             description: info.description,
