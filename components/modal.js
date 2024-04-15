@@ -1,13 +1,11 @@
-import { useEffect, useRef } from "react";
-
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-
+import { useEffect, useRef } from "react";
 import styles from "./modal.module.css";
 
 export default function Modal({ toggleModal, children }) {
-    const comp = useRef<HTMLDivElement>(null);
-    const modal = useRef <HTMLDivElement>(null);
+    const comp = useRef();
+    const modal = useRef();
 
     gsap.config({
         nullTargetWarn: false,

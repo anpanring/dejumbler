@@ -1,32 +1,25 @@
-// react
 import { createContext, useContext, useEffect, useState } from "react";
 
-// db
 import dbConnect from "../lib/mongodb";
 import List from "../models/List";
 
-// local components
 import Layout, { WindowSizeContext } from "../components/layout";
 import Modal from "../components/modal";
 import Snackbar from "../components/snackbar";
 import ListItem from "../components/list-item";
 import SearchBar from "../components/search";
 
-// next components
 import Link from "next/link";
 import Head from "next/head";
 
-// next-auth
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./api/auth/[...nextauth]";
-// import { useSession } from "next-auth/react";
 
 // TODO: implement drag and drop
 import { useDrag } from "react-dnd";
 
 import useWindowSize from "../lib/useWindowSize";
 
-// styles
 import styles from "../styles/AllLists.module.css";
 import formStyles from '../components/navbar.module.css';
 
@@ -246,7 +239,6 @@ export default function AllLists({ lists }) {
     const [listModified, setListModified] = useState(false);
     const [currentListModified, setCurrentListModified] = useState(false);
 
-    // const session = useSession();
     useEffect(() => {
         async function populateList() {
             const res = await fetch(`/api/get-all-lists?type=${type}`);

@@ -4,7 +4,8 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
 export default function Snackbar({ message, toggleShow }) {
-    const boxRef = useRef<HTMLDivElement>(null);
+    const comp = useRef();
+    const boxRef = useRef();
 
     useGSAP(async () => {
         // const ctx = gsap.context(async () => {

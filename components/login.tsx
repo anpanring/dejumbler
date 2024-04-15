@@ -116,7 +116,7 @@ export default function Login({ csrfToken }) {
                 <button className={styles.button} onClick={() => signIn("credentials", {
                     username: "user",
                     password: "password",
-                    // redirect: false,
+                    redirect: false,
                 })}>Demo</button>
             </div>}
 
