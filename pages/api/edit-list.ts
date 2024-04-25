@@ -1,7 +1,12 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+
 import dbConnect from "../../lib/mongodb";
 import List from "../../models/List";
 
-export default async function handler(req, res) {
+export default async function handler(
+    req: NextApiRequest,
+    res: NextApiResponse
+) {
     await dbConnect().then(() => {
         const data = req.body;
 
