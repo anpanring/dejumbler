@@ -203,7 +203,7 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
                         listModified={listModified}
                         setListModified={setListModified}
                         setCurrentList={setCurrentList}
-                        selected={list._id == currentList ? true : false}
+                        selected={width >= mobileWidth && list._id == currentList?.id ? true : false}
                     />;
                 })}
             </section>
@@ -267,7 +267,7 @@ export default function AllLists({ lists }) {
     }, [type]);
 
     function toggleType(e) {
-        if (currentList && e.target.value != currentList.type) setCurrentList(null);
+        if (e.target.value != "Any" && (currentList && e.target.value != currentList.type)) setCurrentList(null);
         setType(e.target.value);
         if (e.target.value == "Any") setDisplayType("All");
         if (e.target.value == "Movies") setDisplayType("Movie");
