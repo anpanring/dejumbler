@@ -137,8 +137,8 @@
     font-size: 40px; */
     fill: var(--main-text-color);
     border: solid 1px var(--accent-color);
-    height: 42px;
-    width: 42px;
+    height: 40px;
+    width: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
