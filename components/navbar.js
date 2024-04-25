@@ -8,6 +8,7 @@ import Modal from "./modal";
 
 import { useSession, signOut } from "next-auth/react";
 
+import { addIcon, settingsIcon, profileIcon, listIcon } from "./icons";
 const colors = ['red', 'orange', 'yellow', 'green', 'lightblue', 'indigo', 'violet'];
 
 export default function Navbar({ changeMode }) {
@@ -15,7 +16,7 @@ export default function Navbar({ changeMode }) {
     const [showModal, setShowModal] = useState(false);
     const [showProfile, setShowProfile] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
-    
+
     const [accentColor, setAccentColor] = useState('green');
 
     const { data } = useSession();
@@ -53,28 +54,23 @@ export default function Navbar({ changeMode }) {
                     </svg>
 
                     {/* All lists button */}
-                    <Link className={styles.link} href="/all-lists" aria-label="All Lists">
-                        <span className={`material-symbols-outlined ${styles.icon}`}>
-                            format_list_bulleted
-                        </span>
+                    <Link className={styles.icon} href="/all-lists" aria-label="All Lists">
+                        {listIcon}
                     </Link>
 
                     {/* Profile button */}
-                    <span onClick={() => setShowProfile(!showProfile)} className={`material-symbols-outlined ${styles.icon}`}>
-                        person
-                    </span>
+                    <div onClick={() => setShowProfile(!showProfile)} className={styles.icon} role="button">
+                        {profileIcon}
+                    </div>
 
                     {/* Settings button */}
-                    <span onClick={() => setShowSettings(!showSettings)} className={`material-symbols-outlined ${styles.icon}`}>
-                        settings
-                    </span>
+                    <div onClick={() => setShowSettings(!showSettings)} className={styles.icon} role="button">
+                        {settingsIcon}
+                    </div>
                 </div>
                 {/* New list button */}
-                <span
-                    onClick={toggleModal}
-                    ref={buttonRef}
-                    className={`material-symbols-outlined ${styles.icon}`}>
-                    add
+                <span onClick={() => setShowModal(!showModal)} className={styles.icon} role="button">
+                    {addIcon}
                 </span>
             </div>
 
