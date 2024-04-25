@@ -39,6 +39,13 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
     // list name and description
     const [name, setName] = useState(data.name);
     const [description, setDescription] = useState(data.description);
+    const [expandDescription, setExpandDescription] = useState(false);
+
+    function close() {
+        setConfirmDelete(false);
+        setShowEditOptions(false);
+        setEditMode(false);
+    }
 
     async function handleDelete(e, id) {
         e.preventDefault();
@@ -53,12 +60,7 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
         } catch (error) { alert('Failed to delete list.'); }
     }
 
-    function close() {
-        setConfirmDelete(false);
-        setShowEditOptions(false);
-        setEditMode(false);
-    }
-
+    // editing list description
     async function handleListUpdate(e) {
         e.preventDefault();
 
@@ -86,9 +88,17 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
     return (
         <div key={data._id} className={`${styles.listInfo} ${selected && width >= 430 ? styles.selected : ''}`}>
             {width < mobileWidth && <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p>}
-            {width >= mobileWidth && <p><Link href="#" onClick={() => setCurrentList(data._id)} >{name}</Link> ({data.items.length}) - {data.type}</p>}
+            {width >= mobileWidth && <p><Link href="#" onClick={() => setCurrentList({ id: data._id, name: data.name, type: data.type })} >{name}</Link> ({data.items.length}) - {data.type}</p>}
             {/* <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p> */}
-            {data.description && <p className={styles.description}>{description}</p>}
+            {data.description &&
+                <p className={styles.description}>
+                    {expandDescription ?
+                        <span>{description} <a onClick={() => setExpandDescription(false)}>Show less</a></span>
+                        : description.length > 100 ?
+                            <span>{description.slice(0, 100)}... <a onClick={() => setExpandDescription(true)}>Show more</a></span>
+                            : description}
+                </p>
+            }
             {selected && <div className={styles.selected}></div>}
             <svg width="15px" height="15px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#000000" className={styles.kebab} onClick={() => setShowEditOptions(!showEditOptions)}>
                 <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
@@ -151,8 +161,7 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
 
 // List Container
 function ListContainer({ lists, setListData, listModified, setListModified }) {
-    // state for context!
-    const [currentList, setCurrentList] = useState(null);
+    const { currentList, setCurrentList } = useContext(CurrentListContext);
 
     // detecting wide mode
     const [width, height] = useWindowSize();
@@ -166,7 +175,7 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
         if (currentList !== null) {
             setLoading(true);
             async function populateList() {
-                const res = await fetch(`/api/get-list?id=${currentList}`);
+                const res = await fetch(`/api/get-list?id=${currentList.id}`);
                 const data = await res.json();
                 setCurrentListData(await data);
             }
@@ -182,55 +191,64 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
     }
 
     return (
-        <CurrentListContext.Provider value={{ currentList, setCurrentList }}>
-            <div className={`${styles.wideview} ${width < mobileWidth ? styles.mobileview : ''}`}>
-                {/* Left */}
-                <section className={`${styles.allListsContainer} ${currentList == null || width < mobileWidth ? styles.wide : ''}`}>
-                    {lists.map((list) => {
-                        return <ListBox
-                            data={list}
-                            setListData={setListData}
-                            key={list._id}
-                            listModified={listModified}
-                            setListModified={setListModified}
-                            setCurrentList={setCurrentList}
-                            selected={list._id == currentList ? true : false}
-                        />;
-                    })}
-                </section>
 
-                {/* Right */}
-                {loading && <p>Loading...</p>}
-                {currentList && width >= mobileWidth &&
-                    <section className={styles.currentListContainer}>
-                        <div className={styles.flexSpaceBetween}>
-                            {currentListData &&
-                                <SearchBar listId={currentList} listType={currentListData.type} handleDataChange={handleDataChange} />}
-                            {currentListData &&
-                                <button className={styles.closeCurrentList} onClick={() => {
-                                    setCurrentList(null);
-                                    setCurrentListData(null);
-                                }}>X</button>}
-                        </div>
-                        {currentListData && currentListData.items.map((item) => {
-                            return <ListItem
-                                data={item}
-                                listId={currentList}
-                                key={item._id}
-                                handleDataChange={handleDataChange}
-                                type={currentListData.type}
-                            />
-                        })}
-                        {songAdded && <Snackbar message={`${changeType} ${currentListData.name}`} toggleShow={setSongAdded} />}
-                    </section>}
-            </div>
-        </CurrentListContext.Provider>
+        <div className={`${styles.wideview} ${width < mobileWidth ? styles.mobileview : ''}`}>
+            {/* Left */}
+            <section className={`${styles.allListsContainer} ${currentList == null || width < mobileWidth ? styles.wide : ''}`}>
+                {lists.map((list) => {
+                    return <ListBox
+                        data={list}
+                        setListData={setListData}
+                        key={list._id}
+                        listModified={listModified}
+                        setListModified={setListModified}
+                        setCurrentList={setCurrentList}
+                        selected={list._id == currentList ? true : false}
+                    />;
+                })}
+            </section>
+
+            {/* Right */}
+            {loading && <p>Loading...</p>}
+            {currentList && width >= mobileWidth && currentListData &&
+                <section className={styles.currentListContainer}>
+                    <div className={styles.flexSpaceBetween}>
+                        <SearchBar listId={currentList.id} listType={currentListData.type} handleDataChange={handleDataChange} />
+                        {/* Shuffle button */}
+                        {/* <button className={styles.closeCurrentList} onClick={() => {
+                            const rand = Math.floor(Math.random() * currentListData.items.length);
+                            console.log(rand);
+                            console.log(currentListData.items[rand].name);
+                        }}>S</button> */}
+                        <button className={styles.closeCurrentList} onClick={() => {
+                            setCurrentList(null);
+                            setCurrentListData(null);
+                        }}>X</button>
+                    </div>
+                    {currentListData.items.map((item) => {
+                        return <ListItem
+                            data={item}
+                            listId={currentList.id}
+                            key={item._id}
+                            handleDataChange={handleDataChange}
+                            type={currentListData.type}
+                        />
+                    })}
+                    {songAdded && <Snackbar message={`${changeType} ${currentListData.name}`} toggleShow={setSongAdded} />}
+                </section>
+            }
+        </div>
+
     );
 }
 
 // Main page for now
 export default function AllLists({ lists }) {
     const [listData, setListData] = useState(lists ? JSON.parse(lists) : []);
+
+    // state for context!
+    // currentList contains list id
+    const [currentList, setCurrentList] = useState(null);
 
     const [type, setType] = useState('Any');
     const [displayType, setDisplayType] = useState('All');
@@ -249,6 +267,7 @@ export default function AllLists({ lists }) {
     }, [type]);
 
     function toggleType(e) {
+        if (currentList && e.target.value != currentList.type) setCurrentList(null);
         setType(e.target.value);
         if (e.target.value == "Any") setDisplayType("All");
         if (e.target.value == "Movies") setDisplayType("Movie");
@@ -277,7 +296,9 @@ export default function AllLists({ lists }) {
 
             {/* {listData.length == 0 && <h1>Make some lists!</h1>} */}
 
-            <ListContainer lists={listData} setListData={setListData} listModified={listModified} setListModified={setListModified} />
+            <CurrentListContext.Provider value={{ currentList, setCurrentList }}>
+                <ListContainer lists={listData} setListData={setListData} listModified={listModified} setListModified={setListModified} />
+            </CurrentListContext.Provider>
 
             {listModified && <Snackbar message={`Deleted list`} toggleShow={setListModified} />}
             {currentListModified && <Snackbar message={`Deleted list`} toggleShow={setCurrentListModified} />}
