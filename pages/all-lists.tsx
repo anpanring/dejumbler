@@ -25,12 +25,30 @@ import formStyles from '../components/navbar.module.css';
 
 const mobileWidth = 600;
 
-export const CurrentListContext = createContext(null);
+type ListMetadata = {
+    id: string,
+    name: string,
+    type: string,
+}
+type ListData = {
+    _id: string,
+    user: string,
+    name: string,
+    type: string,
+    description: string,
+    items: any[],
+}
+type CurrentListContext = {
+    currentList: ListMetadata | null,
+    setCurrentList: React.Dispatch<React.SetStateAction<ListMetadata | null>>
+}
+export const CurrentListContext = createContext<CurrentListContext | null>(null);
 
 // List
-function ListBox({ data, setListData, isDragging, listModified, setListModified, selected }) {
-    const { currentList, setCurrentList } = useContext(CurrentListContext);
-    const { width, height } = useContext(WindowSizeContext);
+function ListBox({ data, setListData, listModified, setListModified, selected }) {
+    // kinda messy, refactor to make sure never null
+    const { currentList, setCurrentList } = useContext(CurrentListContext) ?? {};
+    const { width, height } = useContext(WindowSizeContext) ?? { width: 1200, height: 800 };
 
     const [showEditOptions, setShowEditOptions] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -86,9 +104,17 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
     }
 
     return (
-        <div key={data._id} className={`${styles.listInfo} ${selected && width >= 430 ? styles.selected : ''}`}>
+        <div key={data._id} className={`${styles.listInfo} ${selected && width >= mobileWidth ? styles.selected : ''}`}>
             {width < mobileWidth && <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p>}
-            {width >= mobileWidth && <p><Link href="#" onClick={() => setCurrentList({ id: data._id, name: data.name, type: data.type })} >{name}</Link> ({data.items.length}) - {data.type}</p>}
+            {width >= mobileWidth &&
+                <p>
+                    <Link
+                        href="#"
+                        onClick={() => setCurrentList && setCurrentList({ id: data._id, name: data.name, type: data.type })} >
+                        {name}
+                    </Link>
+                    ({data.items.length}) - {data.type}
+                </p>}
             {/* <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p> */}
             {data.description &&
                 <p className={styles.description}>
@@ -127,7 +153,7 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
                             close();
                             handleDelete(e, data._id);
                             setListModified(true);
-                            if (selected) setCurrentList(null);
+                            if (selected) setCurrentList && setCurrentList(null);
                         }} className={`${styles.editButton} ${styles.delete}`}>
                             Delete list
                         </button>
@@ -148,7 +174,7 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
                         </div>
                         <div className={formStyles.formRow}>
                             <label>Description: </label>
-                            <textarea type="text" name="description" defaultValue={description}></textarea>
+                            <textarea name="description" defaultValue={description}></textarea>
                         </div>
                         <div className={formStyles.formRow}>
                             <input className={styles.editButton} type="submit" value="Save edits" />
@@ -161,12 +187,12 @@ function ListBox({ data, setListData, isDragging, listModified, setListModified,
 
 // List Container
 function ListContainer({ lists, setListData, listModified, setListModified }) {
-    const { currentList, setCurrentList } = useContext(CurrentListContext);
+    const { currentList, setCurrentList } = useContext(CurrentListContext) ?? {};
 
     // detecting wide mode
     const [width, height] = useWindowSize();
 
-    const [currentListData, setCurrentListData] = useState(null);
+    const [currentListData, setCurrentListData] = useState<ListData | null>(null);
     const [songAdded, setSongAdded] = useState(false);
     const [changeType, setChangeType] = useState('');
     const [loading, setLoading] = useState(false);
@@ -174,11 +200,11 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
     useEffect(() => {
         if (currentList !== null) {
             setLoading(true);
-            async function populateList() {
-                const res = await fetch(`/api/get-list?id=${currentList.id}`);
+            const populateList = async () => {
+                const res = await fetch(`/api/get-list?id=${currentList?.id}`);
                 const data = await res.json();
                 setCurrentListData(await data);
-            }
+            };
             populateList();
             setLoading(false);
         }
@@ -202,7 +228,6 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
                         key={list._id}
                         listModified={listModified}
                         setListModified={setListModified}
-                        setCurrentList={setCurrentList}
                         selected={width >= mobileWidth && list._id == currentList?.id ? true : false}
                     />;
                 })}
@@ -221,7 +246,9 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
                             console.log(currentListData.items[rand].name);
                         }}>S</button> */}
                         <button className={styles.closeCurrentList} onClick={() => {
-                            setCurrentList(null);
+                            if (setCurrentList) {
+                                setCurrentList(null);
+                            }
                             setCurrentListData(null);
                         }}>X</button>
                     </div>
@@ -248,7 +275,7 @@ export default function AllLists({ lists }) {
 
     // state for context!
     // currentList contains list id
-    const [currentList, setCurrentList] = useState(null);
+    const [currentList, setCurrentList] = useState<ListMetadata | null>(null);
 
     const [type, setType] = useState('Any');
     const [displayType, setDisplayType] = useState('All');
@@ -285,7 +312,7 @@ export default function AllLists({ lists }) {
                 <h2>{displayType} Lists ({listData.length})</h2>
                 <div className='form-row'>
                     <label>Filter: </label>
-                    <select className={styles.selectMenu} list="types" name="type" onChange={toggleType} required>
+                    <select className={styles.selectMenu} name="type" onChange={toggleType} required>
                         <option value="Any">All</option>
                         <option value="Music">Music</option>
                         <option value="Movies">Movies</option>
