@@ -2,6 +2,8 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
+import { getCsrfToken } from 'next-auth/react';
+
 import { siteTitle } from '../components/layout';
 import Login from '../components/login';
 
@@ -11,12 +13,13 @@ import styles from '../styles/Home.module.css';
 import { useSession } from 'next-auth/react';
 
 
-export default function Home() {
+export default function Home({ csrfToken }) {
     // check session (client-side)
     const session = useSession();
 
     const router = useRouter();
 
+    // loading state
     if (session.status === 'loading') {
         return (
             <>
@@ -28,7 +31,7 @@ export default function Home() {
                     <meta name="google-site-verification" content="n5dZdc1QljJ4k39BSCkZAbhnJS5CjIdAo6OHVqD_c-Y" />
                 </Head>
                 <div className={styles.loadingContainer}>
-                    <svg className={styles.loadingLogo} alt='logo' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.5 283.5">
+                    <svg className={styles.loadingLogo} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.5 283.5">
                         <path
                             d="M0 0v283.5h283.5V0H0Zm221.55 108.55h-16v-40h16v40Z"
                             style={{
@@ -57,7 +60,7 @@ export default function Home() {
                 <div className={styles.container}>
                     <Image src={textLogo} className={styles.textLogo} alt="Dejumbler text logo" />
                     <h2 className={styles.description}>The Dejumbler is a platform that helps you use lists to manage the media you consume.</h2>
-                    <Login />
+                    <Login csrfToken={csrfToken} />
                 </div>
             </>
         )
@@ -66,18 +69,27 @@ export default function Home() {
     else {
         router.push('/all-lists');
         return (
-            <div className={styles.loadingContainer}>
-                <svg className={styles.loadingLogo} alt='logo' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.5 283.5">
-                    <path
-                        d="M0 0v283.5h283.5V0H0Zm221.55 108.55h-16v-40h16v40Z"
-                        style={{
-                            strokeWidth: 0,
-                        }}
-                    />
-                </svg>
-                {/* <Image src={logo} className={styles.loadingLogo} alt='logo' /> */}
-                {/* <h3>Loading...</h3> */}
-            </div>
+            <>
+                <Head>
+                    <title>{siteTitle}</title>
+                    <meta name="description" content="Clean your brain out with the Dejumbler." />
+                    <meta name="og:title" content={siteTitle} />
+                    <meta name="twitter:card" content="summary_large_image" />
+                    <meta name="google-site-verification" content="n5dZdc1QljJ4k39BSCkZAbhnJS5CjIdAo6OHVqD_c-Y" />
+                </Head>
+                <div className={styles.loadingContainer}>
+                    <svg className={styles.loadingLogo} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 283.5 283.5">
+                        <path
+                            d="M0 0v283.5h283.5V0H0Zm221.55 108.55h-16v-40h16v40Z"
+                            style={{
+                                strokeWidth: 0,
+                            }}
+                        />
+                    </svg>
+                    {/* <Image src={logo} className={styles.loadingLogo} alt='logo' /> */}
+                    {/* <h3>Loading...</h3> */}
+                </div>
+            </>
             // <Layout>
             //     <Head>
             //         <title>Home - Dejumbler</title>
@@ -117,3 +129,11 @@ export default function Home() {
 //         }
 //     }
 // }
+
+export async function getServerSideProps(context) {
+    return {
+        props: {
+            csrfToken: await getCsrfToken(context),
+        },
+    }
+}

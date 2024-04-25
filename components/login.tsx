@@ -1,6 +1,6 @@
 'use client';
 
-import { getCsrfToken, useSession, signIn } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 
 import styles from "./login.module.css";
 
@@ -163,12 +163,4 @@ export default function Login({ csrfToken }) {
             </div>}
         </div>
     );
-}
-
-export async function getServerSideProps(context) {
-    return {
-        props: {
-            csrfToken: await getCsrfToken(context),
-        },
-    }
 }
