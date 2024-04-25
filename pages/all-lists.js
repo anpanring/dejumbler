@@ -211,7 +211,7 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
             {/* Right */}
             {loading && <p>Loading...</p>}
             {currentList && width >= mobileWidth && currentListData &&
-                <section className={styles.currentListContainer}>
+                <section className={styles.currentListContainer} key={currentList.id}>
                     <div className={styles.flexSpaceBetween}>
                         <SearchBar listId={currentList.id} listType={currentListData.type} handleDataChange={handleDataChange} />
                         {/* Shuffle button */}
