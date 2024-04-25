@@ -22,11 +22,12 @@ export default function Navbar({ changeMode }) {
     const { data } = useSession();
 
     const buttonRef = useRef();
-    const containerRef = useRef();
+    const containerRef = useRef<HTMLDivElement>(null);
 
     // have to do this on client side
     useEffect(() => {
-        localStorage.getItem('accent') && setAccentColor(localStorage.getItem('accent'));
+        const check = localStorage.getItem('accent') as string;
+        check && setAccentColor(localStorage.getItem('accent') ?? 'green');
     }, [])
 
     function toggleModal() {
@@ -75,12 +76,12 @@ export default function Navbar({ changeMode }) {
             </div>
 
             {/* New list modal */}
-            {showModal && <Modal className="modal" toggleModal={toggleModal}>
+            {showModal && <Modal toggleModal={toggleModal}>
                 <form className={styles.form} action="/api/new-list" method="POST">
                     <button className={styles.closeButton} onClick={toggleModal}>X</button>
                     <div className={styles.formTypeRow}>
                         <label>Type: </label>
-                        <select className={styles.type} id="types" list="types" name="type" required>
+                        <select className={styles.type} id="types" name="type" required>
                             <option value="Music">Music</option>
                             <option value="Books">Books</option>
                             <option value="Movies">Movies</option>
@@ -92,7 +93,7 @@ export default function Navbar({ changeMode }) {
                     </div>
                     <div className={styles.formRow}>
                         <label>Description: </label>
-                        <textarea className={styles.description} type="text" name="description"></textarea>
+                        <textarea className={styles.description} name="description"></textarea>
                     </div>
                     <div className={styles.formRow}>
                         <input className={styles.submitButton} type="submit" value="Create List" />
@@ -105,7 +106,7 @@ export default function Navbar({ changeMode }) {
                 <Modal toggleModal={() => setShowProfile(!showProfile)}>
                     <div className={styles.loggedInWrapper}>
                         <p>Signed in as: <u><strong>{data.user.name}</strong></u></p>
-                        <button href="#" onClick={() => signOut()} className={styles.signoutButton}>Sign out</button>
+                        <button onClick={() => signOut()} className={styles.signoutButton}>Sign out</button>
                     </div>
                 </Modal>
             }

@@ -8,7 +8,8 @@ import Navbar from './navbar';
 import styles from './layout.module.css';
 
 import useWindowSize from '../lib/useWindowSize';
-export const WindowSizeContext = createContext(null);
+type WindowContextType = { width: number, height: number } | null;
+export const WindowSizeContext = createContext<WindowContextType>(null);
 
 export const siteTitle = 'Dejumbler';
 export default function Layout({ children }) {
