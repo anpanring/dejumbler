@@ -1,10 +1,10 @@
 'use client';
 
-import { useSession, signIn } from "next-auth/react";
+import { signIn, getCsrfToken } from "next-auth/react";
 
 import styles from "./login.module.css";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -17,16 +17,21 @@ enum Mode {
     REGISTER,
 }
 
-export default function Login({ csrfToken }) {
-    const { data } = useSession();
+export default function Login() {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [csrfToken, setCsrfToken] = useState("");
 
     const [mode, setMode] = useState<Mode>(Mode.LOGGED_OUT);
 
     const router = useRouter();
+
+    useEffect(() => {
+        getCsrfToken()
+            .then((token) => setCsrfToken(token ?? ""));
+    }, []);
 
     const loginRef = useRef<HTMLFormElement | null>(null);
     useGSAP(() => {
@@ -106,7 +111,7 @@ export default function Login({ csrfToken }) {
         });
     }
 
-    return !data && (
+    return (
         <div className={styles.loginWrapper}>
             {mode === Mode.LOGGED_OUT && <div className={styles.loginOptions}>
                 <button className={styles.button} onClick={() => setMode(Mode.SIGN_IN)}>Sign in</button>

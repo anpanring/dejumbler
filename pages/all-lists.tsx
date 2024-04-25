@@ -107,14 +107,11 @@ function ListBox({ data, setListData, listModified, setListModified, selected })
         <div key={data._id} className={`${styles.listInfo} ${selected && width >= mobileWidth ? styles.selected : ''}`}>
             {width < mobileWidth && <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p>}
             {width >= mobileWidth &&
-                <p>
-                    <Link
-                        href="#"
-                        onClick={() => setCurrentList && setCurrentList({ id: data._id, name: data.name, type: data.type })} >
-                        {name}
-                    </Link>
-                    ({data.items.length}) - {data.type}
-                </p>}
+                <p><Link
+                    href="#"
+                    onClick={() => setCurrentList && setCurrentList({ id: data._id, name: data.name, type: data.type })} >
+                    {name}
+                </Link> ({data.items.length}) - {data.type}</p>}
             {/* <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p> */}
             {data.description &&
                 <p className={styles.description}>

@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState, useRef, useContext } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import styles from "./search.module.css";
 
@@ -183,7 +183,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
             <div className={styles.resultsWrapper}>
                 {results.map((result) => {
                     return <SearchResult
-                        key={result.toString()}
+                        key={Math.random() * Number.MAX_VALUE}
                         data={result}
                         listId={listId}
                         listType={listType}
