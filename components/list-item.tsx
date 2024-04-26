@@ -12,7 +12,7 @@ function ListItem({ data, listId, handleDataChange, type }) {
 
     async function handleDelete() {
         const fetchOptions = {
-            method: 'POST',
+            method: 'DELETE',
             headers: { "Content-Type": 'application/json' },
             body: JSON.stringify({
                 data: data,

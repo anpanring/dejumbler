@@ -12,7 +12,6 @@ import List from '../../models/List';
 
 import styles from '../../styles/ListPage.module.css';
 
-import { useSession } from 'next-auth/react';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../api/auth/[...nextauth]';
 
@@ -20,8 +19,6 @@ import { IList } from '../../models/definitions.types';
 import { HydratedDocument, Query } from "mongoose";
 
 export default function ListPage({ listData, id }) {
-    const session = useSession();
-
     const [data, setData] = useState<IList>(JSON.parse(listData));
     const [songAdded, setSongAdded] = useState(false);
     const [changeType, setChangeType] = useState('');

@@ -25,24 +25,8 @@ import formStyles from '../components/navbar.module.css';
 
 const mobileWidth = 600;
 
-type ListMetadata = {
-    id: string,
-    name: string,
-    type: string,
-}
-type ListData = {
-    _id: string,
-    user: string,
-    name: string,
-    type: string,
-    description: string,
-    items: any[],
-}
-type CurrentListContext = {
-    currentList: ListMetadata | null,
-    setCurrentList: React.Dispatch<React.SetStateAction<ListMetadata | null>>
-}
-export const CurrentListContext = createContext<CurrentListContext | null>(null);
+import { ListMetadata, ListData, CurrentListContextType } from "../types/dejumbler-types";
+export const CurrentListContext = createContext<CurrentListContextType | null>(null);
 
 // List
 function ListBox({ data, setListData, listModified, setListModified, selected }) {
@@ -68,13 +52,11 @@ function ListBox({ data, setListData, listModified, setListModified, selected })
     async function handleDelete(e, id) {
         e.preventDefault();
         try {
-            const updatedData =
-                fetch(`/api/delete-list?id=${id}`)
-                    .then((res) => res.json())
-                    .then((data) => {
-                        return data;
-                    });
-            setListData(await updatedData);
+            const response = await fetch(`/api/delete-list?id=${id}`, {
+                method: 'DELETE'
+            });
+            const updatedData = await response.json();
+            setListData(updatedData);
         } catch (error) { alert('Failed to delete list.'); }
     }
 
@@ -343,7 +325,7 @@ export async function getServerSideProps(context) {
         }
     }
 
-    const { user, expires } = session;
+    const { user } = session;
 
     // Get lists with direct mongoose call
     await dbConnect();

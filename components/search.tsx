@@ -151,13 +151,17 @@ function SearchBar({ listId, listType, handleDataChange }) {
         };
     }, [query, type]);
 
+    function clear() {
+        setResults([]);
+    }
+
     return (
         <div>
             <form className={styles.searchBar} >
                 <input
                     className={styles.searchInput}
                     onChange={(e) => setQuery(e.target.value)}
-                    type="text"
+                    type="search"
                     name="value"
                     placeholder={`Search ${listType.toLowerCase()} to add...`}
                     ref={formRef}

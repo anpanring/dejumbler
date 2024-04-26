@@ -8,20 +8,21 @@ import { getServerSession } from "next-auth";
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<Object[]>
+    res: NextApiResponse<Object[] | string>
 ) {
-    const { query, method } = req;
+    const { query } = req;
 
     // Check logged in
     const session = await getServerSession(req, res, authOptions);
 
-    if (session) {
+    if (!session) res.status(401).send("Unauthorized");
+    else {
         const { user } = session;
 
-        const data: Object[] = await dbConnect()
-            .then(() => List.findByIdAndDelete(query.id))
-            .then(() => List.find({ user: user.id }));
+        await dbConnect();
+        await List.findByIdAndDelete(query.id);
+        const editedList = await List.find({ user: user.id });
 
-        res.status(200).json(data);
-    } else res.status(401);
+        res.status(200).json(editedList);
+    }
 };
