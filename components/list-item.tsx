@@ -12,7 +12,7 @@ function ListItem({ data, listId, handleDataChange, type }) {
 
     async function handleDelete() {
         const fetchOptions = {
-            method: 'POST',
+            method: 'DELETE',
             headers: { "Content-Type": 'application/json' },
             body: JSON.stringify({
                 data: data,
@@ -20,10 +20,10 @@ function ListItem({ data, listId, handleDataChange, type }) {
             }),
         };
 
-        const updatedList = fetch('/api/remove-item', fetchOptions)
-            .then(res => res.json());
+        const response = await fetch('/api/remove-item', fetchOptions);
+        const updatedList = await response.json();
 
-        handleDataChange(await updatedList, data.name + ' removed from ');
+        handleDataChange(updatedList, data.name + ' removed from ');
     }
 
     async function handleNoteChange(e) {
@@ -41,12 +41,11 @@ function ListItem({ data, listId, handleDataChange, type }) {
             body: JSON.stringify(itemInfo),
         };
 
-        fetch('/api/edit-list-item', fetchOptions)
-            .then(response => response.json())
-            .then((data) => {
-                setNotes(data.notes);
-                setShowForm(!showForm);
-            });
+        const response = await fetch('/api/edit-list-item', fetchOptions)
+        const updatedData = await response.json();
+
+        setNotes(updatedData.notes);
+        setShowForm(!showForm);
     }
 
     if (type === "Movies") {

@@ -7,19 +7,22 @@ import List from "../../models/List";
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<Object[]>
+    res: NextApiResponse
 ) {
-    const {
-        query,
-        method,
-    } = req;
+    const { query } = req;
 
     const session = await getServerSession(req, res, authOptions);
-    if (session) {
+    
+    if (!session) res.status(401).send("not authorized");
+    else {
         const { user, expires } = session;
 
-        await dbConnect();
-        const data = await List.findById(query.id);
-        res.status(200).json(data);
-    } else res.status(401).send([]);
+        try {
+            await dbConnect();
+            const data = await List.findById(query.id);
+            res.status(200).json(data);
+        } catch (err) {
+            res.status(401).send({ message: err });
+        }
+    }
 };

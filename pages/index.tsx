@@ -2,8 +2,6 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-import { getCsrfToken } from 'next-auth/react';
-
 import { siteTitle } from '../components/layout';
 import Login from '../components/login';
 
@@ -12,8 +10,7 @@ import styles from '../styles/Home.module.css';
 
 import { useSession } from 'next-auth/react';
 
-
-export default function Home({ csrfToken }) {
+export default function Home() {
     // check session (client-side)
     const session = useSession();
 
@@ -60,7 +57,7 @@ export default function Home({ csrfToken }) {
                 <div className={styles.container}>
                     <Image src={textLogo} className={styles.textLogo} alt="Dejumbler text logo" />
                     <h2 className={styles.description}>The Dejumbler is a platform that helps you use lists to manage the media you consume.</h2>
-                    <Login csrfToken={csrfToken} />
+                    <Login />
                 </div>
             </>
         )
@@ -130,10 +127,10 @@ export default function Home({ csrfToken }) {
 //     }
 // }
 
-export async function getServerSideProps(context) {
-    return {
-        props: {
-            csrfToken: await getCsrfToken(context),
-        },
-    }
-}
+// export async function getServerSideProps(context) {
+//     return {
+//         props: {
+//             csrfToken: await getCsrfToken(context),
+//         },
+//     }
+// }

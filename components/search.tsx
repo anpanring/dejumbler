@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState, useRef, useContext } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import styles from "./search.module.css";
 
@@ -73,9 +73,9 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
             body: data
         };
 
-        fetch('/api/add-item', fetchOptions)
-            .then(res => res.json())
-            .then(data => handleDataChange(data, itemName + ' added to'));
+        const res = await fetch('/api/add-item', fetchOptions);
+        const updatedData = await res.json();
+        handleDataChange(updatedData, itemName + ' added to');
     }
 }
 
@@ -151,13 +151,17 @@ function SearchBar({ listId, listType, handleDataChange }) {
         };
     }, [query, type]);
 
+    function clear() {
+        setResults([]);
+    }
+
     return (
         <div>
             <form className={styles.searchBar} >
                 <input
                     className={styles.searchInput}
                     onChange={(e) => setQuery(e.target.value)}
-                    type="text"
+                    type="search"
                     name="value"
                     placeholder={`Search ${listType.toLowerCase()} to add...`}
                     ref={formRef}
@@ -183,7 +187,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
             <div className={styles.resultsWrapper}>
                 {results.map((result) => {
                     return <SearchResult
-                        key={result.toString()}
+                        key={Math.random() * Number.MAX_VALUE}
                         data={result}
                         listId={listId}
                         listType={listType}

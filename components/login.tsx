@@ -1,10 +1,10 @@
 'use client';
 
-import { useSession, signIn } from "next-auth/react";
+import { signIn, getCsrfToken } from "next-auth/react";
 
 import styles from "./login.module.css";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -17,16 +17,24 @@ enum Mode {
     REGISTER,
 }
 
-export default function Login({ csrfToken }) {
-    const { data } = useSession();
+export default function Login() {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [csrfToken, setCsrfToken] = useState("");
 
     const [mode, setMode] = useState<Mode>(Mode.LOGGED_OUT);
 
     const router = useRouter();
+
+    useEffect(() => {
+        const getCsrf = async () => {
+            const token = await getCsrfToken();
+            setCsrfToken(token ?? "");
+        }
+        getCsrf();
+    }, []);
 
     const loginRef = useRef<HTMLFormElement | null>(null);
     useGSAP(() => {
@@ -72,7 +80,7 @@ export default function Login({ csrfToken }) {
     async function handleRegister(e) {
         e.preventDefault();
 
-        fetch("/api/auth/register", {
+        const response = await fetch("/api/auth/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -81,32 +89,31 @@ export default function Login({ csrfToken }) {
                 username: username,
                 password: password,
             }),
-        }).then(async (res) => {
-            if (res.status === 200) {
-                const signInResponse = await signIn(
-                    "credentials",
-                    {
-                        username: username,
-                        password: password,
-                        // callbackUrl: '/all-lists',
-                        redirect: false,
-                    });
-                if (signInResponse?.error) {
-                    setError(error);
-                    loginRef.current?.reset();
-                } else if (signInResponse?.ok) {
-                    router.push("/all-lists");
-                    const theme = localStorage.getItem('theme');
-                    if (theme) document.documentElement.setAttribute('data-theme', theme);
-                }
-            } else {
-                setError("User already exists");
-                loginRef.current?.reset();
-            }
         });
+        if (response.status === 200) {
+            const signInResponse = await signIn(
+                "credentials",
+                {
+                    username: username,
+                    password: password,
+                    // callbackUrl: '/all-lists',
+                    redirect: false,
+                });
+            if (signInResponse?.error) {
+                setError(error);
+                loginRef.current?.reset();
+            } else if (signInResponse?.ok) {
+                router.push("/all-lists");
+                const theme = localStorage.getItem('theme');
+                if (theme) document.documentElement.setAttribute('data-theme', theme);
+            }
+        } else {
+            setError("User already exists");
+            loginRef.current?.reset();
+        }
     }
 
-    return !data && (
+    return (
         <div className={styles.loginWrapper}>
             {mode === Mode.LOGGED_OUT && <div className={styles.loginOptions}>
                 <button className={styles.button} onClick={() => setMode(Mode.SIGN_IN)}>Sign in</button>

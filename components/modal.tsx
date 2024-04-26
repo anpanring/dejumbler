@@ -16,8 +16,9 @@ export default function Modal({ toggleModal, children }) {
             width: "-=20",
             height: "-=20",
             duration: 0.1,
+            // ease: "elastic",
         });
-    }, [toggleModal]);
+    });
 
     useEffect(() => {
         document.addEventListener("keydown", (e) => {
@@ -29,7 +30,7 @@ export default function Modal({ toggleModal, children }) {
                 if(e.key === "Escape") toggleModal();
             });
         }
-    })
+    });
 
     return (
         <div ref={comp}>

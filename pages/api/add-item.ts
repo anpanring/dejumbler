@@ -47,7 +47,7 @@ export default async function handler(
             genres: subject.slice(0, 6)
         });
         newItem = newBook;
-    } else {
+    } else { // music
         const {
             artists,
             images,
