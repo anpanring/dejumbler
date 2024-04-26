@@ -13,7 +13,7 @@ const fetchOptions = {
 };
 
 export default async function getToken() {
-    return await fetch('https://accounts.spotify.com/api/token', fetchOptions)
-        .then(res => res.json())
-        .then(data => data.access_token)
+    const res = await fetch('https://accounts.spotify.com/api/token', fetchOptions);
+    const { access_token } = await res.json();
+    return access_token;
 }

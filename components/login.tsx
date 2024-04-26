@@ -29,8 +29,11 @@ export default function Login() {
     const router = useRouter();
 
     useEffect(() => {
-        getCsrfToken()
-            .then((token) => setCsrfToken(token ?? ""));
+        const getCsrf = async () => {
+            const token = await getCsrfToken();
+            setCsrfToken(token ?? "");
+        }
+        getCsrf();
     }, []);
 
     const loginRef = useRef<HTMLFormElement | null>(null);
@@ -77,7 +80,7 @@ export default function Login() {
     async function handleRegister(e) {
         e.preventDefault();
 
-        fetch("/api/auth/register", {
+        const response = await fetch("/api/auth/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -86,29 +89,28 @@ export default function Login() {
                 username: username,
                 password: password,
             }),
-        }).then(async (res) => {
-            if (res.status === 200) {
-                const signInResponse = await signIn(
-                    "credentials",
-                    {
-                        username: username,
-                        password: password,
-                        // callbackUrl: '/all-lists',
-                        redirect: false,
-                    });
-                if (signInResponse?.error) {
-                    setError(error);
-                    loginRef.current?.reset();
-                } else if (signInResponse?.ok) {
-                    router.push("/all-lists");
-                    const theme = localStorage.getItem('theme');
-                    if (theme) document.documentElement.setAttribute('data-theme', theme);
-                }
-            } else {
-                setError("User already exists");
-                loginRef.current?.reset();
-            }
         });
+        if (response.status === 200) {
+            const signInResponse = await signIn(
+                "credentials",
+                {
+                    username: username,
+                    password: password,
+                    // callbackUrl: '/all-lists',
+                    redirect: false,
+                });
+            if (signInResponse?.error) {
+                setError(error);
+                loginRef.current?.reset();
+            } else if (signInResponse?.ok) {
+                router.push("/all-lists");
+                const theme = localStorage.getItem('theme');
+                if (theme) document.documentElement.setAttribute('data-theme', theme);
+            }
+        } else {
+            setError("User already exists");
+            loginRef.current?.reset();
+        }
     }
 
     return (

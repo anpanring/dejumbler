@@ -73,9 +73,9 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
             body: data
         };
 
-        fetch('/api/add-item', fetchOptions)
-            .then(res => res.json())
-            .then(data => handleDataChange(data, itemName + ' added to'));
+        const res = await fetch('/api/add-item', fetchOptions);
+        const updatedData = await res.json();
+        handleDataChange(updatedData, itemName + ' added to');
     }
 }
 

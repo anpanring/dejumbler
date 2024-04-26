@@ -7,9 +7,9 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    await dbConnect();
-    const data = req.body;
     try {
+        const data = req.body;
+        await dbConnect();
         await List.findOneAndUpdate(
             { _id: data.listId, "items._id": data.itemId },
             { $set: { "items.$.notes": data.updatedNotes } });

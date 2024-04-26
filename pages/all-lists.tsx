@@ -76,13 +76,11 @@ function ListBox({ data, setListData, listModified, setListModified, selected })
             body: JSON.stringify(itemInfo),
         };
 
-        fetch('/api/edit-list', fetchOptions)
-            .then(response => response.json())
-            .then((data) => {
-                close();
-                setName(data.name);
-                setDescription(data.description);
-            });
+        const res = await fetch('/api/edit-list', fetchOptions);
+        const updatedData = await res.json();
+        close();
+        setName(updatedData.name);
+        setDescription(updatedData.description);
     }
 
     return (
