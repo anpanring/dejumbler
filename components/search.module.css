@@ -121,3 +121,10 @@ span.clearButtonIcon {
     background: var(--accent-color);
     color: white;
 }
+
+/* .searching {
+    color: var(--main-text-color);
+    width: 20em;
+    height: 10em;
+    background-color: green;
+} */
