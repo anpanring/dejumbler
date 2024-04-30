@@ -88,72 +88,33 @@ function SearchBar({ listId, listType, handleDataChange }) {
 
     const formRef = useRef(null);
 
-    // Add https://developer.mozilla.org/en-US/docs/Web/API/AbortController
     useEffect(() => {
         const controller = new AbortController();
         const signal = controller.signal;
 
         if (query) {
+            let url;
+            if (listType == "Music") url = `/api/spot/search?q=${query}&type=${type}`;
+            else if (listType == "Movies") url = `/api/search?q=${query}&type=movies`;
+            else if (listType == "Books") url = `/api/search?q=${query}&type=books`;
             setSearching(true);
-            switch (listType) {
-                case "Music":
-                    fetch(`/api/spot/search?q=${query}&type=${type}`, { signal })
-                        .then(res => res.json())
-                        .then(data => setResults(data))
-                        .catch(err => {
-                            if (err.name === 'AbortError') console.log('Request aborted');
-                            else console.log('Error: ', err);
-                        });
-                    break;
-                case "Movies":
-                    fetch(`https://api.themoviedb.org/3/search/movie?query=${query}&api_key=3770f4ac92cd31bf3489e56a9cc9c5d7`, { signal })
-                        .then(res => res.json())
-                        .then(data => {
-                            const results = data.results.slice(0, 6);
-                            return results.map(async (result) => {
-                                const director = await fetch(`https://api.themoviedb.org/3/movie/${result.id}/credits?api_key=3770f4ac92cd31bf3489e56a9cc9c5d7`)
-                                    .then(response => response.json())
-                                    .then((jsonData) => jsonData.crew.filter(({ job }) => job === 'Director'));
-
-                                const year = await fetch(`https://api.themoviedb.org/3/movie/${result.id}/release_dates?api_key=3770f4ac92cd31bf3489e56a9cc9c5d7`)
-                                    .then(response => response.json())
-                                    .then((jsonData) => jsonData.results.find(({ iso_3166_1 }) => iso_3166_1 === 'US')?.release_dates[0]?.release_date.slice(0, 4));
-                                result.director = director[0]?.name;
-                                result.year = year;
-                                return result;
-                            });
-                        })
-                        .then(async resultsWithDirectors => {
-                            const results = await Promise.all(resultsWithDirectors);
-                            setResults(results);
-                        })
-                        .catch(err => {
-                            if (err.name === 'AbortError') console.log('Request aborted');
-                            else console.log('Error: ', err);
-                        });
-                    break;
-                case "Books":
-                    fetch(`https://openlibrary.org/search.json?q=${query}&limit=5`, { signal })
-                        .then(res => res.json())
-                        .then(data => setResults(data.docs))
-                        .catch(err => {
-                            if (err.name === 'AbortError') console.log('Request aborted');
-                            else console.log('Error: ', err);
-                        });
-                    break;
-            }
-            setSearching(false);
-            console.log('done searching');
-        } else setResults([]);
+            fetch(url, { signal })
+                .then(res => res.json())
+                .then(data => {
+                    setResults(data);
+                    setSearching(false);
+                })
+                .catch(err => {
+                    if (err.name === 'AbortError') console.log('Request aborted');
+                    else console.log('Error: ', err);
+                });
+        }
+        else setResults([]);
 
         return () => {
             controller.abort();
         };
-    }, [query, type]);
-
-    function clear() {
-        setResults([]);
-    }
+    }, [query, type, listType]);
 
     return (
         <div>
@@ -194,10 +155,10 @@ function SearchBar({ listId, listType, handleDataChange }) {
                         handleDataChange={handleDataChange}
                     />;
                 })}
+                {searching && <p className={styles.searching}>Searching...</p>}
                 {listType === 'Movies' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">The Movie Database (TMDB) API</a></p>}
                 {listType === 'Music' && <p>*results from <a href="https://developer.spotify.com/documentation/web-api" rel="noreferrer" target="_blank">Spotify API</a></p>}
                 {listType === 'Books' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">Open Library API</a></p>}
-                {searching && <p>Searching...</p>}
             </div>
         </div>
     );
