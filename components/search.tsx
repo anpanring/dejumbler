@@ -1,10 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 
 import styles from "./search.module.css";
 
+import { CurrentListContext } from "../pages/all-lists";
+
 function SearchResult({ data, listId, listType, handleDataChange }) {
-    switch (listType) {
+    const { currentList, setCurrentList } = useContext(CurrentListContext) ?? {};
+    switch (currentList ? currentList.type : listType) {
         case 'Music':
             const {
                 artists,
@@ -21,7 +24,7 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
             return (
                 <div className={styles.searchResultsWrapper}>
                     <img src={imageURLs[0]} height={50} width={50} alt={name} />
-                    <button className={styles.addButton} onClick={() => addToList(data, listId, name)}>+</button>
+                    <button className={styles.addButton} onClick={() => addToList(data, currentList ? currentList.id : listId, name)}>+</button>
                     <div className={styles.searchResultText}>
                         <p className={styles.title}>{name}</p>
                         <p className={styles.artist}>{artistNames.join(', ')}</p>
@@ -36,7 +39,7 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
             return (
                 <div className={styles.movieSearchResultsWrapper}>
                     <img src={`http://image.tmdb.org/t/p/w92${poster_path}`} width={50} height={75} alt={title} />
-                    <button className={styles.addButton} onClick={() => addToList(data, listId, title)}>+</button>
+                    <button className={styles.addButton} onClick={() => addToList(data, currentList ? currentList.id : listId, title)}>+</button>
                     <div className={styles.searchResultText}>
                         <p className={styles.title}>{title}</p>
                         <p className={styles.artist}>{director && `Dir. ${director}`} {year && `(${year})`}</p>
@@ -51,7 +54,7 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
             return (
                 <div className={styles.movieSearchResultsWrapper}>
                     <img src={`https://covers.openlibrary.org/b/olid/${cover_edition_key}-M.jpg`} width={50} height={75} alt={bookTitle} />
-                    <button className={styles.addButton} onClick={() => addToList(data, listId, bookTitle)}>+</button>
+                    <button className={styles.addButton} onClick={() => addToList(data, currentList ? currentList.id : listId, bookTitle)}>+</button>
                     <div className={styles.searchResultText}>
                         <p className={styles.title}>{bookTitle}</p>
                         {author_name && <p className={styles.artist}>{author_name.join(', ')} - {first_publish_year}</p>}
@@ -80,21 +83,26 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
 }
 
 function SearchBar({ listId, listType, handleDataChange }) {
+    const { currentList, setCurrentList } = useContext(CurrentListContext) ?? {};
 
     const [results, setResults] = useState<Object[]>([]);
-    const [type, setType] = useState('all');
+    const [musicType, setMusicType] = useState('all');
     const [query, setQuery] = useState('');
     const [searching, setSearching] = useState<boolean>(false);
 
-    const formRef = useRef(null);
+    const formRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         const controller = new AbortController();
         const signal = controller.signal;
 
         if (query) {
+            if(query === ' ') {
+                return setResults([]);
+                setSearching(false);
+            }
             let url;
-            if (listType == "Music") url = `/api/spot/search?q=${query}&type=${type}`;
+            if (listType == "Music") url = `/api/spot/search?q=${query}&type=${musicType}`;
             else if (listType == "Movies") url = `/api/search?q=${query}&type=movies`;
             else if (listType == "Books") url = `/api/search?q=${query}&type=books`;
             setSearching(true);
@@ -105,7 +113,9 @@ function SearchBar({ listId, listType, handleDataChange }) {
                     setSearching(false);
                 })
                 .catch(err => {
-                    if (err.name === 'AbortError') console.log('Request aborted');
+                    if (err.name === 'AbortError') {
+                        console.log('Request aborted');
+                    }
                     else console.log('Error: ', err);
                 });
         }
@@ -114,7 +124,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
         return () => {
             controller.abort();
         };
-    }, [query, type, listType]);
+    }, [query, musicType, listType]);
 
     return (
         <div>
@@ -134,7 +144,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                     </span>
                 </button> */}
                 {listType !== 'Movies' && listType !== 'Books' && <select
-                    onChange={(e) => setType(e.target.value)}
+                    onChange={(e) => setMusicType(e.target.value)}
                     className={styles.searchTypeSelect}
                     name="type"
                     required
@@ -155,7 +165,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                         handleDataChange={handleDataChange}
                     />;
                 })}
-                {searching && <p className={styles.searching}>Searching...</p>}
+                {searching && formRef.current?.value !== '' && <p className={styles.searching}>Searching...</p>}
                 {listType === 'Movies' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">The Movie Database (TMDB) API</a></p>}
                 {listType === 'Music' && <p>*results from <a href="https://developer.spotify.com/documentation/web-api" rel="noreferrer" target="_blank">Spotify API</a></p>}
                 {listType === 'Books' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">Open Library API</a></p>}

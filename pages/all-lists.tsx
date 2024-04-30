@@ -85,7 +85,12 @@ function ListBox({ data, setListData, listModified, setListModified, selected })
 
     return (
         <div key={data._id} className={`${styles.listInfo} ${selected && width >= mobileWidth ? styles.selected : ''}`}>
-            {width < mobileWidth && <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p>}
+            {width < mobileWidth &&
+                <p><Link
+                    href={`/list/${data._id}`}
+                    onClick={() => setCurrentList && setCurrentList({ id: data._id, name: data.name, type: data.type })}
+                >{name}
+                </Link> ({data.items.length}) - {data.type}</p>}
             {width >= mobileWidth &&
                 <p><Link
                     href="#"
@@ -232,7 +237,7 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
                     {currentListData.items.map((item) => {
                         return <ListItem
                             data={item}
-                            listId={currentList.id}
+                            listMetadata={currentList}
                             key={item._id}
                             handleDataChange={handleDataChange}
                             type={currentListData.type}
@@ -329,5 +334,9 @@ export async function getServerSideProps(context) {
     await dbConnect();
     const result = await List.find({ user: user.id }); // email is rly _id
 
-    return { props: { lists: JSON.stringify(result) } }
+    return {
+        props: {
+            lists: JSON.stringify(result)
+        }
+    }
 }

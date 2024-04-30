@@ -3,10 +3,7 @@ import React, { useState } from "react";
 
 import styles from '../styles/ListPage.module.css';
 
-import { IAlbum, IArtist, IBook, IItem, IMovie, ISong } from "../models/definitions.types";
-import { HydratedDocument } from "mongoose";
-
-function ListItem({ data, listId, handleDataChange, type }) {
+function ListItem({ data, listMetadata, handleDataChange, type }) {
     const [notes, setNotes] = useState(data.notes);
     const [showForm, setShowForm] = useState(false);
 
@@ -16,7 +13,7 @@ function ListItem({ data, listId, handleDataChange, type }) {
             headers: { "Content-Type": 'application/json' },
             body: JSON.stringify({
                 data: data,
-                listId: listId
+                listId: listMetadata.id
             }),
         };
 
@@ -31,7 +28,7 @@ function ListItem({ data, listId, handleDataChange, type }) {
 
         const itemInfo = {
             itemId: data._id,
-            listId: listId,
+            listId: listMetadata.id,
             updatedNotes: e.target.notes.value
         }
 
