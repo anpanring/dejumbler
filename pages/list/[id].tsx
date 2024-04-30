@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 
 import Head from 'next/head';
 
@@ -18,8 +18,13 @@ import { authOptions } from '../api/auth/[...nextauth]';
 import { IList } from '../../models/definitions.types';
 import { HydratedDocument, Query } from "mongoose";
 
-export default function ListPage({ listData, id }) {
-    const [data, setData] = useState<IList>(JSON.parse(listData));
+import { ListMetadata, ListData } from '../../types/dejumbler-types';
+
+export default function ListPage({ listData, listMetadata }: {
+    listData: string,
+    listMetadata: ListMetadata
+}) {
+    const [data, setData] = useState<ListData>(JSON.parse(listData));
     const [songAdded, setSongAdded] = useState(false);
     const [changeType, setChangeType] = useState('');
 
@@ -40,7 +45,8 @@ export default function ListPage({ listData, id }) {
                 <h3 className={styles.listType}>{data.type} </h3>
             </div>
 
-            <SearchBar listId={id} listType={data.type} handleDataChange={handleDataChange} />
+            {/* still need to pass in listId and listType b/c can't carry context between pages */}
+            <SearchBar listId={listMetadata.id} listType={data.type} handleDataChange={handleDataChange} />
 
             <div className={styles.itemWrapper}>
                 {
@@ -48,7 +54,7 @@ export default function ListPage({ listData, id }) {
                         return (
                             <ListItem
                                 data={item}
-                                listId={id}
+                                listMetadata={listMetadata}
                                 type={data.type}
                                 key={item.artURL || item.name}
                                 handleDataChange={handleDataChange}
@@ -90,5 +96,14 @@ export async function getServerSideProps(context) {
     }
 
     const listData = JSON.stringify(data);
-    return { props: { listData, id: context.params.id } };
+    return {
+        props: {
+            listData,
+            listMetadata: {
+                id: context.params.id,
+                name: data.name,
+                type: data.type,
+            }
+        }
+    };
 }
