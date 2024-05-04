@@ -31,16 +31,19 @@ export const CurrentListContext = createContext<CurrentListContextType | null>(n
 // List
 function ListBox({ data, setListData, listModified, setListModified, selected }) {
     // kinda messy, refactor to make sure never null
-    const { currentList, setCurrentList } = useContext(CurrentListContext) ?? {};
-    const { width, height } = useContext(WindowSizeContext) ?? { width: 1200, height: 800 };
+    const currentListContext = useContext(CurrentListContext);
+    if(!currentListContext) throw new Error('CurrentListContext is null');
+    const { setCurrentList } = currentListContext;
+
+    const { width } = useContext(WindowSizeContext) ?? { width: 1200, height: 800 };
 
     const [showEditOptions, setShowEditOptions] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
 
     // list name and description
-    const [name, setName] = useState(data.name);
-    const [description, setDescription] = useState(data.description);
+    const [name, setName] = useState<string>(data.name);
+    const [description, setDescription] = useState<string>(data.description);
     const [expandDescription, setExpandDescription] = useState(false);
 
     function close() {
@@ -169,7 +172,9 @@ function ListBox({ data, setListData, listModified, setListModified, selected })
 
 // List Container
 function ListContainer({ lists, setListData, listModified, setListModified }) {
-    const { currentList, setCurrentList } = useContext(CurrentListContext) ?? {};
+    const currentListContext = useContext(CurrentListContext);
+    if(!currentListContext) throw new Error('CurrentListContext is null');
+    const { currentList, setCurrentList } = currentListContext;
 
     // detecting wide mode
     const [width, height] = useWindowSize();
@@ -181,14 +186,14 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
 
     useEffect(() => {
         if (currentList !== null) {
-            setLoading(true);
+            // setLoading(true);
             const populateList = async () => {
                 const res = await fetch(`/api/get-list?id=${currentList?.id}`);
                 const data = await res.json();
                 setCurrentListData(await data);
             };
             populateList();
-            setLoading(false);
+            // setLoading(false);
         }
     }, [currentList]);
 
@@ -216,7 +221,7 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
             </section>
 
             {/* Right */}
-            {loading && <p>Loading...</p>}
+            {/* {loading && <p>Loading...</p>} */}
             {currentList && width >= mobileWidth && currentListData &&
                 <section className={styles.currentListContainer} key={currentList.id}>
                     <div className={styles.flexSpaceBetween}>

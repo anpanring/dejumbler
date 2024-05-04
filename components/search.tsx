@@ -6,7 +6,10 @@ import styles from "./search.module.css";
 import { CurrentListContext } from "../pages/all-lists";
 
 function SearchResult({ data, listId, listType, handleDataChange }) {
-    const { currentList, setCurrentList } = useContext(CurrentListContext) ?? {};
+    const currentListContext = useContext(CurrentListContext);
+    if (!currentListContext) throw new Error('CurrentListContext is null');
+    const { currentList } = currentListContext;
+
     switch (currentList ? currentList.type : listType) {
         case 'Music':
             const {
@@ -83,9 +86,7 @@ function SearchResult({ data, listId, listType, handleDataChange }) {
 }
 
 function SearchBar({ listId, listType, handleDataChange }) {
-    const { currentList, setCurrentList } = useContext(CurrentListContext) ?? {};
-
-    const [results, setResults] = useState<Object[]>([]);
+    const [results, setResults] = useState<Object[] | null>(null);
     const [musicType, setMusicType] = useState('all');
     const [query, setQuery] = useState('');
     const [searching, setSearching] = useState<boolean>(false);
@@ -97,14 +98,10 @@ function SearchBar({ listId, listType, handleDataChange }) {
         const signal = controller.signal;
 
         if (query) {
-            if(query === ' ') {
-                return setResults([]);
-                setSearching(false);
-            }
-            let url;
+            let url: string;
             if (listType == "Music") url = `/api/spot/search?q=${query}&type=${musicType}`;
             else if (listType == "Movies") url = `/api/search?q=${query}&type=movies`;
-            else if (listType == "Books") url = `/api/search?q=${query}&type=books`;
+            else url = `/api/search?q=${query}&type=books`;
             setSearching(true);
             fetch(url, { signal })
                 .then(res => res.json())
@@ -113,13 +110,11 @@ function SearchBar({ listId, listType, handleDataChange }) {
                     setSearching(false);
                 })
                 .catch(err => {
-                    if (err.name === 'AbortError') {
-                        console.log('Request aborted');
-                    }
+                    if (err.name === 'AbortError') console.log('Request aborted');
                     else console.log('Error: ', err);
                 });
         }
-        else setResults([]);
+        else setResults(null); // clear results when query is empty
 
         return () => {
             controller.abort();
@@ -156,7 +151,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                 </select>}
             </form>
             <div className={styles.resultsWrapper}>
-                {results.map((result) => {
+                {results && results.map((result) => {
                     return <SearchResult
                         key={Math.random() * Number.MAX_VALUE}
                         data={result}
@@ -166,6 +161,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                     />;
                 })}
                 {searching && formRef.current?.value !== '' && <p className={styles.searching}>Searching...</p>}
+                {!searching && formRef.current?.value !== '' && results && <p className={styles.searching}>No results found</p>}
                 {listType === 'Movies' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">The Movie Database (TMDB) API</a></p>}
                 {listType === 'Music' && <p>*results from <a href="https://developer.spotify.com/documentation/web-api" rel="noreferrer" target="_blank">Spotify API</a></p>}
                 {listType === 'Books' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">Open Library API</a></p>}
