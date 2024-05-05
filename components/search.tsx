@@ -6,9 +6,7 @@ import styles from "./search.module.css";
 import { CurrentListContext } from "../pages/all-lists";
 
 function SearchResult({ data, listId, listType, handleDataChange }) {
-    const currentListContext = useContext(CurrentListContext);
-    if (!currentListContext) throw new Error('CurrentListContext is null');
-    const { currentList } = currentListContext;
+    const { currentList } = useContext(CurrentListContext) ?? {};
 
     switch (currentList ? currentList.type : listType) {
         case 'Music':
