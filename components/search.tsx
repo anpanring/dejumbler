@@ -109,7 +109,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
             fetch(url, { signal })
                 .then(res => res.json())
                 .then(data => {
-                    setResults(data.length != 0 ? data : null);
+                    setResults(data);
                     setSearching(false);
                 })
                 .catch(err => {
@@ -164,7 +164,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                     />;
                 })}
                 {searching && formRef.current?.value !== '' && <p className={styles.searching}>Searching...</p>}
-                {!searching && formRef.current?.value !== '' && !results && <p className={styles.searching}>No results found</p>}
+                {!searching && formRef.current?.value !== '' && results?.length == 0 && <p className={styles.searching}>No results found</p>}
                 {listType === 'Movies' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">The Movie Database (TMDB) API</a></p>}
                 {listType === 'Music' && <p>*results from <a href="https://developer.spotify.com/documentation/web-api" rel="noreferrer" target="_blank">Spotify API</a></p>}
                 {listType === 'Books' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">Open Library API</a></p>}
