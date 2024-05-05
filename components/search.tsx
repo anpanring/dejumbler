@@ -5,7 +5,12 @@ import styles from "./search.module.css";
 
 import { CurrentListContext } from "../pages/all-lists";
 
-function SearchResult({ data, listId, listType, handleDataChange }) {
+function SearchResult({ data, listId, listType, handleDataChange }: {
+    data: any,
+    listId: string,
+    listType: string,
+    handleDataChange: (data: any, message: string) => void
+}) {
     const { currentList } = useContext(CurrentListContext) ?? {};
 
     switch (currentList ? currentList.type : listType) {
@@ -95,7 +100,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
         const controller = new AbortController();
         const signal = controller.signal;
 
-        if (query) {
+        if (query && query.trim() !== ''){
             let url: string;
             if (listType == "Music") url = `/api/spot/search?q=${query}&type=${musicType}`;
             else if (listType == "Movies") url = `/api/search?q=${query}&type=movies`;
@@ -104,7 +109,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
             fetch(url, { signal })
                 .then(res => res.json())
                 .then(data => {
-                    setResults(data);
+                    setResults(data.length != 0 ? data : null);
                     setSearching(false);
                 })
                 .catch(err => {
@@ -159,7 +164,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                     />;
                 })}
                 {searching && formRef.current?.value !== '' && <p className={styles.searching}>Searching...</p>}
-                {!searching && formRef.current?.value !== '' && results && <p className={styles.searching}>No results found</p>}
+                {!searching && formRef.current?.value !== '' && !results && <p className={styles.searching}>No results found</p>}
                 {listType === 'Movies' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">The Movie Database (TMDB) API</a></p>}
                 {listType === 'Music' && <p>*results from <a href="https://developer.spotify.com/documentation/web-api" rel="noreferrer" target="_blank">Spotify API</a></p>}
                 {listType === 'Books' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">Open Library API</a></p>}
