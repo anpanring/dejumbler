@@ -25,7 +25,7 @@ export default async function handler(
 
         const newMovie: HydratedDocument<IMovie> = new Movie({
             name: title,
-            artURL: `http://image.tmdb.org/t/p/w92${poster_path}`,
+            artURL: `https://image.tmdb.org/t/p/w92${poster_path}`,
         });
         if(req.body.director) newMovie.director = req.body.director;
         if(req.body.year) newMovie.year = req.body.year;

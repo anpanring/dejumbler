@@ -44,7 +44,7 @@ function SearchResult({ data, listContext, handleDataChange }: {
 
             return (
                 <div className={styles.movieSearchResultsWrapper}>
-                    <img src={`http://image.tmdb.org/t/p/w92${poster_path}`} width={50} height={75} alt={title} />
+                    <img src={`https://image.tmdb.org/t/p/w92${poster_path}`} width={50} height={75} alt={title} />
                     <button className={styles.addButton} onClick={() => addToList(data, currentList ? currentList.id : listContext.id, title)}>+</button>
                     <div className={styles.searchResultText}>
                         <p className={styles.title}>{title}</p>
