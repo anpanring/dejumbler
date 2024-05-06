@@ -16,7 +16,7 @@ export default function Home() {
 
     const router = useRouter();
 
-    // loading state
+    // loading state - maybe use Suspense instead?
     if (session.status === 'loading') {
         return (
             <>
@@ -83,8 +83,6 @@ export default function Home() {
                             }}
                         />
                     </svg>
-                    {/* <Image src={logo} className={styles.loadingLogo} alt='logo' /> */}
-                    {/* <h3>Loading...</h3> */}
                 </div>
             </>
             // <Layout>
@@ -124,13 +122,5 @@ export default function Home() {
 //         props: {
 //             session: session
 //         }
-//     }
-// }
-
-// export async function getServerSideProps(context) {
-//     return {
-//         props: {
-//             csrfToken: await getCsrfToken(context),
-//         },
 //     }
 // }

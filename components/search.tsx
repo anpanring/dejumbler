@@ -4,16 +4,16 @@ import React, { useEffect, useState, useRef, useContext } from "react";
 import styles from "./search.module.css";
 
 import { CurrentListContext } from "../pages/all-lists";
+import { ListMetadata } from "../types/dejumbler-types";
 
-function SearchResult({ data, listId, listType, handleDataChange }: {
+function SearchResult({ data, listContext, handleDataChange }: {
     data: any,
-    listId: string,
-    listType: string,
+    listContext: ListMetadata,
     handleDataChange: (data: any, message: string) => void
 }) {
     const { currentList } = useContext(CurrentListContext) ?? {};
 
-    switch (currentList ? currentList.type : listType) {
+    switch (currentList ? currentList.type : listContext.type) {
         case 'Music':
             const {
                 artists,
@@ -30,7 +30,7 @@ function SearchResult({ data, listId, listType, handleDataChange }: {
             return (
                 <div className={styles.searchResultsWrapper}>
                     <img src={imageURLs[0]} height={50} width={50} alt={name} />
-                    <button className={styles.addButton} onClick={() => addToList(data, currentList ? currentList.id : listId, name)}>+</button>
+                    <button className={styles.addButton} onClick={() => addToList(data, currentList ? currentList.id : listContext.id, name)}>+</button>
                     <div className={styles.searchResultText}>
                         <p className={styles.title}>{name}</p>
                         <p className={styles.artist}>{artistNames.join(', ')}</p>
@@ -45,7 +45,7 @@ function SearchResult({ data, listId, listType, handleDataChange }: {
             return (
                 <div className={styles.movieSearchResultsWrapper}>
                     <img src={`http://image.tmdb.org/t/p/w92${poster_path}`} width={50} height={75} alt={title} />
-                    <button className={styles.addButton} onClick={() => addToList(data, currentList ? currentList.id : listId, title)}>+</button>
+                    <button className={styles.addButton} onClick={() => addToList(data, currentList ? currentList.id : listContext.id, title)}>+</button>
                     <div className={styles.searchResultText}>
                         <p className={styles.title}>{title}</p>
                         <p className={styles.artist}>{director && `Dir. ${director}`} {year && `(${year})`}</p>
@@ -60,7 +60,7 @@ function SearchResult({ data, listId, listType, handleDataChange }: {
             return (
                 <div className={styles.movieSearchResultsWrapper}>
                     <img src={`https://covers.openlibrary.org/b/olid/${cover_edition_key}-M.jpg`} width={50} height={75} alt={bookTitle} />
-                    <button className={styles.addButton} onClick={() => addToList(data, currentList ? currentList.id : listId, bookTitle)}>+</button>
+                    <button className={styles.addButton} onClick={() => addToList(data, currentList ? currentList.id : listContext.id, bookTitle)}>+</button>
                     <div className={styles.searchResultText}>
                         <p className={styles.title}>{bookTitle}</p>
                         {author_name && <p className={styles.artist}>{author_name.join(', ')} - {first_publish_year}</p>}
@@ -88,7 +88,10 @@ function SearchResult({ data, listId, listType, handleDataChange }: {
     }
 }
 
-function SearchBar({ listId, listType, handleDataChange }) {
+function SearchBar({ listContext, handleDataChange } : {
+    listContext: ListMetadata,
+    handleDataChange: (data: any, message: string) => void
+}) {
     const [results, setResults] = useState<Object[] | null>(null);
     const [musicType, setMusicType] = useState('all');
     const [query, setQuery] = useState('');
@@ -102,8 +105,8 @@ function SearchBar({ listId, listType, handleDataChange }) {
 
         if (query && query.trim() !== ''){
             let url: string;
-            if (listType == "Music") url = `/api/spot/search?q=${query}&type=${musicType}`;
-            else if (listType == "Movies") url = `/api/search?q=${query}&type=movies`;
+            if (listContext.type == "Music") url = `/api/spot/search?q=${query}&type=${musicType}`;
+            else if (listContext.type == "Movies") url = `/api/search?q=${query}&type=movies`;
             else url = `/api/search?q=${query}&type=books`;
             setSearching(true);
             fetch(url, { signal })
@@ -122,7 +125,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
         return () => {
             controller.abort();
         };
-    }, [query, musicType, listType]);
+    }, [query, musicType, listContext.type]);
 
     return (
         <div>
@@ -132,7 +135,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                     onChange={(e) => setQuery(e.target.value)}
                     type="search"
                     name="value"
-                    placeholder={`Search ${listType.toLowerCase()} to add...`}
+                    placeholder={`Search ${listContext.type.toLowerCase()} to add...`}
                     ref={formRef}
                     required
                 />
@@ -141,7 +144,7 @@ function SearchBar({ listId, listType, handleDataChange }) {
                         close
                     </span>
                 </button> */}
-                {listType !== 'Movies' && listType !== 'Books' && <select
+                {listContext.type !== 'Movies' && listContext.type !== 'Books' && <select
                     onChange={(e) => setMusicType(e.target.value)}
                     className={styles.searchTypeSelect}
                     name="type"
@@ -158,16 +161,15 @@ function SearchBar({ listId, listType, handleDataChange }) {
                     return <SearchResult
                         key={Math.random() * Number.MAX_VALUE}
                         data={result}
-                        listId={listId}
-                        listType={listType}
+                        listContext={listContext}
                         handleDataChange={handleDataChange}
                     />;
                 })}
                 {searching && formRef.current?.value !== '' && <p className={styles.searching}>Searching...</p>}
                 {!searching && formRef.current?.value !== '' && results?.length == 0 && <p className={styles.searching}>No results found</p>}
-                {listType === 'Movies' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">The Movie Database (TMDB) API</a></p>}
-                {listType === 'Music' && <p>*results from <a href="https://developer.spotify.com/documentation/web-api" rel="noreferrer" target="_blank">Spotify API</a></p>}
-                {listType === 'Books' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">Open Library API</a></p>}
+                {listContext.type === 'Movies' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">The Movie Database (TMDB) API</a></p>}
+                {listContext.type === 'Music' && <p>*results from <a href="https://developer.spotify.com/documentation/web-api" rel="noreferrer" target="_blank">Spotify API</a></p>}
+                {listContext.type === 'Books' && <p>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">Open Library API</a></p>}
             </div>
         </div>
     );

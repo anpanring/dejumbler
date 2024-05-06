@@ -2,8 +2,13 @@
 import React, { useState } from "react";
 
 import styles from '../styles/ListPage.module.css';
+import { ListMetadata } from "../types/dejumbler-types";
 
-function ListItem({ data, listMetadata, handleDataChange, type }) {
+function ListItem({ data, listMetadata, handleDataChange } : {
+    data: any,
+    listMetadata: ListMetadata,
+    handleDataChange: (updatedList: any, message: string) => void,
+}) {
     const [notes, setNotes] = useState(data.notes);
     const [showForm, setShowForm] = useState(false);
 
@@ -45,9 +50,9 @@ function ListItem({ data, listMetadata, handleDataChange, type }) {
         setShowForm(!showForm);
     }
 
-    if (type === "Movies") {
+    if (listMetadata.type === "Movies") {
         return (
-            <div className={styles.listItem} >
+            <div className={styles.listItem}>
                 <img className={styles.listItemArt} src={data.artURL} alt={data.name} />
 
                 <div className={styles.listItemText}>
@@ -75,9 +80,9 @@ function ListItem({ data, listMetadata, handleDataChange, type }) {
                 </div>
             </div >
         );
-    } else if (type === "Books") {
+    } else if (listMetadata.type === "Books") {
         return (
-            <div className={styles.listItem} >
+            <div className={styles.listItem}>
                 <img className={styles.listItemArt} src={data.artURL} alt={data.name} />
 
                 <div className={styles.listItemText}>
@@ -107,7 +112,7 @@ function ListItem({ data, listMetadata, handleDataChange, type }) {
         );
     } else {
         return ( // Music
-            <div className={styles.listItem} >
+            <div className={styles.listItem}>
                 <img className={styles.listItemArt} src={data.artURL} alt={data.name} />
 
                 <div className={styles.listItemText}>

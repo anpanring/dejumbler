@@ -46,7 +46,7 @@ export default function ListPage({ listData, listMetadata }: {
             </div>
 
             {/* still need to pass in listId and listType b/c can't carry context between pages */}
-            <SearchBar listId={listMetadata.id} listType={data.type} handleDataChange={handleDataChange} />
+            <SearchBar listContext={listMetadata} handleDataChange={handleDataChange} />
 
             <div className={styles.itemWrapper}>
                 {
@@ -55,7 +55,6 @@ export default function ListPage({ listData, listMetadata }: {
                             <ListItem
                                 data={item}
                                 listMetadata={listMetadata}
-                                type={data.type}
                                 key={item.artURL || item.name}
                                 handleDataChange={handleDataChange}
                             />
