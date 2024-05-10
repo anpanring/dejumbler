@@ -4,35 +4,36 @@ import React, { useState } from "react";
 import styles from '../styles/ListPage.module.css';
 import { ListMetadata } from "../types/dejumbler-types";
 
-function ListItem({ data, listMetadata, handleDataChange } : {
-    data: any,
+function ListItem({ itemData, listMetadata, handleDataChange }: {
+    itemData: any,
     listMetadata: ListMetadata,
     handleDataChange: (updatedList: any, message: string) => void,
 }) {
-    const [notes, setNotes] = useState(data.notes);
-    const [showForm, setShowForm] = useState(false);
+    const [notes, setNotes] = useState(itemData.notes);
+    const [showNotesForm, setShowNotesForm] = useState(false);
 
     async function handleDelete() {
         const fetchOptions = {
             method: 'DELETE',
             headers: { "Content-Type": 'application/json' },
-            body: JSON.stringify({
-                data: data,
-                listId: listMetadata.id
-            }),
+            // body: JSON.stringify({
+            //     itemId: itemData._id,
+            //     listId: listMetadata.id
+            // }),
         };
 
-        const response = await fetch('/api/remove-item', fetchOptions);
+        const response = await fetch(`/api/remove-item?list=${listMetadata.id}&item=${itemData._id}`, fetchOptions);
         const updatedList = await response.json();
 
-        handleDataChange(updatedList, data.name + ' removed from ');
+        // set state in parent component
+        handleDataChange(updatedList, itemData.name + ' removed from ');
     }
 
     async function handleNoteChange(e) {
         e.preventDefault();
 
         const itemInfo = {
-            itemId: data._id,
+            itemId: itemData._id,
             listId: listMetadata.id,
             updatedNotes: e.target.notes.value
         }
@@ -47,104 +48,56 @@ function ListItem({ data, listMetadata, handleDataChange } : {
         const updatedData = await response.json();
 
         setNotes(updatedData.notes);
-        setShowForm(!showForm);
+        setShowNotesForm(!showNotesForm);
     }
 
+    let listInfoComponent;
     if (listMetadata.type === "Movies") {
-        return (
-            <div className={styles.listItem}>
-                <img className={styles.listItemArt} src={data.artURL} alt={data.name} />
-
-                <div className={styles.listItemText}>
-                    <p className={styles.itemInfo}> {data.name} </p>
-                    <p className={styles.artistRow}>{data.director && `Dir. ${data.director}`} {data.year && `(${data.year})`}</p>
-
-                    {
-                        !showForm && <p className={styles.notes}> Notes: {notes} </p>}
-                    {
-                        showForm ? <form onSubmit={handleNoteChange} className={styles.notesForm} >
-                            <textarea name="notes" defaultValue={notes} className={styles.notesInput} />
-                            <div className={styles.notesEditButtons}>
-                                <button className={styles.button} type="submit" > Save </button>
-                                <button className={styles.button} onClick={() => setShowForm(!showForm)
-                                }> Cancel </button>
-                            </div>
-                        </form> : null}
-
-                    {
-                        !showForm && <div className={styles.listItemActions}>
-                            <button className={styles.button} onClick={() => setShowForm(!showForm)
-                            }> Edit </button>
-                            <button className={styles.button} onClick={handleDelete} > Remove </button>
-                        </div>}
-                </div>
-            </div >
-        );
+        listInfoComponent = <>
+            <p className={styles.itemInfo}> {itemData.name} </p>
+            <p className={styles.listItemType}>{itemData.director && `Dir. ${itemData.director}`} {itemData.year && `(${itemData.year})`}</p>
+        </>
     } else if (listMetadata.type === "Books") {
-        return (
-            <div className={styles.listItem}>
-                <img className={styles.listItemArt} src={data.artURL} alt={data.name} />
+        listInfoComponent = <>
+            <p className={styles.itemInfo}> {itemData.name} </p>
+            <p className={styles.listItemType}>{itemData.author} ({itemData.year})</p>
+        </>
+    } else { // Music
+        listInfoComponent = <>
+            <p className={styles.itemInfo}> {itemData.name} </p>
 
-                <div className={styles.listItemText}>
-                    <p className={styles.itemInfo}> {data.name} </p>
-                    <p className={styles.artistRow}>{data.author} ({data.year})</p>
-
-                    {
-                        !showForm && <p className={styles.notes}> Notes: {notes} </p>}
-                    {
-                        showForm ? <form onSubmit={handleNoteChange} className={styles.notesForm} >
-                            <textarea name="notes" defaultValue={notes} className={styles.notesInput} />
-                            <div className={styles.notesEditButtons}>
-                                <button className={styles.button} type="submit" > Save </button>
-                                <button className={styles.button} onClick={() => setShowForm(!showForm)
-                                }> Cancel </button>
-                            </div>
-                        </form> : null}
-
-                    {
-                        !showForm && <div className={styles.listItemActions}>
-                            <button className={styles.button} onClick={() => setShowForm(!showForm)
-                            }> Edit </button>
-                            <button className={styles.button} onClick={handleDelete} > Remove </button>
-                        </div>}
-                </div>
-            </div >
-        );
-    } else {
-        return ( // Music
-            <div className={styles.listItem}>
-                <img className={styles.listItemArt} src={data.artURL} alt={data.name} />
-
-                <div className={styles.listItemText}>
-                    <p className={styles.itemInfo}> {data.name} </p>
-
-                    {data.artist ?
-                        <p className={styles.artistRow}> {data.artist} - {data.__t} </p>
-                        : <p className={styles.artistRow}> {data.__t} </p>}
-
-
-                    {!showForm && <p className={styles.notes}> Notes: {notes} </p>}
-
-                    {
-                        showForm ? <form onSubmit={handleNoteChange} className={styles.notesForm} >
-                            <textarea name="notes" defaultValue={notes} className={styles.notesInput} />
-                            <div className={styles.notesEditButtons}>
-                                <button className={styles.button} type="submit" > Save </button>
-                                <button className={styles.button} onClick={() => setShowForm(!showForm)
-                                }> Cancel </button>
-                            </div>
-                        </form> : null}
-
-                    {
-                        !showForm && <div className={styles.listItemActions}>
-                            <button className={styles.button} onClick={() => setShowForm(!showForm)
-                            }> Edit </button>
-                            <button className={styles.button} onClick={handleDelete} > Remove </button>
-                        </div>}
-                </div>
-            </div >
-        );
+            {itemData.artist ?
+                <p className={styles.listItemType}> {itemData.artist} - {itemData.__t} </p>
+                : <p className={styles.listItemType}> {itemData.__t} </p>}
+        </>
     }
+
+    return (
+        <div className={styles.listItem}>
+            <img className={styles.listItemArt} src={itemData.artURL} alt={itemData.name} loading="lazy" />
+
+            <div className={styles.listItemText}>
+                {listInfoComponent}
+
+                {!showNotesForm && <p className={styles.listItemNotes}> Notes: {notes} </p>}
+
+                {showNotesForm ? <form onSubmit={handleNoteChange} className={styles.notesForm} >
+                    <textarea name="notes" defaultValue={notes} className={styles.notesInput} />
+                    <div className={styles.notesEditButtons}>
+                        <button className={styles.button} type="submit" > Save </button>
+                        <button className={styles.button} onClick={() => setShowNotesForm(!showNotesForm)
+                        }> Cancel </button>
+                    </div>
+                </form> : null}
+
+                {!showNotesForm && <div className={styles.listItemActions}>
+                    <button className={styles.button} onClick={() => setShowNotesForm(!showNotesForm)
+                    }> Edit </button>
+                    <button className={styles.button} onClick={handleDelete} > Remove </button>
+                </div>}
+            </div>
+        </div >
+    );
 }
 
 export default ListItem;

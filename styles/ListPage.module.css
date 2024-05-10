@@ -1,3 +1,4 @@
+/* Save and edit buttons */
 .button {
     background-color: var(--background-color);
     color: var(--main-text-color);
@@ -11,7 +12,7 @@
     color: white;
 }
 
-.itemWrapper {
+.itemsContainer {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -19,6 +20,8 @@
     padding-bottom: 1em;
 }
 
+
+/* Each list item */
 .listItem {
     display: flex;
     align-items: center;
@@ -38,6 +41,11 @@
     margin: 1em;
 }
 
+.listItemType {
+    font-size: 0.75em;
+    color: grey;
+}
+
 .listItemActions {
     display: flex;
     flex-direction: row;
@@ -45,22 +53,7 @@
     margin-top: 0.5em;
 }
 
-.listInfo {
-    margin: 1.5em 0 1em;
-}
-
-.listTitle {
-    margin: 0;
-    line-height: 1.2em;
-}
-
-.listType {
-    margin: 0;
-    font-size: 15px;
-    color: grey;
-}
-
-.notes {
+.listItemNotes {
     font-style: italic;
     font-size: 12px;
     margin-top: 0.5em;
@@ -104,7 +97,19 @@
     }
 }
 
-.artistRow {
-    font-size: 0.75em;
+
+/* List info */
+.listInfo {
+    margin: 1.5em 0 1em;
+}
+
+.listTitle {
+    margin: 0;
+    line-height: 1.2em;
+}
+
+.listType {
+    margin: 0;
+    font-size: 15px;
     color: grey;
 }

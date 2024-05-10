@@ -21,22 +21,3 @@
     flex: 1;
     height: calc(100% - 1em);
 }
-
-.loggedInWrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1em;
-}
-
-.signoutButton {
-    font-size: 1em;
-    width: 90%;
-    height: 2em;
-    margin: auto;
-}
-
-.signoutButton:hover {
-    background-color: red;
-    color: var(--main-text-color);
-}

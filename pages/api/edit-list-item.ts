@@ -9,6 +9,7 @@ export default async function handler(
 ) {
     try {
         const data = req.body;
+        
         await dbConnect();
         await List.findOneAndUpdate(
             { _id: data.listId, "items._id": data.itemId },

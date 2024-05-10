@@ -21,7 +21,6 @@ import { useDrag } from "react-dnd";
 import useWindowSize from "../lib/useWindowSize";
 
 import styles from "../styles/AllLists.module.css";
-import formStyles from '../components/navbar.module.css';
 
 const mobileWidth = 600;
 
@@ -66,6 +65,7 @@ function ListBox({ data, setListData, setListModified, selected }: {
             });
             const updatedData = await response.json();
             setListData(updatedData); // in order to update lists instantly
+            // setLength(length - 1);
         } catch (error) {
             alert('Failed to delete list.');
         }
@@ -101,8 +101,9 @@ function ListBox({ data, setListData, setListModified, selected }: {
                 href={width < mobileWidth ? `/list/${data._id}` : "#"}
                 onClick={() => setCurrentList && setCurrentList({ id: data._id, name: data.name, type: data.type })} >
                 {name}
+            {/* </Link> ({selected && currentListData ? currentListData.items.length : length}) - {data.type}</p> */}
             </Link> ({data.items.length}) - {data.type}</p>
-
+            {/* currentlistdata is changing later than selected */}
             {data.description &&
                 <p className={styles.description}>
                     {expandDescription ?
@@ -155,16 +156,16 @@ function ListBox({ data, setListData, setListModified, selected }: {
             {/* Edit modal */}
             {editMode &&
                 <Modal toggleModal={close}>
-                    <form className={formStyles.form} onSubmit={handleListUpdate} method="POST">
-                        <div className={formStyles.formRow}>
+                    <form className={`flex-column ${styles.form}`} onSubmit={handleListUpdate} method="POST">
+                        <div className={styles.formRow}>
                             <label>Name: </label>
                             <input className={styles.formInput} type="text" name="name" defaultValue={name} required />
                         </div>
-                        <div className={formStyles.formRow}>
+                        <div className={styles.formRow}>
                             <label>Description: </label>
                             <textarea name="description" defaultValue={description}></textarea>
                         </div>
-                        <div className={formStyles.formRow}>
+                        <div className={styles.formRow}>
                             <input className={styles.editButton} type="submit" value="Save edits" />
                         </div>
                     </form>
@@ -217,9 +218,9 @@ function ListContainer({ lists, setListData, setListModified }: {
             <section className={`${styles.allListsContainer} ${currentList == null || width < mobileWidth ? styles.wide : ''}`}>
                 {lists.map((list) => {
                     return <ListBox
+                        key={list._id}
                         data={list}
                         setListData={setListData}
-                        key={list._id}
                         setListModified={setListModified}
                         selected={width >= mobileWidth && list._id == currentList?.id ? true : false}
                     />;
@@ -230,7 +231,7 @@ function ListContainer({ lists, setListData, setListModified }: {
             {/* {loading && <p>Loading...</p>} */}
             {currentList && width >= mobileWidth && currentListData &&
                 <section className={styles.currentListContainer} key={currentList.id}>
-                    <div className={styles.flexSpaceBetween}>
+                    <div className={styles.currentListTopBar}>
                         <SearchBar listContext={currentList} handleDataChange={handleDataChange} />
                         {/* Shuffle button */}
                         {/* <button className={styles.closeCurrentList} onClick={() => {
@@ -238,17 +239,17 @@ function ListContainer({ lists, setListData, setListModified }: {
                             console.log(rand);
                             console.log(currentListData.items[rand].name);
                         }}>S</button> */}
-                        <button className={styles.closeCurrentList} onClick={() => {
+                        <button className={styles.closeCurrentListButton} onClick={() => {
                             if (setCurrentList) setCurrentList(null);
                             setCurrentListData(null);
                         }}>X</button>
                     </div>
                     {currentListData.items.map((item) => {
                         return <ListItem
-                            data={item}
+                            itemData={item}
                             listMetadata={currentList}
                             key={item._id}
-                            handleDataChange={handleDataChange}
+                            handleDataChange={handleDataChange} // for editing and deleting
                         />
                     })}
                     {songAdded && <Snackbar message={`${changeType} ${currentListData.name}`} toggleShow={setSongAdded} />}
@@ -302,7 +303,7 @@ export default function AllLists({ lists }) {
                 <h2>{displayType} Lists ({listData.length})</h2>
                 <div>
                     <label>Filter: </label>
-                    <select className={styles.selectMenu} name="type" onChange={toggleType} required>
+                    <select className={styles.filterSelect} name="type" onChange={toggleType} required>
                         <option value="Any">All</option>
                         <option value="Music">Music</option>
                         <option value="Movies">Movies</option>

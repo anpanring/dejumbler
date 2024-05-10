@@ -8,9 +8,9 @@ import { getServerSession } from "next-auth";
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<Object[] | string>
+    res: NextApiResponse
 ) {
-    const { query } = req;
+    const { id } = req.query;
 
     // Check logged in
     const session = await getServerSession(req, res, authOptions);
@@ -20,7 +20,7 @@ export default async function handler(
         const { user } = session;
 
         await dbConnect();
-        await List.findByIdAndDelete(query.id);
+        await List.findByIdAndDelete(id);
         const editedList = await List.find({ user: user.id });
 
         res.status(200).json(editedList);

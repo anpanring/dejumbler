@@ -1,3 +1,4 @@
+/* Containers */
 .navbarBack {
     background-color: var(--background-color);
     position: fixed;
@@ -5,6 +6,7 @@
     left: 0;
     right: 0;
     padding: 0.5em 1em 0;
+    z-index: 100;
 }
 
 .navbarContainer {
@@ -21,28 +23,34 @@
     gap: 0.5em;
 }
 
-.createButton {
-    border: 1px solid var(--accent-color);
-    border-radius: 5px;
+
+/* Icons */
+.smallLogo {
     width: 42px;
     height: 42px;
-    background-color: var(--background-color);
-    color: var(--main-text-color);
+    fill: var(--main-text-color);
+    cursor: pointer;
 }
 
-.createButton:hover {
-    background-color: var(--accent-color);
-    color: var(--background-color);
-}
-
-/* .createButton:active {
-    width: 2.5em;
-    height: 2.5em;
-} */
-
-.form {
+.icon {
+    fill: var(--main-text-color);
+    border: solid 1px var(--accent-color);
+    height: 40px;
+    width: 40px;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.icon:hover {
+    background-color: var(--accent-color);
+    fill: var(--background-color);
+}
+
+
+/* New list modal */
+.form {
     justify-content: space-between;
     gap: 1em;
     height: 100%;
@@ -62,24 +70,24 @@
     justify-content: space-between;
 }
 
-.nameInput {
+.formNameInput {
     font-size: 1em;
     background-color: var(--background-color);
     flex-grow: 1;
     height: 1.5em;
 }
 
-.description {
+.formDescriptionBox {
     flex-grow: 1;
     font-size: 1em;
 }
 
-.type {
+.formTypeSelect {
     height: auto;
     font-size: 1em;
 }
 
-.closeButton {
+.formCloseButton {
     width: 2em;
     height: 2em;
     position: absolute;
@@ -88,28 +96,21 @@
     text-align: center;
 }
 
-.closeButton:hover {
+.formCloseButton:hover {
     background-color: red;
     color: var(--background-color);
 }
 
-.submitButton {
+.formSubmitButton {
     font-size: 1em;
     width: 90%;
     height: 2em;
     margin: auto;
 }
 
-.smallLogo {
-    width: 42px;
-    height: 42px;
-    fill: var(--main-text-color);
-    cursor: pointer;
-}
 
+/* Profile modal */
 .loggedInWrapper {
-    display: flex;
-    flex-direction: column;
     align-items: center;
     gap: 1em;
 }
@@ -127,33 +128,12 @@
     color: var(--background-color);
 }
 
-.icon {
-    /* cursor: pointer;
-    font-variation-settings:
-        'FILL' 0,
-        'wght' 200,
-        'GRAD' 0,
-        'opsz' 40;
-    font-size: 40px; */
-    fill: var(--main-text-color);
-    border: solid 1px var(--accent-color);
-    height: 40px;
-    width: 40px;
+
+/* Settings modal */
+.settingsContainer {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-}
-
-.icon:hover {
-    background-color: var(--accent-color);
-    fill: var(--background-color);
-}
-
-.link {
-    color: var(--main-text-color);
-    height: 42px;
-    width: 42px;
+    flex-direction: column;
+    gap: 1em;
 }
 
 .colorPicker {
@@ -161,7 +141,7 @@
     gap: 0.25em;
 }
 
-.color {
+.colorSquare {
     width: 20px;
     height: 20px;
     cursor: pointer;
@@ -170,10 +150,19 @@
     text-align: center;
 }
 
-.color:hover {
+.colorSquare:hover {
     border: solid 1px var(--main-text-color);
 }
 
 .selectedColor {
     border: solid 1px var(--main-text-color);
+}
+
+.darkMode {
+    display: flex;
+    gap: 1em;
+}
+
+.toggleModeButton {
+    height: 2em;
 }
