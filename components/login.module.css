@@ -1,4 +1,4 @@
-.loginWrapper {
+.loginContainer {
     width: fit-content;
     display: flex;
     flex-direction: column;
@@ -7,25 +7,16 @@
     gap: 1em;
 }
 
-.subLogin {
+.loginOptions {
+    display: flex;
+    gap: 0.5em;
+}
+
+/* For login and register forms */
+.subLoginContainer {
     display: flex;
     flex-direction: column;
     align-items: left;
-}
-
-.loading-spinner {
-    width: 2em;
-    height: 2em;
-    border: solid green 1px;
-}
-
-.signoutButton, .error {
-    color: red;
-}
-
-.signoutButton:hover {
-    color: white;
-    background-color: red;
 }
 
 .form {
@@ -39,42 +30,13 @@
     flex-direction: column;
 }
 
-.closeButton {
-    width: 2em;
-    height: 2em;
-    position: absolute;
-    top: -1em;
-    right: -1em;
-}
-
-.closeButton:hover {
-    background-color: red;
-    color: var(--background-color);
-}
-
-.divider {
-    margin-left: 0.75em;
-    margin-right: 0.75em;
-    font-size: 0.75em;
-}
-
+/* For input and buttons */
 .box {
     height: 2em;
     font-size: 1em;
 }
 
-.demo {
-    text-decoration: none;
-    border: solid 1px black;
-    padding: 0.25em 1em 0.25em 1em;
-}
-
-.loginOptions {
-    display: flex;
-    gap: 0.5em;
-}
-
-.button {
+.linkButton {
     border: none;
     padding: 0;
     font-size: 1em;

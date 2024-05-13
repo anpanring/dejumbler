@@ -8,19 +8,25 @@ export default async function handler(
     res: NextApiResponse
 ) {
     try {
-        const data = req.body;
+        const {
+            listId,
+            updatedName,
+            updatedDescription
+        } = req.body;
+
         await dbConnect();
         await List.findOneAndUpdate(
-            { _id: data.listId },
+            { _id: listId },
             {
                 $set: {
-                    name: data.updatedName,
-                    description: data.updatedDescription,
+                    name: updatedName,
+                    description: updatedDescription,
                 }
             });
+            
         res.status(200).json({
-            name: data.updatedName,
-            description: data.updatedDescription
+            name: updatedName,
+            description: updatedDescription
         });
     } catch (err) {
         res.status(401).send({ message: err })

@@ -5,17 +5,20 @@ import List from "../../models/List";
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<Object[]>
+    res: NextApiResponse
 ) {
-    const listId = req.body.listId;
-    const itemId = req.body.data._id;
+    try {
+        const { list, item } = req.query;
 
-    await dbConnect();
-    const updatedData = await List.findOneAndUpdate(
-        { _id: listId },
-        { $pull: { items: { _id: itemId } } },
-        { new: true }
-    );
+        await dbConnect();
+        const updatedData = await List.findOneAndUpdate(
+            { _id: list },
+            { $pull: { items: { _id: item } } },
+            { new: true }
+        );
 
-    res.status(200).json(updatedData);
+        res.status(200).json(updatedData);
+    } catch (err) {
+        res.status(401).send({ message: err });
+    }
 };

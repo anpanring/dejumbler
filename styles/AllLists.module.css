@@ -1,3 +1,4 @@
+/* Main containers */
 .wideview {
     display: flex;
     flex-direction: row;
@@ -17,14 +18,32 @@
     overflow-y: scroll;
 }
 
+.allListsContainer.wide {
+    width: 100%;
+}
+
 .mobileview .allListsContainer {
     padding-bottom: 1em
 }
 
-.wide {
-    width: 100%;
+
+/* Top bar left -> right */
+.topBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* height: 86.5px; */
 }
 
+.filterSelect {
+    border: solid 1px var(--accent-color);
+    height: 2.5em;
+    background-color: var(--background-color);
+    color: var(--main-text-color)
+}
+
+
+/* Each clickable list metadata box */
 .listInfo {
     padding: 0.5em;
     border: solid var(--main-text-color) 1px;
@@ -32,17 +51,16 @@
     flex-direction: column;
 }
 
-.selectMenu {
-    border: solid 1px var(--accent-color);
-    height: 2.5em;
-    background-color: var(--background-color);
-    color: var(--main-text-color)
+.description {
+    font-family: cursive;
 }
 
-.topBar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.selected {
+    background-color: color-mix(in srgb, var(--accent-color) 25%, white);
+}
+
+html[data-theme='dark'] .selected {
+    background-color: color-mix(in srgb, var(--accent-color) 50%, black);
 }
 
 .kebab {
@@ -58,6 +76,36 @@
     opacity: 75%;
 }
 
+
+/* Wideview list items container */
+.currentListContainer {
+    /* flex-grow: 1.5; */
+    width: 65%;
+    /* border: solid 1px var(--main-text-color); */
+    margin-left: 1em;
+    /* padding: 0.5em; */
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    overflow-y: scroll;
+}
+
+.currentListTopBar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.closeCurrentListButton {
+    height: 2em;
+    width: 2em;
+}
+
+.closeCurrentListButton:hover {
+    background-color: red;
+}
+
+
+/* Modals */
 .editContainer {
     display: flex;
     flex-direction: column;
@@ -83,46 +131,22 @@
     background-color: red;
 }
 
-.description {
-    font-family: cursive;
+/* Edit form */
+.form {
+    justify-content: space-between;
+    gap: 1em;
+    height: 100%;
+}
+
+.formRow {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: space-between;
 }
 
 .formInput {
     font-size: 1em;
     font-family: 'Epilogue', sans-serif;
     height: 1.5em;
-}
-
-.currentListContainer {
-    /* flex-grow: 1.5; */
-    width: 65%;
-    /* border: solid 1px var(--main-text-color); */
-    margin-left: 1em;
-    /* padding: 0.5em; */
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
-    overflow-y: scroll;
-}
-
-.selected {
-    background-color: color-mix(in srgb, var(--accent-color) 25%, white);
-}
-
-html[data-theme='dark'] .selected {
-    background-color: color-mix(in srgb, var(--accent-color) 50%, black);
-}
-
-.flexSpaceBetween {
-    display: flex;
-    justify-content: space-between;
-}
-
-.closeCurrentList {
-    height: 2em;
-    width: 2em;
-}
-
-.closeCurrentList:hover {
-    background-color: red;
 }

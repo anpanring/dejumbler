@@ -28,8 +28,19 @@ html[data-theme='light'] {
 }
 
 html[data-theme='dark'] {
-    --background-color: black;
+    --background-color: #16181d;
     --main-text-color: white;
+}
+
+/* Reusable flex classes */
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
 }
 
 p {

@@ -10,7 +10,10 @@ export type ListData = {
     name: string,
     type: string,
     description: string,
+    createdAt: string,
+    slug: string,
     items: any[],
+    __v: number,
 }
 
 export type CurrentListContextType = {

@@ -77,11 +77,11 @@ export default function Navbar({ changeMode }) {
 
             {/* New list modal */}
             {showModal && <Modal toggleModal={toggleModal}>
-                <form className={styles.form} action="/api/new-list" method="POST">
-                    <button className={styles.closeButton} onClick={toggleModal}>X</button>
+                <form className={`flex-column ${styles.form}`} action="/api/new-list" method="POST">
+                    <button className={styles.formCloseButton} onClick={toggleModal}>X</button>
                     <div className={styles.formTypeRow}>
                         <label>Type: </label>
-                        <select className={styles.type} id="types" name="type" required>
+                        <select className={styles.formTypeSelect} id="types" name="type" required>
                             <option value="Music">Music</option>
                             <option value="Books">Books</option>
                             <option value="Movies">Movies</option>
@@ -89,14 +89,14 @@ export default function Navbar({ changeMode }) {
                     </div>
                     <div className={styles.formRow}>
                         <label>Name: </label>
-                        <input className={styles.nameInput} type="text" name="name" required />
+                        <input className={styles.formNameInput} type="text" name="name" required />
                     </div>
                     <div className={styles.formRow}>
                         <label>Description: </label>
-                        <textarea className={styles.description} name="description"></textarea>
+                        <textarea className={styles.formDescriptionBox} name="description"></textarea>
                     </div>
                     <div className={styles.formRow}>
-                        <input className={styles.submitButton} type="submit" value="Create List" />
+                        <input className={styles.formSubmitButton} type="submit" value="Create List" />
                     </div>
                 </form>
             </Modal>}
@@ -104,7 +104,7 @@ export default function Navbar({ changeMode }) {
             {/* Profile modal */}
             {showProfile && data &&
                 <Modal toggleModal={() => setShowProfile(!showProfile)}>
-                    <div className={styles.loggedInWrapper}>
+                    <div className={`flex-column ${styles.loggedInWrapper}`}>
                         <p>Signed in as: <u><strong>{data.user.name}</strong></u></p>
                         <button onClick={() => signOut()} className={styles.signoutButton}>Sign out</button>
                     </div>
@@ -114,17 +114,24 @@ export default function Navbar({ changeMode }) {
             {/* Settings modal */}
             {showSettings &&
                 <Modal toggleModal={() => setShowSettings(!showSettings)}>
-                    <div>
-                        <p>Accent Color</p>
-                        <div className={styles.colorPicker}>
-                            {colors.map((color) => {
-                                return <div
-                                    key={color}
-                                    style={{ backgroundColor: color }}
-                                    className={color === accentColor ? `${styles.color} ${styles.selectedColor}` : styles.color}
-                                    onClick={() => changeAccentColor(color)}>
-                                </div>
-                            })}
+                    <div className={styles.settingsContainer}>
+                        <div className={styles.darkMode}>
+                            <p>Dark Mode</p>
+                            <button onClick={changeMode} className={styles.toggleModeButton}>Toggle</button>
+                        </div>
+                        <div>
+                            <p>Accent Color</p>
+                            <div className={styles.colorPicker}>
+                                {colors.map((color) => {
+                                    return <div
+                                        key={color}
+                                        style={{ backgroundColor: color }}
+                                        className={color === accentColor ? `${styles.colorSquare} ${styles.selectedColor}` : styles.colorSquare}
+                                        onClick={() => changeAccentColor(color)}
+                                        aria-label={color}>
+                                    </div>
+                                })}
+                            </div>
                         </div>
                     </div>
                 </Modal>

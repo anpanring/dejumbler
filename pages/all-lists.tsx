@@ -21,7 +21,6 @@ import { useDrag } from "react-dnd";
 import useWindowSize from "../lib/useWindowSize";
 
 import styles from "../styles/AllLists.module.css";
-import formStyles from '../components/navbar.module.css';
 
 const mobileWidth = 600;
 
@@ -29,14 +28,20 @@ import { ListMetadata, ListData, CurrentListContextType } from "../types/dejumbl
 export const CurrentListContext = createContext<CurrentListContextType | null>(null);
 
 // List
-function ListBox({ data, setListData, listModified, setListModified, selected }) {
+function ListBox({ data, setListData, setListModified, selected }: {
+    data: ListData,
+    setListData: React.Dispatch<React.SetStateAction<ListData[]>>,
+    setListModified: React.Dispatch<React.SetStateAction<"Deleted" | "Updated" | null>>,
+    selected: boolean
+}) {
     // kinda messy, refactor to make sure never null
     const currentListContext = useContext(CurrentListContext);
-    if(!currentListContext) throw new Error('CurrentListContext is null');
+    if (!currentListContext) throw new Error('CurrentListContext is null');
     const { setCurrentList } = currentListContext;
 
     const { width } = useContext(WindowSizeContext) ?? { width: 1200, height: 800 };
 
+    // control modals
     const [showEditOptions, setShowEditOptions] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
@@ -52,18 +57,21 @@ function ListBox({ data, setListData, listModified, setListModified, selected })
         setEditMode(false);
     }
 
-    async function handleDelete(e, id) {
-        e.preventDefault();
+    // handle deleting list
+    async function handleDelete(id: string) {
         try {
             const response = await fetch(`/api/delete-list?id=${id}`, {
                 method: 'DELETE'
             });
             const updatedData = await response.json();
-            setListData(updatedData);
-        } catch (error) { alert('Failed to delete list.'); }
+            setListData(updatedData); // in order to update lists instantly
+            // setLength(length - 1);
+        } catch (error) {
+            alert('Failed to delete list.');
+        }
     }
 
-    // editing list description
+    // handle editing list description
     async function handleListUpdate(e) {
         e.preventDefault();
 
@@ -84,23 +92,18 @@ function ListBox({ data, setListData, listModified, setListModified, selected })
         close();
         setName(updatedData.name);
         setDescription(updatedData.description);
+        setListModified("Updated");
     }
 
     return (
         <div key={data._id} className={`${styles.listInfo} ${selected && width >= mobileWidth ? styles.selected : ''}`}>
-            {width < mobileWidth &&
-                <p><Link
-                    href={`/list/${data._id}`}
-                    onClick={() => setCurrentList && setCurrentList({ id: data._id, name: data.name, type: data.type })}
-                >{name}
-                </Link> ({data.items.length}) - {data.type}</p>}
-            {width >= mobileWidth &&
-                <p><Link
-                    href="#"
-                    onClick={() => setCurrentList && setCurrentList({ id: data._id, name: data.name, type: data.type })} >
-                    {name}
-                </Link> ({data.items.length}) - {data.type}</p>}
-            {/* <p><Link href={`/list/${data._id}`} >{name}</Link> ({data.items.length}) - {data.type}</p> */}
+            <p><Link
+                href={width < mobileWidth ? `/list/${data._id}` : "#"}
+                onClick={() => setCurrentList && setCurrentList({ id: data._id, name: data.name, type: data.type })} >
+                {name}
+            {/* </Link> ({selected && currentListData ? currentListData.items.length : length}) - {data.type}</p> */}
+            </Link> ({data.items.length}) - {data.type}</p>
+            {/* currentlistdata is changing later than selected */}
             {data.description &&
                 <p className={styles.description}>
                     {expandDescription ?
@@ -135,9 +138,10 @@ function ListBox({ data, setListData, listModified, setListModified, selected })
                     <div className={styles.editContainer}>
                         <p>Are you sure you want to delete <u><strong>{name}</strong></u>?</p>
                         <button onClick={(e) => {
+                            e.preventDefault();
                             close();
-                            handleDelete(e, data._id);
-                            setListModified(true);
+                            handleDelete(data._id);
+                            setListModified("Deleted");
                             if (selected) setCurrentList && setCurrentList(null);
                         }} className={`${styles.editButton} ${styles.delete}`}>
                             Delete list
@@ -152,16 +156,16 @@ function ListBox({ data, setListData, listModified, setListModified, selected })
             {/* Edit modal */}
             {editMode &&
                 <Modal toggleModal={close}>
-                    <form className={formStyles.form} onSubmit={handleListUpdate} method="POST">
-                        <div className={formStyles.formRow}>
+                    <form className={`flex-column ${styles.form}`} onSubmit={handleListUpdate} method="POST">
+                        <div className={styles.formRow}>
                             <label>Name: </label>
                             <input className={styles.formInput} type="text" name="name" defaultValue={name} required />
                         </div>
-                        <div className={formStyles.formRow}>
+                        <div className={styles.formRow}>
                             <label>Description: </label>
                             <textarea name="description" defaultValue={description}></textarea>
                         </div>
-                        <div className={formStyles.formRow}>
+                        <div className={styles.formRow}>
                             <input className={styles.editButton} type="submit" value="Save edits" />
                         </div>
                     </form>
@@ -171,13 +175,17 @@ function ListBox({ data, setListData, listModified, setListModified, selected })
 }
 
 // List Container
-function ListContainer({ lists, setListData, listModified, setListModified }) {
+function ListContainer({ lists, setListData, setListModified }: {
+    lists: ListData[],
+    setListData: React.Dispatch<React.SetStateAction<ListData[]>>,
+    setListModified: React.Dispatch<React.SetStateAction<"Deleted" | "Updated" | null>>
+}) {
     const currentListContext = useContext(CurrentListContext);
-    if(!currentListContext) throw new Error('CurrentListContext is null');
+    if (!currentListContext) throw new Error('CurrentListContext is null');
     const { currentList, setCurrentList } = currentListContext;
 
     // detecting wide mode
-    const [width, height] = useWindowSize();
+    const [width] = useWindowSize();
 
     const [currentListData, setCurrentListData] = useState<ListData | null>(null);
     const [songAdded, setSongAdded] = useState(false);
@@ -186,18 +194,18 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
 
     useEffect(() => {
         if (currentList !== null) {
-            // setLoading(true);
+            setLoading(true);
             const populateList = async () => {
                 const res = await fetch(`/api/get-list?id=${currentList?.id}`);
                 const data = await res.json();
+                setLoading(false);
                 setCurrentListData(await data);
             };
             populateList();
-            // setLoading(false);
         }
     }, [currentList]);
 
-    function handleDataChange(changedData, changeType) {
+    function handleDataChange(changedData, changeType: string) {
         setCurrentListData(changedData);        // all list items
         setSongAdded(true);                     // controls showing of snackbar
         setChangeType(changeType);              // when adding/removing items
@@ -210,10 +218,9 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
             <section className={`${styles.allListsContainer} ${currentList == null || width < mobileWidth ? styles.wide : ''}`}>
                 {lists.map((list) => {
                     return <ListBox
+                        key={list._id}
                         data={list}
                         setListData={setListData}
-                        key={list._id}
-                        listModified={listModified}
                         setListModified={setListModified}
                         selected={width >= mobileWidth && list._id == currentList?.id ? true : false}
                     />;
@@ -224,28 +231,25 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
             {/* {loading && <p>Loading...</p>} */}
             {currentList && width >= mobileWidth && currentListData &&
                 <section className={styles.currentListContainer} key={currentList.id}>
-                    <div className={styles.flexSpaceBetween}>
-                        <SearchBar listId={currentList.id} listType={currentListData.type} handleDataChange={handleDataChange} />
+                    <div className={styles.currentListTopBar}>
+                        <SearchBar listContext={currentList} handleDataChange={handleDataChange} />
                         {/* Shuffle button */}
                         {/* <button className={styles.closeCurrentList} onClick={() => {
                             const rand = Math.floor(Math.random() * currentListData.items.length);
                             console.log(rand);
                             console.log(currentListData.items[rand].name);
                         }}>S</button> */}
-                        <button className={styles.closeCurrentList} onClick={() => {
-                            if (setCurrentList) {
-                                setCurrentList(null);
-                            }
+                        <button className={styles.closeCurrentListButton} onClick={() => {
+                            if (setCurrentList) setCurrentList(null);
                             setCurrentListData(null);
                         }}>X</button>
                     </div>
                     {currentListData.items.map((item) => {
                         return <ListItem
-                            data={item}
+                            itemData={item}
                             listMetadata={currentList}
                             key={item._id}
-                            handleDataChange={handleDataChange}
-                            type={currentListData.type}
+                            handleDataChange={handleDataChange} // for editing and deleting
                         />
                     })}
                     {songAdded && <Snackbar message={`${changeType} ${currentListData.name}`} toggleShow={setSongAdded} />}
@@ -258,19 +262,19 @@ function ListContainer({ lists, setListData, listModified, setListModified }) {
 
 // Main page for now
 export default function AllLists({ lists }) {
-    const [listData, setListData] = useState(lists ? JSON.parse(lists) : []);
+    // ALL LISTS
+    const [listData, setListData] = useState<ListData[]>(lists ? JSON.parse(lists) : []);
 
-    // state for context!
-    // currentList contains list id
+    // state used for context!
     const [currentList, setCurrentList] = useState<ListMetadata | null>(null);
 
     const [type, setType] = useState('Any');
     const [displayType, setDisplayType] = useState('All');
 
     // control snackbars
-    const [listModified, setListModified] = useState(false);
-    const [currentListModified, setCurrentListModified] = useState(false);
+    const [listModified, setListModified] = useState<"Deleted" | "Updated" | null>(null);
 
+    // runs every time filter type changes
     useEffect(() => {
         async function populateList() {
             const res = await fetch(`/api/get-all-lists?type=${type}`);
@@ -297,9 +301,9 @@ export default function AllLists({ lists }) {
 
             <div className={styles.topBar}>
                 <h2>{displayType} Lists ({listData.length})</h2>
-                <div className='form-row'>
+                <div>
                     <label>Filter: </label>
-                    <select className={styles.selectMenu} name="type" onChange={toggleType} required>
+                    <select className={styles.filterSelect} name="type" onChange={toggleType} required>
                         <option value="Any">All</option>
                         <option value="Music">Music</option>
                         <option value="Movies">Movies</option>
@@ -311,11 +315,14 @@ export default function AllLists({ lists }) {
             {/* {listData.length == 0 && <h1>Make some lists!</h1>} */}
 
             <CurrentListContext.Provider value={{ currentList, setCurrentList }}>
-                <ListContainer lists={listData} setListData={setListData} listModified={listModified} setListModified={setListModified} />
+                <ListContainer
+                    lists={listData}
+                    setListData={setListData}
+                    setListModified={setListModified} />
             </CurrentListContext.Provider>
 
-            {listModified && <Snackbar message={`Deleted list`} toggleShow={setListModified} />}
-            {currentListModified && <Snackbar message={`Deleted list`} toggleShow={setCurrentListModified} />}
+            {/* Snackbar */}
+            {listModified && <Snackbar message={`${listModified} list`} toggleShow={setListModified} />}
         </Layout>
     );
 }
@@ -337,7 +344,7 @@ export async function getServerSideProps(context) {
 
     // Get lists with direct mongoose call
     await dbConnect();
-    const result = await List.find({ user: user.id }); // email is rly _id
+    const result = await List.find({ user: user.id });
 
     return {
         props: {

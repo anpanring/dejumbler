@@ -7,7 +7,13 @@
     transform: translate(-50%, -50%);
     background-color: var(--background-color);
     z-index: 99;
-    width: auto;
+    width: fit-content;
+}
+
+@media (width < 600px) {
+    .snack {
+        width: 80%;
+    }
 }
 
 .message {

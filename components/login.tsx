@@ -114,21 +114,21 @@ export default function Login() {
     }
 
     return (
-        <div className={styles.loginWrapper}>
+        <div className={styles.loginContainer}>
             {mode === Mode.LOGGED_OUT && <div className={styles.loginOptions}>
-                <button className={styles.button} onClick={() => setMode(Mode.SIGN_IN)}>Sign in</button>
+                <button className={styles.linkButton} onClick={() => setMode(Mode.SIGN_IN)}>Sign in</button>
                 <p>or</p>
-                <button className={styles.button} onClick={() => setMode(Mode.REGISTER)}>Register</button>
+                <button className={styles.linkButton} onClick={() => setMode(Mode.REGISTER)}>Register</button>
                 <p>or</p>
-                <button className={styles.button} onClick={() => signIn("credentials", {
+                <button className={styles.linkButton} onClick={() => signIn("credentials", {
                     username: "user",
                     password: "password",
                     // redirect: false,
                 })}>Demo</button>
             </div>}
 
-            {mode === Mode.SIGN_IN && <div className={styles.subLogin}>
-                <button className={`${styles.button} ${styles.backButton}`} onClick={back}>← Back</button>
+            {mode === Mode.SIGN_IN && <div className={styles.subLoginContainer}>
+                <button className={`${styles.linkButton} ${styles.backButton}`} onClick={back}>← Back</button>
                 <form className={styles.form} ref={loginRef} onSubmit={handleSubmit}>
                     <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
                     <div className={styles.formSub}>
@@ -148,8 +148,8 @@ export default function Login() {
                 </form>
             </div>}
 
-            {mode === Mode.REGISTER && <div className={styles.subLogin}>
-                <button className={`${styles.button} ${styles.backButton}`} onClick={back}>← Back</button>
+            {mode === Mode.REGISTER && <div className={styles.subLoginContainer}>
+                <button className={`${styles.linkButton} ${styles.backButton}`} onClick={back}>← Back</button>
                 <form className={styles.form} ref={loginRef} onSubmit={handleRegister}>
                     <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
                     <div className={styles.formSub}>

@@ -1,42 +1,9 @@
-.searchResultsWrapper,
-.movieSearchResultsWrapper {
-    display: flex;
-    position: relative;
-    align-items: center;
-    height: 4em;
-    width: 90%;
-    z-index: 0;
-}
-
-.searchResultsWrapper {
-    margin: 0 0.5em 0.5em 0;
-}
-
-.movieSearchResultsWrapper {
-    margin: 0 1.5em 1.5em 0;
-}
-
-.searchResultText {
-    display: flex;
-    flex-direction: column;
-    font-size: small;
-    margin-left: 1.5em;
-    width: 90%;
-}
-
+/* Main search bar */
 .searchBar {
     display: flex;
     gap: 0.5em;
     margin-bottom: 1em;
     height: 2em;
-}
-
-.searchInputWrapper {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5em;
-    height: 2em;
-    align-items: center;
 }
 
 .searchInput {
@@ -66,27 +33,76 @@
     background-color: transparent;
 }
 
-span.clearButtonIcon {
-    font-size: 20px;
+.resultsDisclaimer {
+    font-size: 0.75em;
 }
 
-.button {
-    border: solid var(--accent-color) 1px;
-    background-color: white;
-    width: auto;
-}
 
-.button:hover {
-    background-color: var(--accent-color);
-    color: white;
-}
-
-.resultsWrapper {
+/* All search results */
+.resultsContainer {
     margin-bottom: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+}
+
+
+/* For each search result */
+.searchResultWrapper,
+.movieSearchResultWrapper {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: space-between;
+    max-height: 5em;
+    z-index: 0;
+    /* border: solid 1px var(--main-text-color); */
+}
+
+@media (width < 600px) {
+    .searchResultWrapper,
+    .movieSearchResultWrapper {
+        width: 100%;
+    }
+}
+
+@media (width >= 600px) {
+    .searchResultWrapper,
+    .movieSearchResultWrapper {
+        width: 25em;
+    }
+}
+
+/* .searchResultWrapper {
+    margin: 0 0.5em 0.5em 0;
+}
+
+.movieSearchResultWrapper {
+    margin: 0 0.5em 0.5em 0;
+} */
+
+.searchResultInfo {
+    display: flex;
+    width: 80%;
+    height: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    align-items: center;
+}
+
+.searchResultImage {
+    flex: 0 0 auto;
+}
+
+.searchResultText {
+    display: flex;
+    flex-direction: column;
+    font-size: small;
+    margin-left: 1.5em;
+    width: 100%;
 }
 
 .title {
-    text-overflow: ellipsis;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -105,13 +121,30 @@ span.clearButtonIcon {
     font-size: 0.75em;
 }
 
+.noImage {
+    flex: 0 0 auto;
+    width: 50px;
+    height: 50px;
+    background-color: var(--background-color);
+    border: solid 1px var(--accent-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    overflow: hidden;
+}
+
+.movieSearchResultWrapper .noImage {
+    height: 75px;
+}
+
 .addButton {
-    height: 1.5em;
-    width: 1.5em;
-    position: absolute;
+    height: 2.5em;
+    width: 2.5em;
+    /* position: absolute;
     top: 3em;
-    left: 3em;
-    background: white;
+    left: 3em; */
+    background: var(--background-color);
     color: var(--accent-color);
     border: 1px solid var(--accent-color);
     text-align: center;
@@ -121,10 +154,3 @@ span.clearButtonIcon {
     background: var(--accent-color);
     color: white;
 }
-
-/* .searching {
-    color: var(--main-text-color);
-    width: 20em;
-    height: 10em;
-    background-color: green;
-} */

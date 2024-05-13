@@ -8,32 +8,35 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<{ message: string }>
 ) {
-    const { username, password } = req.body;
+    try {
+        const { username, password } = req.body;
 
-    await dbConnect();
-    
-    const check = await User.exists({ username: username });
+        await dbConnect();
+        const check = await User.exists({ username: username });
 
-    if (check !== null) {
-        res.status(400).json({ message: "User already exists" });
-        return;
-    }
+        if (check !== null) {
+            res.status(400).send({ message: "User already exists" });
+        }
 
-    else {
-        bcrypt.genSalt(10, function (err, salt) {
-            bcrypt.hash(password, salt, async function (err, hash) {
+        else {
+            bcrypt.genSalt(10, function (err, salt) {
+                if(err) throw err;
+                bcrypt.hash(password, salt, async function (err, hash) {
+                    if(err) throw err;
 
-                // Store hash in your password DB.
-                const newUser = new User({
-                    username: username,
-                    password: hash,
-                    lists: []
+                    // Store hash in your password DB.
+                    const newUser = new User({
+                        username: username,
+                        password: hash,
+                        lists: []
+                    });
+
+                    await newUser.save();
+                    res.status(200).send({ message: "User created" });
                 });
-
-                await newUser.save();
-                res.status(200).send({ message: "User created" });
-                return;
             });
-        });
+        }
+    } catch (err) {
+        res.status(500).send({ message: err });
     }
 }
