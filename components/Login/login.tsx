@@ -144,6 +144,7 @@ export default function Login() {
                         }} />
                     </div>
                     <button className={styles.box} type="submit">Sign in</button>
+                    {/* <button type="submit" onClick={() => signIn("google")}>Sign in w Google</button> */}
                     {error !== "" && <p className={styles.error}>{error}</p>}
                 </form>
             </div>}

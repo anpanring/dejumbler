@@ -3,11 +3,11 @@ import { createContext, useContext, useEffect, useState } from "react";
 import dbConnect from "../lib/mongodb";
 import List from "../models/List";
 
-import Layout, { WindowSizeContext } from "../components/layout";
-import Modal from "../components/modal";
-import Snackbar from "../components/snackbar";
+import Layout, { WindowSizeContext } from "../components/Layout/layout";
+import Modal from "../components/Modal/modal";
+import Snackbar from "../components/Snackbar/snackbar";
 import ListItem from "../components/list-item";
-import SearchBar from "../components/search";
+import SearchBar from "../components/Search/search";
 
 import Link from "next/link";
 import Head from "next/head";
@@ -25,6 +25,7 @@ import styles from "../styles/AllLists.module.css";
 const mobileWidth = 600;
 
 import { ListMetadata, ListData, CurrentListContextType } from "../types/dejumbler-types";
+import { set } from "mongoose";
 export const CurrentListContext = createContext<CurrentListContextType | null>(null);
 
 // List
@@ -211,8 +212,9 @@ function ListContainer({ lists, setListData, setListModified }: {
         setChangeType(changeType);              // when adding/removing items
     }
 
-    return (
+    console.log("beeep", lists);
 
+    return (
         <div className={`${styles.wideview} ${width < mobileWidth ? styles.mobileview : ''}`}>
             {/* Left */}
             <section className={`${styles.allListsContainer} ${currentList == null || width < mobileWidth ? styles.wide : ''}`}>
@@ -261,7 +263,7 @@ function ListContainer({ lists, setListData, setListModified }: {
 }
 
 // Main page for now
-export default function AllLists({ lists }) {
+export default function AllLists({ lists }) {    
     // ALL LISTS
     const [listData, setListData] = useState<ListData[]>(lists ? JSON.parse(lists) : []);
 
@@ -276,13 +278,12 @@ export default function AllLists({ lists }) {
 
     // runs every time filter type changes
     useEffect(() => {
-        async function populateList() {
-            const res = await fetch(`/api/get-all-lists?type=${type}`);
-            const data = await res.json();
-            setListData(await data);
-        }
-        populateList();
-    }, [type]);
+        const filtered = JSON.parse(lists).filter((list) => {
+            if (type == "Any") return true;
+            return list.type == type;
+        });
+        setListData(filtered);
+    }, [type, lists]);
 
     function toggleType(e) {
         if (e.target.value != "Any" && (currentList && e.target.value != currentList.type)) setCurrentList(null);
@@ -341,10 +342,12 @@ export async function getServerSideProps(context) {
     }
 
     const { user } = session;
+    console.log(user);
 
     // Get lists with direct mongoose call
     await dbConnect();
     const result = await List.find({ user: user.id });
+    console.log(result);
 
     return {
         props: {

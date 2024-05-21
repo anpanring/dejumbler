@@ -2,10 +2,10 @@ import { useState } from 'react';
 
 import Head from 'next/head';
 
-import Layout from "../../components/layout";
+import Layout from '../../components/Layout/layout';
 import ListItem from '../../components/list-item';
-import SearchBar from '../../components/search';
-import Snackbar from '../../components/snackbar';
+import SearchBar from '../../components/Search/search';
+import Snackbar from '../../components/Snackbar/snackbar';
 
 import dbConnect from '../../lib/mongodb';
 import List from '../../models/List';
@@ -14,9 +14,6 @@ import styles from '../../styles/ListPage.module.css';
 
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../api/auth/[...nextauth]';
-
-import { IList } from '../../models/definitions.types';
-import { HydratedDocument, Query } from "mongoose";
 
 import { ListMetadata, ListData } from '../../types/dejumbler-types';
 

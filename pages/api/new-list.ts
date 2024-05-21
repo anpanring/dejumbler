@@ -19,7 +19,7 @@ export default async function handler(
         const { user } = session;
 
         new List({
-            user: new ObjectId(user.id),
+            user: user.id,
             name: info.name,
             type: info.type,
             description: info.description,

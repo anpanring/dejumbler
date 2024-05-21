@@ -2,7 +2,7 @@ import { Schema, Types, model, models } from "mongoose";
 import { ItemSchema } from "./Item";
 import { IList } from "./definitions.types";
 
-const URLSlugs = require('mongoose-url-slugs')
+import URLSlugs from 'mongoose-url-slugs';
 
 const ListSchema = new Schema<IList>({
     user: {
