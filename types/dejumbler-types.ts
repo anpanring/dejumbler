@@ -1,14 +1,14 @@
 export type ListMetadata = {
     id: string,
     name: string,
-    type: string,
+    type: "Movies" | "Books" | "Music",
 }
 
 export type ListData = {
     _id: string,
     user: string,
     name: string,
-    type: string,
+    type: "Movies" | "Books" | "Music",
     description: string,
     createdAt: string,
     slug: string,

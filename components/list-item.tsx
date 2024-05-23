@@ -3,11 +3,13 @@ import React, { useState } from "react";
 
 import styles from '../styles/ListPage.module.css';
 import { ListMetadata } from "../types/dejumbler-types";
+import { deleteIcon, editIcon } from "./Navbar/icons";
 
-function ListItem({ itemData, listMetadata, handleDataChange }: {
+function ListItem({ itemData, listMetadata, handleDataChange, view }: {
     itemData: any,
     listMetadata: ListMetadata,
     handleDataChange: (updatedList: any, message: string) => void,
+    view: "list" | "grid"
 }) {
     const [notes, setNotes] = useState(itemData.notes);
     const [showNotesForm, setShowNotesForm] = useState(false);
@@ -79,21 +81,34 @@ function ListItem({ itemData, listMetadata, handleDataChange }: {
             <div className={styles.listItemText}>
                 {listInfoComponent}
 
-                {!showNotesForm && <p className={styles.listItemNotes}> Notes: {notes} </p>}
+                {!showNotesForm && <p className={styles.listItemNotes}> Notes: {notes}</p>}
 
                 {showNotesForm ? <form onSubmit={handleNoteChange} className={styles.notesForm} >
                     <textarea name="notes" defaultValue={notes} className={styles.notesInput} />
                     <div className={styles.notesEditButtons}>
-                        <button className={styles.button} type="submit" > Save </button>
+                        <button className={styles.button} type="submit"> Save </button>
                         <button className={styles.button} onClick={() => setShowNotesForm(!showNotesForm)
                         }> Cancel </button>
                     </div>
                 </form> : null}
 
                 {!showNotesForm && <div className={styles.listItemActions}>
-                    <button className={styles.button} onClick={() => setShowNotesForm(!showNotesForm)
-                    }> Edit </button>
-                    <button className={styles.button} onClick={handleDelete} > Remove </button>
+                    <div
+                        className={styles.editButton}
+                        onClick={() => setShowNotesForm(!showNotesForm)}
+                        role="button"
+                    >
+                        {editIcon}
+                        <p>edit</p>
+                    </div>
+                    <div
+                        className={styles.deleteButton}
+                        onClick={handleDelete}
+                        role="button"
+                    >
+                        {deleteIcon}
+                        <p>delete</p>
+                    </div>
                 </div>}
             </div>
         </div >

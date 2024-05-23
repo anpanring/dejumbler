@@ -71,10 +71,10 @@
 }
 
 .formNameInput {
-    font-size: 1em;
     background-color: var(--background-color);
+    font-size: 1em;
     flex-grow: 1;
-    height: 1.5em;
+    padding: 0.25em;
 }
 
 .formDescriptionBox {

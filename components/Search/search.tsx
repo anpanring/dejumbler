@@ -37,7 +37,6 @@ function SearchResult({ data, listContext, handleDataChange }: {
                             <p className={styles.title}
                                 ref={titleScroll}
                                 onMouseOver={() => {
-                                    console.log(titleScroll.current);
                                     for (let i = 0; i < 100; i++) {
                                         setInterval(() => {
                                             if (titleScroll.current != null) {
@@ -169,6 +168,14 @@ function SearchBar({ listContext, handleDataChange }: {
                     ref={formRef}
                     required
                 />
+                {results && <button
+                    className={styles.clearButton}
+                    onClick={() => {
+                        if (formRef.current) formRef.current.value = "";
+                        setResults(null);
+                        formRef.current?.focus();
+                    }}
+                >Clear</button>}
                 {listContext.type !== 'Movies' && listContext.type !== 'Books' && <select
                     onChange={(e) => setMusicType(e.target.value)}
                     className={styles.searchTypeSelect}
@@ -183,21 +190,23 @@ function SearchBar({ listContext, handleDataChange }: {
             </form>
 
             {/* Results */}
-            {results && results.length !== 0 && <div className={styles.resultsContainer}>
-                {results.map((result) => {
-                    return <SearchResult
-                        key={Math.random() * Number.MAX_VALUE}
-                        data={result}
-                        listContext={listContext}
-                        handleDataChange={handleDataChange}
-                    />;
-                })}
+            {
+                results && results.length !== 0 && <div className={styles.resultsContainer}>
+                    {results.map((result) => {
+                        return <SearchResult
+                            key={Math.random() * Number.MAX_VALUE}
+                            data={result}
+                            listContext={listContext}
+                            handleDataChange={handleDataChange}
+                        />;
+                    })}
 
-                {listContext.type === 'Movies' && <p className={styles.resultsDisclaimer}>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">The Movie Database (TMDB) API</a></p>}
-                {listContext.type === 'Music' && <p className={styles.resultsDisclaimer}>*results from <a href="https://developer.spotify.com/documentation/web-api" rel="noreferrer" target="_blank">Spotify API</a></p>}
-                {listContext.type === 'Books' && <p className={styles.resultsDisclaimer}>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">Open Library API</a></p>}
-            </div>}
-            {searching && formRef.current?.value !== '' && !results && <p className={styles.searching}>Searching...</p>}
+                    {listContext.type === 'Movies' && <p className={styles.resultsDisclaimer}>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">The Movie Database (TMDB) API</a></p>}
+                    {listContext.type === 'Music' && <p className={styles.resultsDisclaimer}>*results from <a href="https://developer.spotify.com/documentation/web-api" rel="noreferrer" target="_blank">Spotify API</a></p>}
+                    {listContext.type === 'Books' && <p className={styles.resultsDisclaimer}>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">Open Library API</a></p>}
+                </div>
+            }
+            {searching && formRef.current?.value !== '' && !results && <p className={styles.searching}>Searching</p>}
             {!searching && formRef.current?.value !== '' && results?.length == 0 && <p className={styles.searching}>No results found :(</p>}
         </div>
     );

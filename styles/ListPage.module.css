@@ -20,6 +20,39 @@
     padding-bottom: 1em;
 }
 
+.editButton {
+    /* height: 20px;
+    width: 20px; */
+    cursor: pointer;
+    display: flex;
+    font-size: 0.75em;
+    align-items: center;
+}
+
+.editButton svg {
+    fill: var(--main-text-color);
+}
+
+.editButton:hover svg {
+    fill: var(--accent-color);
+}
+
+.deleteButton {
+    /* height: 20px;
+    width: 20px; */
+    cursor: pointer;
+    display: flex;
+    font-size: 0.75em;
+    align-items: center;
+}
+
+.deleteButton svg {
+    fill: var(--main-text-color);
+}
+
+.deleteButton:hover svg {
+    fill: red;
+}
 
 /* Each list item */
 .listItem {
@@ -38,7 +71,8 @@
 .listItemText {
     display: flex;
     flex-direction: column;
-    margin: 1em;
+    margin: 0.75em;
+    width: 100%;
 }
 
 .listItemType {
@@ -49,7 +83,7 @@
 .listItemActions {
     display: flex;
     flex-direction: row;
-    gap: 5px;
+    gap: 1em;
     margin-top: 0.5em;
 }
 
@@ -63,8 +97,15 @@
     .notesForm {
         display: flex;
         gap: 0.5em;
-        align-items: flex-end;
+        /* align-items: flex-end; */
+        max-width: fit-content;
     }
+}
+
+.notesForm {
+    flex-direction: column;
+    gap: 0.25em;
+    width: 100%;
 }
 
 .notesInput {
@@ -75,20 +116,21 @@
     font-size: 1em;
     line-height: 1.5;
     margin-top: 0.5em;
-    max-width: max-content;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .notesEditButtons {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 0.25em;
 }
 
 @media (width < 600px) {
-    .notesForm {
+    /* .notesForm {
         flex-direction: column;
         gap: 0.25em;
-    }
+    } */
 
     .notesEditButtons {
         display: flex;

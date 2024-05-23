@@ -16,6 +16,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../api/auth/[...nextauth]';
 
 import { ListMetadata, ListData } from '../../types/dejumbler-types';
+import ListsLayout from '../../components/lists-layout';
 
 export default function ListPage({ listData, listMetadata }: {
     listData: string,
@@ -33,33 +34,36 @@ export default function ListPage({ listData, listMetadata }: {
 
     return (
         <Layout>
-            <Head>
-                <title>{data.name}</title>
-            </Head>
+            {/* <ListsLayout> */}
+                <Head>
+                    <title>{data.name}</title>
+                </Head>
 
-            <div className={styles.listInfo}>
-                <h2 className={styles.listTitle}>{data.name} </h2>
-                <h3 className={styles.listType}>{data.type} </h3>
-            </div>
+                <div className={styles.listInfo}>
+                    <h2 className={styles.listTitle}>{data.name} </h2>
+                    <h3 className={styles.listType}>{data.type} </h3>
+                </div>
 
-            {/* still need to pass in listId and listType b/c can't carry context between pages */}
-            <SearchBar listContext={listMetadata} handleDataChange={handleDataChange} />
+                {/* still need to pass in listId and listType b/c can't carry context between pages */}
+                <SearchBar listContext={listMetadata} handleDataChange={handleDataChange} />
 
-            <div className={styles.itemsContainer}>
-                {
-                    data.items.map((item) => {
-                        return (
-                            <ListItem
-                                itemData={item}
-                                listMetadata={listMetadata}
-                                key={item.artURL || item.name}
-                                handleDataChange={handleDataChange}
-                            />
-                        );
-                    })
-                }
-            </div>
-            {songAdded && <Snackbar message={`${changeType} ${data.name}`} toggleShow={setSongAdded} />}
+                <div className={styles.itemsContainer}>
+                    {
+                        data.items.map((item) => {
+                            return (
+                                <ListItem
+                                    itemData={item}
+                                    listMetadata={listMetadata}
+                                    view="list"
+                                    key={item.artURL || item.name}
+                                    handleDataChange={handleDataChange}
+                                />
+                            );
+                        })
+                    }
+                </div>
+                {songAdded && <Snackbar message={`${changeType} ${data.name}`} toggleShow={setSongAdded} />}
+            {/* </ListsLayout> */}
         </Layout>
     )
 }

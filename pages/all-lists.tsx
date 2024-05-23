@@ -29,7 +29,7 @@ import { set } from "mongoose";
 export const CurrentListContext = createContext<CurrentListContextType | null>(null);
 
 // List
-function ListBox({ data, setListData, setListModified, selected }: {
+export function ListBox({ data, setListData, setListModified, selected }: {
     data: ListData,
     setListData: React.Dispatch<React.SetStateAction<ListData[]>>,
     setListModified: React.Dispatch<React.SetStateAction<"Deleted" | "Updated" | null>>,
@@ -102,7 +102,7 @@ function ListBox({ data, setListData, setListModified, selected }: {
                 href={width < mobileWidth ? `/list/${data._id}` : "#"}
                 onClick={() => setCurrentList && setCurrentList({ id: data._id, name: data.name, type: data.type })} >
                 {name}
-            {/* </Link> ({selected && currentListData ? currentListData.items.length : length}) - {data.type}</p> */}
+                {/* </Link> ({selected && currentListData ? currentListData.items.length : length}) - {data.type}</p> */}
             </Link> ({data.items.length}) - {data.type}</p>
             {/* currentlistdata is changing later than selected */}
             {data.description &&
@@ -192,6 +192,8 @@ function ListContainer({ lists, setListData, setListModified }: {
     const [songAdded, setSongAdded] = useState(false);
     const [changeType, setChangeType] = useState('');
     const [loading, setLoading] = useState(false);
+    const [listView, setListView] = useState<"list" | "grid">('list');
+    const [sort, setSort] = useState('added');
 
     useEffect(() => {
         if (currentList !== null) {
@@ -204,7 +206,30 @@ function ListContainer({ lists, setListData, setListModified }: {
             };
             populateList();
         }
+        setSort("added");
     }, [currentList]);
+
+    useEffect(() => {
+        if (currentListData) {
+            const currentListDataCopy = { ...currentListData };
+            const newItems = currentListDataCopy.items.sort((a, b) => {
+                if (sort === 'added') {
+                    const populateList = async () => {
+                        const res = await fetch(`/api/get-list?id=${currentList?.id}`);
+                        const data = await res.json();
+                        setLoading(false);
+                        setCurrentListData(await data);
+                    };
+                    populateList();
+                }
+                if (sort === 'name') return a.name.localeCompare(b.name);
+                if (sort === 'director') return a.director.localeCompare(b.director);
+                if (sort === 'author') return a.author.localeCompare(b.author);
+            })
+            currentListDataCopy.items = newItems;
+            setCurrentListData(currentListDataCopy);
+        }
+    }, [sort])
 
     function handleDataChange(changedData, changeType: string) {
         setCurrentListData(changedData);        // all list items
@@ -212,7 +237,9 @@ function ListContainer({ lists, setListData, setListModified }: {
         setChangeType(changeType);              // when adding/removing items
     }
 
-    console.log("beeep", lists);
+    function toggleSort(e) {
+        setSort(e.target.value);
+    }
 
     return (
         <div className={`${styles.wideview} ${width < mobileWidth ? styles.mobileview : ''}`}>
@@ -241,19 +268,40 @@ function ListContainer({ lists, setListData, setListModified }: {
                             console.log(rand);
                             console.log(currentListData.items[rand].name);
                         }}>S</button> */}
-                        <button className={styles.closeCurrentListButton} onClick={() => {
-                            if (setCurrentList) setCurrentList(null);
-                            setCurrentListData(null);
-                        }}>X</button>
+                        <div className={styles.controlButtons}>
+                            {currentList.type === "Movies" && <select onChange={toggleSort}>
+                                <option>added</option>
+                                <option>name</option>
+                                <option>director</option>
+                            </select>}
+                            {currentList.type === "Music" && <select onChange={toggleSort}>
+                                <option>added</option>
+                                <option>name</option>
+                            </select>}
+                            {currentList.type === "Books" && <select onChange={toggleSort}>
+                                <option>added</option>
+                                <option>name</option>
+                                <option>author</option>
+                            </select>}
+                            <button onClick={() => setListView(listView === "grid" ? "list" : "grid")}>{listView === "grid" ? "list" : "grid"} view</button>
+                            <button className={styles.closeCurrentListButton} onClick={() => {
+                                if (setCurrentList) setCurrentList(null);
+                                setCurrentListData(null);
+                            }}>X</button>
+                        </div>
                     </div>
-                    {currentListData.items.map((item) => {
-                        return <ListItem
-                            itemData={item}
-                            listMetadata={currentList}
-                            key={item._id}
-                            handleDataChange={handleDataChange} // for editing and deleting
-                        />
-                    })}
+                    <div className={listView === "grid" ? styles.gridViewContainer : styles.listViewContainer}>
+                        {currentListData.items.map((item) => {
+                            return <ListItem
+                                itemData={item}
+                                listMetadata={currentList}
+                                view={listView}
+                                key={item._id}
+                                handleDataChange={handleDataChange} // for editing and deleting
+                            />
+                        })}
+                    </div>
+
                     {songAdded && <Snackbar message={`${changeType} ${currentListData.name}`} toggleShow={setSongAdded} />}
                 </section>
             }
@@ -263,7 +311,7 @@ function ListContainer({ lists, setListData, setListModified }: {
 }
 
 // Main page for now
-export default function AllLists({ lists }) {    
+export default function AllLists({ lists }) {
     // ALL LISTS
     const [listData, setListData] = useState<ListData[]>(lists ? JSON.parse(lists) : []);
 

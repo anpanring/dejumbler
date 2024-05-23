@@ -11,6 +11,8 @@ export default function App({
     Component,
     pageProps: { session, ...pageProps },
 }) {
+    const getLayout = Component.getLayout ?? ((page) => page);
+
     // runs on every page!!
     useEffect(() => {
         const theme = localStorage.getItem('theme');
