@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 import dbConnect from "../../../lib/mongodb";
 import User from "../../../models/User";
@@ -48,7 +49,7 @@ export const authOptions: NextAuthOptions = {
                 const currUser: LoggedInUser = {
                     id: user._id,
                     name: user.username,
-                    email: user._id,
+                    email: "",
                     image: ""
                 }
 
@@ -56,6 +57,10 @@ export const authOptions: NextAuthOptions = {
                 if (match) return currUser;
                 else return null;
             }
+        }),
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID || "",
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
         })
     ],
     pages: {

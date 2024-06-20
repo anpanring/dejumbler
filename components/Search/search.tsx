@@ -3,8 +3,8 @@ import React, { useEffect, useState, useRef, useContext } from "react";
 
 import styles from "./search.module.css";
 
-import { CurrentListContext } from "../pages/all-lists";
-import { ListMetadata } from "../types/dejumbler-types";
+import { CurrentListContext } from "../../pages/all-lists";
+import { ListMetadata } from "../../types/dejumbler-types";
 
 function SearchResult({ data, listContext, handleDataChange }: {
     data: any,
@@ -12,6 +12,7 @@ function SearchResult({ data, listContext, handleDataChange }: {
     handleDataChange: (data: any, message: string) => void
 }) {
     const { currentList } = useContext(CurrentListContext) ?? {};
+    const titleScroll = useRef<HTMLParagraphElement>(null);
 
     switch (currentList ? currentList.type : listContext.type) {
         case 'Music':
@@ -33,7 +34,18 @@ function SearchResult({ data, listContext, handleDataChange }: {
                         {imageURLs[0] ? <img className={styles.searchResultImage} src={imageURLs[0]} height={50} width={50} alt={name} loading="lazy" />
                             : <div className={styles.noImage}><p>{name}</p></div>}
                         <div className={styles.searchResultText}>
-                            <p className={styles.title}>{name}</p>
+                            <p className={styles.title}
+                                ref={titleScroll}
+                                onMouseOver={() => {
+                                    for (let i = 0; i < 100; i++) {
+                                        setInterval(() => {
+                                            if (titleScroll.current != null) {
+                                                titleScroll.current.scrollLeft += 1;
+                                            }
+                                        }, 5);
+                                    }
+                                }
+                                }>{name}</p>
                             <p className={styles.artist}>{artistNames.join(', ')}</p>
                             <p className={styles.type}>{type.charAt(0).toUpperCase() + type.substring(1)}</p>
                         </div>
@@ -156,6 +168,14 @@ function SearchBar({ listContext, handleDataChange }: {
                     ref={formRef}
                     required
                 />
+                {results && <button
+                    className={styles.clearButton}
+                    onClick={() => {
+                        if (formRef.current) formRef.current.value = "";
+                        setResults(null);
+                        formRef.current?.focus();
+                    }}
+                >Clear</button>}
                 {listContext.type !== 'Movies' && listContext.type !== 'Books' && <select
                     onChange={(e) => setMusicType(e.target.value)}
                     className={styles.searchTypeSelect}
@@ -170,21 +190,23 @@ function SearchBar({ listContext, handleDataChange }: {
             </form>
 
             {/* Results */}
-            {results && results.length !== 0 && <div className={styles.resultsContainer}>
-                {results.map((result) => {
-                    return <SearchResult
-                        key={Math.random() * Number.MAX_VALUE}
-                        data={result}
-                        listContext={listContext}
-                        handleDataChange={handleDataChange}
-                    />;
-                })}
+            {
+                results && results.length !== 0 && <div className={styles.resultsContainer}>
+                    {results.map((result) => {
+                        return <SearchResult
+                            key={Math.random() * Number.MAX_VALUE}
+                            data={result}
+                            listContext={listContext}
+                            handleDataChange={handleDataChange}
+                        />;
+                    })}
 
-                {listContext.type === 'Movies' && <p className={styles.resultsDisclaimer}>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">The Movie Database (TMDB) API</a></p>}
-                {listContext.type === 'Music' && <p className={styles.resultsDisclaimer}>*results from <a href="https://developer.spotify.com/documentation/web-api" rel="noreferrer" target="_blank">Spotify API</a></p>}
-                {listContext.type === 'Books' && <p className={styles.resultsDisclaimer}>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">Open Library API</a></p>}
-            </div>}
-            {searching && formRef.current?.value !== '' && !results && <p className={styles.searching}>Searching...</p>}
+                    {listContext.type === 'Movies' && <p className={styles.resultsDisclaimer}>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">The Movie Database (TMDB) API</a></p>}
+                    {listContext.type === 'Music' && <p className={styles.resultsDisclaimer}>*results from <a href="https://developer.spotify.com/documentation/web-api" rel="noreferrer" target="_blank">Spotify API</a></p>}
+                    {listContext.type === 'Books' && <p className={styles.resultsDisclaimer}>*results from <a href="https://openlibrary.org/developers/api" rel="noreferrer" target="_blank">Open Library API</a></p>}
+                </div>
+            }
+            {searching && formRef.current?.value !== '' && !results && <p className={styles.searching}>Searching</p>}
             {!searching && formRef.current?.value !== '' && results?.length == 0 && <p className={styles.searching}>No results found :(</p>}
         </div>
     );

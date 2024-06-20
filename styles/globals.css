@@ -8,7 +8,7 @@
 html,
 body {
     font-family: 'Epilogue', sans-serif;
-    line-height: 1.6;
+    line-height: 1.5;
     height: 100%;
     background-color: var(--background-color);
     color: var(--main-text-color);
@@ -29,7 +29,7 @@ html[data-theme='light'] {
 
 html[data-theme='dark'] {
     --background-color: #16181d;
-    --main-text-color: white;
+    --main-text-color: #e8eaed;
 }
 
 /* Reusable flex classes */
@@ -103,10 +103,9 @@ textarea {
     color: var(--main-text-color);
     font-size: 1em;
     font-family: 'Epilogue', sans-serif;
-    height: 4em;
-    padding-top: 0.35em;
-    padding-bottom: 0.35em;
-    resize: none;
+    height: 6em;
+    padding: 0.25em;
+    resize: vertical;
 }
 
 button:hover {

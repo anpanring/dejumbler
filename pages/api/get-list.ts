@@ -4,6 +4,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
 import dbConnect from "../../lib/mongodb";
 import List from "../../models/List";
+import { HydratedDocument } from "mongoose";
+import { IList } from "../../models/definitions.types";
 
 export default async function handler(
     req: NextApiRequest,
@@ -12,10 +14,10 @@ export default async function handler(
     const { query } = req;
 
     const session = await getServerSession(req, res, authOptions);
-    
+
     if (!session) res.status(401).send("not authorized");
     else {
-        const { user, expires } = session;
+        const { user } = session;
 
         try {
             await dbConnect();
