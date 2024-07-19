@@ -2,10 +2,10 @@ import { useState } from 'react';
 
 import Head from 'next/head';
 
-import Layout from '../../components/Layout/layout';
+import Layout from '../../components/layout/layout';
 import ListItem from '../../components/list-item';
-import SearchBar from '../../components/Search/search';
-import Snackbar from '../../components/Snackbar/snackbar';
+import SearchBar from '../../components/search/search';
+import Snackbar from '../../components/snackbar/snackbar';
 
 import dbConnect from '../../lib/mongodb';
 import List from '../../models/List';

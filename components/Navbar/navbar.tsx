@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import styles from './navbar.module.css';
 
-import Modal from "../Modal/modal";
+import Modal from "../modal/modal";
 
 import { useSession, signOut } from "next-auth/react";
 

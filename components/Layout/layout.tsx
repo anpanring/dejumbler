@@ -2,8 +2,8 @@ import { createContext, Suspense } from 'react';
 
 import Head from 'next/head';
 
-import Loading from '../Loading/loading';
-import Navbar from '../Navbar/navbar';
+import Loading from '../loading/loading';
+import Navbar from '../navbar/navbar';
 
 import styles from './layout.module.css';
 

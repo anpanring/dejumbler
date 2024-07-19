@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import styles from '../styles/ListPage.module.css';
 import { ListMetadata } from "../types/dejumbler-types";
-import { deleteIcon, editIcon } from "./Navbar/icons";
+import { deleteIcon, editIcon } from "./navbar/icons";
 
 function ListItem({ itemData, listMetadata, handleDataChange, view }: {
     itemData: any,

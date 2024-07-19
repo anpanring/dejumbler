@@ -2,8 +2,8 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-import { siteTitle } from '../components/Layout/layout';
-import Login from '../components/Login/login';
+import { siteTitle } from '../components/layout/layout';
+import Login from '../components/login/login';
 
 import textLogo from '../public/images/dejumbler-text-logo.png';
 import styles from '../styles/Home.module.css';

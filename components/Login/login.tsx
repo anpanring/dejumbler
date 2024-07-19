@@ -38,16 +38,20 @@ export default function Login() {
 
     const loginRef = useRef<HTMLFormElement | null>(null);
     useGSAP(() => {
-        gsap.from(loginRef.current, {
-            y: "20",
-            duration: 0.1,
-        });
-
-        return () => {
-            gsap.to(loginRef.current, {
-                y: "-20",
+        if (loginRef.current) {
+            gsap.from(loginRef.current, {
+                y: "20",
                 duration: 0.1,
             });
+        }
+
+        return () => {
+            if (loginRef.current) {
+                gsap.to(loginRef.current, {
+                    y: "-20",
+                    duration: 0.1,
+                });
+            }
         }
     }, [mode]);
 

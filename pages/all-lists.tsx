@@ -3,11 +3,11 @@ import { createContext, useContext, useEffect, useState } from "react";
 import dbConnect from "../lib/mongodb";
 import List from "../models/List";
 
-import Layout, { WindowSizeContext } from "../components/Layout/layout";
-import Modal from "../components/Modal/modal";
-import Snackbar from "../components/Snackbar/snackbar";
+import Layout, { WindowSizeContext } from "../components/layout/layout";
+import Modal from "../components/modal/modal";
+import Snackbar from "../components/snackbar/snackbar";
 import ListItem from "../components/list-item";
-import SearchBar from "../components/Search/search";
+import SearchBar from "../components/search/search";
 
 import Link from "next/link";
 import Head from "next/head";
@@ -25,16 +25,22 @@ import styles from "../styles/AllLists.module.css";
 const mobileWidth = 600;
 
 import { ListMetadata, ListData, CurrentListContextType } from "../types/dejumbler-types";
-import { set } from "mongoose";
 export const CurrentListContext = createContext<CurrentListContextType | null>(null);
 
-// List
-export function ListBox({ data, setListData, setListModified, selected }: {
+
+interface ListBoxProps {
     data: ListData,
     setListData: React.Dispatch<React.SetStateAction<ListData[]>>,
     setListModified: React.Dispatch<React.SetStateAction<"Deleted" | "Updated" | null>>,
     selected: boolean
-}) {
+}
+
+export const ListBox: React.FC<ListBoxProps> = ({
+    data,
+    setListData,
+    setListModified,
+    selected
+}) => {
     // kinda messy, refactor to make sure never null
     const currentListContext = useContext(CurrentListContext);
     if (!currentListContext) throw new Error('CurrentListContext is null');
@@ -175,12 +181,18 @@ export function ListBox({ data, setListData, setListModified, selected }: {
     );
 }
 
-// List Container
-function ListContainer({ lists, setListData, setListModified }: {
+interface ListContainerProps {
     lists: ListData[],
     setListData: React.Dispatch<React.SetStateAction<ListData[]>>,
     setListModified: React.Dispatch<React.SetStateAction<"Deleted" | "Updated" | null>>
-}) {
+}
+
+// List Container
+export const ListContainer: React.FC<ListContainerProps> = ({
+    lists,
+    setListData,
+    setListModified
+}) => {
     const currentListContext = useContext(CurrentListContext);
     if (!currentListContext) throw new Error('CurrentListContext is null');
     const { currentList, setCurrentList } = currentListContext;
@@ -229,7 +241,7 @@ function ListContainer({ lists, setListData, setListModified }: {
             currentListDataCopy.items = newItems;
             setCurrentListData(currentListDataCopy);
         }
-    }, [sort])
+    }, [currentList?.id, currentListData, sort])
 
     function handleDataChange(changedData, changeType: string) {
         setCurrentListData(changedData);        // all list items
