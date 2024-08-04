@@ -241,7 +241,7 @@ export const ListContainer: React.FC<ListContainerProps> = ({
             currentListDataCopy.items = newItems;
             setCurrentListData(currentListDataCopy);
         }
-    }, [currentList?.id, currentListData, sort])
+    }, [sort])
 
     function handleDataChange(changedData, changeType: string) {
         setCurrentListData(changedData);        // all list items
