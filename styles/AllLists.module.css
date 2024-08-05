@@ -64,20 +64,6 @@ html[data-theme='dark'] .selected {
     background-color: color-mix(in srgb, var(--accent-color) 50%, black);
 }
 
-.kebab {
-    align-self: end;
-    border: none;
-    padding: 0.25em;
-    fill: var(--main-text-color);
-}
-
-.kebab:hover {
-    fill: var(--accent-color);
-    cursor: pointer;
-    opacity: 75%;
-}
-
-
 /* Wideview list items container */
 .currentListContainer {
     /* flex-grow: 1.5; */

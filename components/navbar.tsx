@@ -18,16 +18,10 @@ import { Textarea } from "./ui/textarea";
 const colors = ['red', 'orange', 'yellow', 'green', 'lightblue', 'indigo', 'violet'];
 
 export default function Navbar({ changeMode }) {
-  // can probably refactor to just one state
-  const [showModal, setShowModal] = useState(false);
-  const [showProfile, setShowProfile] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
-
   const [accentColor, setAccentColor] = useState('green');
 
   const { data } = useSession();
 
-  const buttonRef = useRef();
   const containerRef = useRef<HTMLDivElement>(null);
 
   // have to do this on client side
@@ -35,10 +29,6 @@ export default function Navbar({ changeMode }) {
     const check = localStorage.getItem('accent') as string;
     check && setAccentColor(localStorage.getItem('accent') ?? 'green');
   }, [])
-
-  function toggleModal() {
-    setShowModal(!showModal);
-  }
 
   function changeAccentColor(color) {
     document.documentElement.style.setProperty('--accent-color', color);
@@ -65,7 +55,7 @@ export default function Navbar({ changeMode }) {
             {listIcon}
           </Link>
 
-          {/* Profile button */}
+          {/* Profile dialog */}
           <Dialog>
             <DialogTrigger asChild className="self-end w-auto border-none hover:border-1 hover:bg-none">
               <div className={styles.icon} role="button">
@@ -80,7 +70,7 @@ export default function Navbar({ changeMode }) {
             </DialogContent>
           </Dialog>
 
-          {/* Settings button */}
+          {/* Settings dialog */}
           <Dialog>
             <DialogTrigger asChild className="self-end w-auto border-none hover:border-1 hover:bg-none">
               <div className={styles.icon} role="button">
@@ -94,7 +84,7 @@ export default function Navbar({ changeMode }) {
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label>Dark Mode</Label>
-                  <Button onClick={changeMode} className={styles.toggleModeButton} variant="ghost">Toggle</Button>
+                  <Button onClick={changeMode} variant="ghost">Toggle</Button>
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label>Accent Color</Label>
@@ -159,16 +149,6 @@ export default function Navbar({ changeMode }) {
           </DialogContent>
         </Dialog>
       </div>
-
-      {/* Profile modal */}
-      {showProfile && data &&
-        <Modal toggleModal={() => setShowProfile(!showProfile)}>
-          <div className={`flex-column ${styles.loggedInWrapper}`}>
-            <p>Signed in as: <u><strong>{data.user.name}</strong></u></p>
-            <button onClick={() => signOut()} className={styles.signoutButton}>Sign out</button>
-          </div>
-        </Modal>
-      }
     </nav>
   )
 }

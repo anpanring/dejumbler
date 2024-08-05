@@ -162,14 +162,14 @@ function SearchBar({ listContext, handleDataChange }: {
       {/* Search bar */}
       <form className={styles.searchBar}>
         {/* <Input
-                    className={styles.searchInput}
-                    onChange={(e) => setQuery(e.target.value)}
-                    type="search"
-                    name="value"
-                    placeholder={`Search ${listContext.type.toLowerCase()} to add...`}
-                    ref={formRef}
-                    required
-                /> */}
+            className={styles.searchInput}
+            onChange={(e) => setQuery(e.target.value)}
+            type="search"
+            name="value"
+            placeholder={`Search ${listContext.type.toLowerCase()} to add...`}
+            ref={formRef}
+            required
+        /> */}
         <Input
           // className={styles.searchInput}
           className="h-8 w-[15em]"
