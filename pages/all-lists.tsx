@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import dbConnect from "../lib/mongodb";
 import List from "../models/List";
 import Layout, { WindowSizeContext } from "../components/layout";
-import Modal from "../components/modal";
 import Snackbar from "../components/snackbar";
 import ListItem from "../components/list-item";
 import SearchBar from "../components/search";
@@ -40,6 +39,8 @@ const mobileWidth = 600;
 import { ListMetadata, ListData, CurrentListContextType } from "../types/dejumbler-types";
 import { Button } from "../components/ui/button";
 import { Kebab } from "../components/ui/kebab";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 export const CurrentListContext = createContext<CurrentListContextType | null>(null);
 
 export interface AllListsPageQueryParams {
@@ -138,10 +139,6 @@ export const ListBox: React.FC<ListBoxProps> = ({
         </p>
       }
       {selected && <div className={styles.selected}></div>}
-      {/* <Kebab
-        showEditOptions={showEditOptions}
-        setShowEditOptions={setShowEditOptions}
-      /> */}
 
       {/* List options modal */}
       <Dialog>
@@ -158,7 +155,6 @@ export const ListBox: React.FC<ListBoxProps> = ({
             <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
           </svg>
         </DialogTrigger>
-        {/* {showEditOptions && !confirmDelete && !editMode && */}
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="m-0">Edit List</DialogTitle>
@@ -168,7 +164,7 @@ export const ListBox: React.FC<ListBoxProps> = ({
           </DialogHeader>
           {/* nested dialog */}
           <Dialog>
-            <DialogTrigger asChild className="self-end w-auto border-none hover:border-1 hover:bg-none">
+            <DialogTrigger asChild className="self-end w-auto hover:border-1 hover:bg-none">
               <Button variant="ghost">
                 Edit list
               </Button>
@@ -182,89 +178,60 @@ export const ListBox: React.FC<ListBoxProps> = ({
               </DialogHeader>
               <form className={`flex-column ${styles.form}`} onSubmit={handleListUpdate} method="POST">
                 <div className={styles.formRow}>
-                  <label>Name: </label>
+                  <Label>Name</Label>
                   <input className={styles.formInput} type="text" name="name" defaultValue={name} required />
                 </div>
                 <div className={styles.formRow}>
-                  <label>Description: </label>
+                  <Label>Description</Label>
                   <textarea name="description" defaultValue={description}></textarea>
                 </div>
                 <div className={styles.formRow}>
-                  <input className={styles.editButton} type="submit" value="Save edits" />
+                  <Button type="submit" variant="ghost">Save edits</Button>
                 </div>
               </form>
             </DialogContent>
           </Dialog>
-          {/* <Button onClick={() => setEditMode(true)} variant="ghost">
-            Edit list
-          </Button> */}
 
-          <Button
-            // className={`${styles.editButton} ${styles.delete}`}
-            className="hover:bg-['red']"
-            onClick={() => setConfirmDelete(true)}
-            variant="ghost"
-          >
-            Delete list
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild className="self-end w-auto hover:border-1 hover:bg-none">
+              <Button
+                className="hover:bg-red-600 hover:text-white"
+                variant="ghost"
+              >
+                Delete list
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className="m-0"><p>Are you sure you want to delete <u><strong>{name}</strong></u>?</p></DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex flex-col gap-4 items-center text-center">
+                <Button onClick={(e) => {
+                  e.preventDefault();
+                  close();
+                  handleDelete(data._id);
+                  setListModified("Deleted");
+                  if (selected) setCurrentList && setCurrentList(null);
+                }} className="text-base w-[100%] text-red-600" variant="ghost"
+                >
+                  Yes, delete list
+                </Button>
+
+                <DialogClose asChild>
+                  <Button className="w-[100%]" type="button" variant="ghost">
+                    No, close
+                  </Button>
+                </DialogClose>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+
         </DialogContent>
-        {/* // <Modal toggleModal={() => setShowEditOptions(!showEditOptions)}>
-        //   <div className="flex flex-col gap-2 items-center text-center">
-        //     <Button onClick={() => setEditMode(true)} variant="ghost">
-        //       Edit list
-        //     </Button>
-
-        //     <Button
-        //       // className={`${styles.editButton} ${styles.delete}`}
-        //       className="hover:color-red"
-        //       onClick={() => setConfirmDelete(true)}
-        //       variant="ghost"
-        //     >
-        //       Delete list
-        //     </Button>
-        //   </div>
-        // </Modal>
-      // } */}
       </Dialog>
-
-      {/* Delete modal */}
-      {confirmDelete &&
-        <Modal toggleModal={close}>
-          <div className="flex flex-col gap-2 items-center text-center">
-            <p>Are you sure you want to delete <u><strong>{name}</strong></u>?</p>
-            <button onClick={(e) => {
-              e.preventDefault();
-              close();
-              handleDelete(data._id);
-              setListModified("Deleted");
-              if (selected) setCurrentList && setCurrentList(null);
-            }} className={`text-base h-8 w-[90%] text-red`}>
-              Delete list
-            </button>
-
-            <button className={styles.editButton} onClick={close}>
-              Cancel
-            </button>
-          </div>
-        </Modal>}
-
-      {/* Edit modal */}
-      {editMode &&
-        <Modal toggleModal={close}>
-          <form className={`flex-column ${styles.form}`} onSubmit={handleListUpdate} method="POST">
-            <div className={styles.formRow}>
-              <label>Name: </label>
-              <input className={styles.formInput} type="text" name="name" defaultValue={name} required />
-            </div>
-            <div className={styles.formRow}>
-              <label>Description: </label>
-              <textarea name="description" defaultValue={description}></textarea>
-            </div>
-            <div className={styles.formRow}>
-              <input className={styles.editButton} type="submit" value="Save edits" />
-            </div>
-          </form>
-        </Modal>}
     </div>
   );
 }
