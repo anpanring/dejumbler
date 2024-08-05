@@ -2,13 +2,13 @@ import { createContext, Suspense } from 'react';
 
 import Head from 'next/head';
 
-import Loading from '../loading/loading';
-import Navbar from '../navbar/navbar';
+import Loading from './loading';
+import Navbar from './navbar';
 
 import styles from './layout.module.css';
 
-import useWindowSize from '../../lib/useWindowSize';
-import { WindowContextType } from '../../types/dejumbler-types';
+import useWindowSize from '../lib/useWindowSize';
+import { WindowContextType } from '../types/dejumbler-types';
 export const WindowSizeContext = createContext<WindowContextType | null>(null);
 
 export const siteTitle = 'Dejumbler';

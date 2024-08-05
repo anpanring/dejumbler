@@ -1,11 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import dbConnect from "../lib/mongodb";
 import List from "../models/List";
-import Layout, { WindowSizeContext } from "../components/layout/layout";
-import Modal from "../components/modal/modal";
-import Snackbar from "../components/snackbar/snackbar";
+import Layout, { WindowSizeContext } from "../components/layout";
+import Modal from "../components/modal";
+import Snackbar from "../components/snackbar";
 import ListItem from "../components/list-item";
-import SearchBar from "../components/search/search";
+import SearchBar from "../components/search";
 import Link from "next/link";
 import Head from "next/head";
 import { getServerSession } from "next-auth/next";

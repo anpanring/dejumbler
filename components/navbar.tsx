@@ -4,17 +4,17 @@ import Link from "next/link";
 
 import styles from './navbar.module.css';
 
-import Modal from "../modal/modal";
+import Modal from "./modal";
 
 import { useSession, signOut } from "next-auth/react";
 
 import { addIcon, settingsIcon, profileIcon, listIcon } from "./icons";
-import { Button } from "../ui/button";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogFooter } from "../ui/dialog";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { Textarea } from "../ui/textarea";
+import { Button } from "./ui/button";
+import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogFooter } from "./ui/dialog";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Textarea } from "./ui/textarea";
 const colors = ['red', 'orange', 'yellow', 'green', 'lightblue', 'indigo', 'violet'];
 
 export default function Navbar({ changeMode }) {

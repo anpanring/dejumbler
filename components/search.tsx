@@ -3,10 +3,10 @@ import React, { useEffect, useState, useRef, useContext } from "react";
 
 import styles from "./search.module.css";
 
-import { CurrentListContext } from "../../pages/all-lists";
-import { ListMetadata } from "../../types/dejumbler-types";
-import { Input } from "../ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { CurrentListContext } from "../pages/all-lists";
+import { ListMetadata } from "../types/dejumbler-types";
+import { Input } from "./ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
 function SearchResult({ data, listContext, handleDataChange }: {
   data: any,
