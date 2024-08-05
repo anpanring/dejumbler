@@ -41,6 +41,7 @@ import { Button } from "../components/ui/button";
 import { Kebab } from "../components/ui/kebab";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+import { Textarea } from "../components/ui/textarea";
 export const CurrentListContext = createContext<CurrentListContextType | null>(null);
 
 export interface AllListsPageQueryParams {
@@ -179,11 +180,11 @@ export const ListBox: React.FC<ListBoxProps> = ({
               <form className={`flex-column ${styles.form}`} onSubmit={handleListUpdate} method="POST">
                 <div className={styles.formRow}>
                   <Label>Name</Label>
-                  <input className={styles.formInput} type="text" name="name" defaultValue={name} required />
+                  <Input className={styles.formInput} type="text" name="name" defaultValue={name} required />
                 </div>
                 <div className={styles.formRow}>
                   <Label>Description</Label>
-                  <textarea name="description" defaultValue={description}></textarea>
+                  <Textarea name="description" defaultValue={description}></Textarea>
                 </div>
                 <div className={styles.formRow}>
                   <Button type="submit" variant="ghost">Save edits</Button>
