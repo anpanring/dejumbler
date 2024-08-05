@@ -5,7 +5,6 @@ import styles from '../styles/ListPage.module.css';
 import { ListMetadata } from "../types/dejumbler-types";
 import { deleteIcon, editIcon } from "./navbar/icons";
 import { Button } from "./ui/button";
-import { Textarea } from "./ui/textarea";
 
 function ListItem({ itemData, listMetadata, handleDataChange, view }: {
   itemData: any,
