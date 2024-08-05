@@ -23,7 +23,7 @@ export default function Layout({ children }) {
 
     return (
         <WindowSizeContext.Provider value={{ width, height }}>
-            <div className={styles.wrapper}>
+            <div className="flex flex-col justify-between h-[100vh] px-4 pt-[var(--navbar-height)]">
                 <div className={styles.flexContainer}>
                     <Head>
                         <meta name="description" content="Clean your brain out with the Dejumbler." />

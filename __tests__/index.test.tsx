@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
-// import { useRouter } from 'next/router';
 jest.mock("next/router", () => ({
     useRouter() {
         return {
@@ -43,14 +42,26 @@ describe("Home", () => {
     });
 
     it("when logged in", () => {
+        mockUseSession.mockReturnValue({
+            status: 'authenticated',
+            data: {
+                user: {
+                    name: "test"
+                }
+            },
+        });
+
         // useRouter.mockImplementation(() => ({
         //     route: "/all-lists",
-        //     pathname: "/all-lists",
+        //     pathname: "",
         //     query: "",
         //     asPath: "",
         // }));
 
-        render(<AllLists lists={[]}/>);
+        render(<AllLists lists={[]} />);
+
+        screen.debug();
+
         expect(screen.getByText("All Lists")).toBeInTheDocument();
     });
 })

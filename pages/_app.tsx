@@ -7,6 +7,9 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import { useEffect } from 'react';
 
+import { QueryParamProvider } from "use-query-params";
+import { NextAdapter } from "next-query-params";
+
 export default function App({
     Component,
     pageProps: { session, ...pageProps },
@@ -25,9 +28,11 @@ export default function App({
 
     return (
         <SessionProvider session={session}>
-            <Component {...pageProps} />
-            <Analytics />
-            <SpeedInsights />
+            <QueryParamProvider adapter={NextAdapter}>
+                <Component {...pageProps} />
+                <Analytics />
+                <SpeedInsights />
+            </QueryParamProvider>
         </SessionProvider>
     )
 }
