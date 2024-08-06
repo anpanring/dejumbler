@@ -4,8 +4,6 @@ import Link from "next/link";
 
 import styles from './navbar.module.css';
 
-import Modal from "./modal";
-
 import { useSession, signOut } from "next-auth/react";
 
 import { addIcon, settingsIcon, profileIcon, listIcon } from "./icons";
@@ -15,10 +13,13 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Textarea } from "./ui/textarea";
+
 const colors = ['red', 'orange', 'yellow', 'green', 'lightblue', 'indigo', 'violet'];
+const fonts = ['Epilogue', 'cursive', 'monospace', 'sans-serif', 'serif'];
 
 export default function Navbar({ changeMode }) {
   const [accentColor, setAccentColor] = useState('green');
+  const [font, setFont] = useState('cursive');
 
   const { data } = useSession();
 
@@ -27,13 +28,21 @@ export default function Navbar({ changeMode }) {
   // have to do this on client side
   useEffect(() => {
     const check = localStorage.getItem('accent') as string;
+    const font = localStorage.getItem('font') as string;
     check && setAccentColor(localStorage.getItem('accent') ?? 'green');
+    font && setFont(localStorage.getItem('font') ?? 'Epilogue');
   }, [])
 
   function changeAccentColor(color) {
     document.documentElement.style.setProperty('--accent-color', color);
     setAccentColor(color);
     localStorage.setItem('accent', color);
+  }
+
+  function changeFont(font) {
+    document.documentElement.style.setProperty('--secondary-font', font);
+    setFont(font);
+    localStorage.setItem('font', font);
   }
 
   return (
@@ -63,6 +72,7 @@ export default function Navbar({ changeMode }) {
               </div>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[300px]">
+              <DialogTitle>Profile</DialogTitle>
               <div className={`flex-column ${styles.loggedInWrapper}`}>
                 <p>Signed in as: <u><strong>{data?.user.name}</strong></u></p>
                 <Button onClick={() => signOut()} variant="destructive">Sign out</Button>
@@ -99,6 +109,21 @@ export default function Navbar({ changeMode }) {
                       </div>
                     })}
                   </div>
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label>Font</Label>
+                  <Select name="type" defaultValue={font} onValueChange={(val) => changeFont(val)}>
+                    <SelectTrigger className="col-span-2">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {fonts.map((font) => {
+                        return <SelectItem key={font} value={font} style={{
+                          fontFamily: font
+                        }}>{font}</SelectItem>
+                      })}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </DialogContent>

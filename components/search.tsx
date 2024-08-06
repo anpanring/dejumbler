@@ -172,7 +172,7 @@ function SearchBar({ listContext, handleDataChange }: {
         /> */}
         <Input
           // className={styles.searchInput}
-          className="h-8 w-[15em]"
+          className="h-8 w-[18em]"
           onChange={(e) => setQuery(e.target.value)}
           type="search"
           name="value"

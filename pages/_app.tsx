@@ -20,9 +20,11 @@ export default function App({
     useEffect(() => {
         const theme = localStorage.getItem('theme');
         const accent = localStorage.getItem('accent');
+        const font = localStorage.getItem('font')
         if (theme) {
             document.documentElement.setAttribute('data-theme', theme);
             document.documentElement.style.setProperty("--accent-color", accent);
+            document.documentElement.style.setProperty("--secondary-font", font);
         }
     })
 

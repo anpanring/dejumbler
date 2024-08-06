@@ -41,6 +41,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../components/ui/dropdown-menu";
 export const CurrentListContext = createContext<CurrentListContextType | null>(null);
 
 export interface AllListsPageQueryParams {
@@ -67,21 +68,10 @@ export const ListBox: React.FC<ListBoxProps> = ({
 
   const { width } = useContext(WindowSizeContext) ?? { width: 1200, height: 800 };
 
-  // control modals
-  const [showEditOptions, setShowEditOptions] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-
   // list name and description
   const [name, setName] = useState<string>(data.name);
   const [description, setDescription] = useState<string>(data.description);
   const [expandDescription, setExpandDescription] = useState(false);
-
-  function close() {
-    setConfirmDelete(false);
-    setShowEditOptions(false);
-    setEditMode(false);
-  }
 
   // handle deleting list
   async function handleDelete(id: string) {
@@ -115,7 +105,6 @@ export const ListBox: React.FC<ListBoxProps> = ({
 
     const res = await fetch('/api/edit-list', fetchOptions);
     const updatedData = await res.json();
-    close();
     setName(updatedData.name);
     setDescription(updatedData.description);
     setListModified("Updated");
@@ -130,7 +119,7 @@ export const ListBox: React.FC<ListBoxProps> = ({
       </Link> ({data.items.length}) - {data.type}</p>
       {/* currentlistdata is changing later than selected */}
       {data.description &&
-        <p className="font-mono text-sm">
+        <p className="font-cursive text-sm">
           {expandDescription ?
             <span>{description} <a onClick={() => setExpandDescription(false)}>Show less</a></span>
             : description.length > 100 ?
@@ -141,8 +130,8 @@ export const ListBox: React.FC<ListBoxProps> = ({
       {selected && <div className={styles.selected}></div>}
 
       {/* List options modal */}
-      <Dialog>
-        <DialogTrigger asChild className="self-end w-auto border-none hover:border-1 hover:bg-none">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild className="self-end w-auto border-none hover:border-1 hover:bg-none">
           <svg
             viewBox="0 0 16 16"
             xmlns="http://www.w3.org/2000/svg"
@@ -150,88 +139,85 @@ export const ListBox: React.FC<ListBoxProps> = ({
             className="self-end border-none h-6 p-1 
             fill-[var(--main-text-color)] 
             hover:fill-[var(--accent-color)] hover:cursor-pointer"
-            onClick={() => setShowEditOptions(!showEditOptions)}
           >
             <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
           </svg>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="m-0">Edit List</DialogTitle>
-            <DialogDescription>
-              Make changes to your profile here. Click save when you are done.
-            </DialogDescription>
-          </DialogHeader>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Modify List</DropdownMenuLabel>
+          <DropdownMenuSeparator />
           {/* nested dialog */}
-          <Dialog>
-            <DialogTrigger asChild className="self-end w-auto hover:border-1 hover:bg-none">
-              <Button variant="ghost">
-                Edit list
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle className="m-0">Edit Description</DialogTitle>
-                <DialogDescription>
-                  Make changes to your profile here. Click save when you are done.
-                </DialogDescription>
-              </DialogHeader>
-              <form className={`flex-column ${styles.form}`} onSubmit={handleListUpdate} method="POST">
-                <div className={styles.formRow}>
-                  <Label>Name</Label>
-                  <Input className={styles.formInput} type="text" name="name" defaultValue={name} required />
-                </div>
-                <div className={styles.formRow}>
-                  <Label>Description</Label>
-                  <Textarea name="description" defaultValue={description}></Textarea>
-                </div>
-                <div className={styles.formRow}>
-                  <Button type="submit" variant="ghost">Save edits</Button>
-                </div>
-              </form>
-            </DialogContent>
-          </Dialog>
+          <DropdownMenuGroup>
+            <Dialog>
+              <DialogTrigger asChild className="self-end w-auto hover:border-1 hover:bg-none">
+                {/* <DropdownMenuItem> */}
+                  <p>Edit list</p>
+                {/* </DropdownMenuItem> */}
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Edit Description</DialogTitle>
+                  <DialogDescription>
+                    Make changes to your profile here. Click save when you are done.
+                  </DialogDescription>
+                </DialogHeader>
+                <form className={`flex-column ${styles.form}`} onSubmit={handleListUpdate} method="POST">
+                  <div className={styles.formRow}>
+                    <Label className="mb-1">Name</Label>
+                    <Input className={styles.formInput} type="text" name="name" defaultValue={name} required />
+                  </div>
+                  <div className={styles.formRow}>
+                    <Label className="mb-1">Description</Label>
+                    <Textarea name="description" defaultValue={description}></Textarea>
+                  </div>
+                  <DialogFooter>
+                    <DialogClose>
+                      <div className={styles.formRow}>
+                        <Button type="submit" variant="ghost">Save edits</Button>
+                      </div>
+                    </DialogClose>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
 
-          <Dialog>
-            <DialogTrigger asChild className="self-end w-auto hover:border-1 hover:bg-none">
-              <Button
-                className="hover:bg-red-600 hover:text-white"
-                variant="ghost"
-              >
-                Delete list
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle className="m-0"><p>Are you sure you want to delete <u><strong>{name}</strong></u>?</p></DialogTitle>
-                <DialogDescription>
-                  This action cannot be undone.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="flex flex-col gap-4 items-center text-center">
-                <Button onClick={(e) => {
-                  e.preventDefault();
-                  close();
-                  handleDelete(data._id);
-                  setListModified("Deleted");
-                  if (selected) setCurrentList && setCurrentList(null);
-                }} className="text-base w-[100%] text-red-600" variant="ghost"
-                >
-                  Yes, delete list
-                </Button>
-
-                <DialogClose asChild>
-                  <Button className="w-[100%]" type="button" variant="ghost">
-                    No, close
+            <Dialog>
+              <DialogTrigger asChild className="self-end w-auto hover:border-1 hover:bg-none">
+                {/* <DropdownMenuItem className="hover:bg-red-600 hover:text-white"> */}
+                  <p>Delete list</p>
+                {/* </DropdownMenuItem> */}
+                {/* </Button> */}
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle><p>Are you sure you want to delete <u><strong>{name}</strong></u>?</p></DialogTitle>
+                  <DialogDescription>
+                    This action cannot be undone.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="flex flex-col gap-4 items-center text-center">
+                  <Button onClick={(e) => {
+                    e.preventDefault();
+                    handleDelete(data._id);
+                    setListModified("Deleted");
+                    if (selected) setCurrentList && setCurrentList(null);
+                  }} className="text-base w-[100%] text-red-600" variant="ghost"
+                  >
+                    Yes, delete list
                   </Button>
-                </DialogClose>
-              </div>
-            </DialogContent>
-          </Dialog>
 
+                  <DialogClose asChild>
+                    <Button className="w-[100%]" type="button" variant="ghost">
+                      No, close
+                    </Button>
+                  </DialogClose>
+                </div>
+              </DialogContent>
 
-        </DialogContent>
-      </Dialog>
+            </Dialog>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }
@@ -445,7 +431,7 @@ export default function AllLists({ lists }) {
               <SelectItem value="Books">Books</SelectItem>
             </SelectContent>
           </Select>
-          {/* <label>Filter: </label>
+          {/* <label className="mb-1">Filter: </label>
           <select className="border border-[--var(accent-color)] bg-[var(--background-color)] h-10" name="type" onChange={toggleType} required>
             <option value="Any">All</option>
             <option value="Music">Music</option>

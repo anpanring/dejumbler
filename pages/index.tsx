@@ -45,6 +45,7 @@ export default function Home() {
   if (!session.data) {
     document.documentElement.setAttribute('data-theme', "light");
     document.documentElement.style.setProperty("--accent-color", "green");
+    document.documentElement.style.setProperty("--secondary-font", 'sans-serif');
     return (
       <>
         <Head>
