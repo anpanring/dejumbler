@@ -1,150 +1,147 @@
 /* Main containers */
 .wideview {
-    display: flex;
-    flex-direction: row;
-    height: calc(100vh - var(--navbar-height) - 86.5px - 0.5em);
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - var(--navbar-height) - 86.5px - 0.5em);
 }
 
 .mobileview {
-    height: auto;
+  height: auto;
 }
 
 .allListsContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
-    /* flex: 1; */
-    width: 30%;
-    overflow-y: scroll;
-    padding-top: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  /* flex: 1; */
+  width: 30%;
+  overflow-y: scroll;
+  padding-top: 1em;
 }
 
 .allListsContainer.wide {
-    width: 100%;
+  width: 100%;
 }
 
 .mobileview .allListsContainer {
-    padding-bottom: 1em
+  padding-bottom: 1em;
 }
-
 
 /* Top bar left -> right */
 .topBar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    /* height: 86.5px; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* height: 86.5px; */
 }
 
 .filterSelect {
-    border: solid 1px var(--accent-color);
-    height: 2.5em;
-    background-color: var(--background-color);
-    color: var(--main-text-color)
+  border: solid 1px var(--accent-color);
+  height: 2.5em;
+  background-color: var(--background-color);
+  color: var(--main-text-color);
 }
-
 
 /* Each clickable list metadata box */
 .listInfo {
-    padding: 0.5em;
-    border: solid var(--main-text-color) 1px;
-    display: flex;
-    flex-direction: column;
+  padding: 0.5em;
+  border: solid var(--main-text-color) 1px;
+  display: flex;
+  flex-direction: column;
 }
 
 .description {
-    font-family: cursive;
+  font-family: cursive;
 }
 
 .selected {
-    background-color: color-mix(in srgb, var(--accent-color) 25%, white);
+  background-color: color-mix(in srgb, var(--accent-color) 25%, white);
 }
 
 html[data-theme='dark'] .selected {
-    background-color: color-mix(in srgb, var(--accent-color) 50%, black);
+  background-color: color-mix(in srgb, var(--accent-color) 50%, black);
 }
 
 /* Wideview list items container */
 .currentListContainer {
-    /* flex-grow: 1.5; */
-    width: 70%;
-    /* border: solid 1px var(--main-text-color); */
-    padding-left: 1em;
-    padding-top: 1em;
-    /* padding: 0.5em; */
-    display: flex;
-    flex-direction: column;
-    /* gap: 0.75em; */
-    overflow-y: scroll;
+  /* flex-grow: 1.5; */
+  width: 70%;
+  /* border: solid 1px var(--main-text-color); */
+  padding-left: 1em;
+  padding-top: 1em;
+  /* padding: 0.5em; */
+  display: flex;
+  flex-direction: column;
+  /* gap: 0.75em; */
+  overflow-y: scroll;
 }
 
 .currentListTopBar {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .listViewContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
 }
 
 .gridViewContainer {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(30ch, 100%), 1fr));
-    gap: 0.5em;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(30ch, 100%), 1fr));
+  gap: 0.5em;
 }
 
 .controlButtons {
-    display: flex;
-    gap: 0.5em;
-    height: 2em;
+  display: flex;
+  gap: 0.5em;
+  height: 2em;
 }
 
 .closeCurrentListButton {
-    /* height: 2em; */
-    width: 2em;
+  /* height: 2em; */
+  width: 2em;
 }
 
 .closeCurrentListButton:hover {
-    background-color: red;
+  background-color: red;
 }
-
 
 /* Modals */
 .editButton {
-    font-size: 1em;
-    width: 90%;
-    height: 2em;
-    margin: auto;
+  font-size: 1em;
+  width: 90%;
+  height: 2em;
+  margin: auto;
 }
 
 .delete {
-    color: red;
-    text-decoration: none;
+  color: red;
+  text-decoration: none;
 }
 
 .delete:hover {
-    color: white;
-    background-color: red;
+  color: white;
+  background-color: red;
 }
 
 /* Edit form */
 .form {
-    justify-content: space-between;
-    gap: 1em;
-    height: 100%;
+  justify-content: space-between;
+  gap: 1em;
+  height: 100%;
 }
 
 .formRow {
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: space-between;
 }
 
 .formInput {
-    font-size: 1em;
-    font-family: 'Epilogue', sans-serif;
-    padding: 0.25em;
+  font-size: 1em;
+  font-family: 'Epilogue', sans-serif;
+  padding: 0.25em;
 }

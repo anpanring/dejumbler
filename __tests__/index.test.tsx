@@ -1,17 +1,17 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 
-jest.mock("next/router", () => ({
-    useRouter() {
-        return {
-            route: "/",
-            pathname: "",
-            query: "",
-            asPath: "",
-        };
-    },
+jest.mock('next/router', () => ({
+  useRouter() {
+    return {
+      route: '/',
+      pathname: '',
+      query: '',
+      asPath: '',
+    };
+  },
 }));
-const useRouter = jest.spyOn(require("next/router"), "useRouter");
+const useRouter = jest.spyOn(require('next/router'), 'useRouter');
 
 jest.mock('next-auth/react');
 import { useSession, signIn, signOut } from 'next-auth/react';
@@ -23,45 +23,45 @@ const mockUseSession = useSession as jest.Mock;
 import Home from '../pages/index';
 import AllLists from '../pages/all-lists';
 
-describe("Home", () => {
-    it("when logged out", () => {
-        mockUseSession.mockReturnValue({
-            status: 'unauthenticated',
-            data: null,
-        });
-
-        useRouter.mockImplementation(() => ({
-            route: "/",
-            pathname: "",
-            query: "",
-            asPath: "",
-        }));
-
-        render(<Home />);
-        expect(screen.getByText("Sign in")).toBeInTheDocument();
+describe('Home', () => {
+  it('when logged out', () => {
+    mockUseSession.mockReturnValue({
+      status: 'unauthenticated',
+      data: null,
     });
 
-    it("when logged in", () => {
-        mockUseSession.mockReturnValue({
-            status: 'authenticated',
-            data: {
-                user: {
-                    name: "test"
-                }
-            },
-        });
+    useRouter.mockImplementation(() => ({
+      route: '/',
+      pathname: '',
+      query: '',
+      asPath: '',
+    }));
 
-        // useRouter.mockImplementation(() => ({
-        //     route: "/all-lists",
-        //     pathname: "",
-        //     query: "",
-        //     asPath: "",
-        // }));
+    render(<Home />);
+    expect(screen.getByText('Sign in')).toBeInTheDocument();
+  });
 
-        render(<AllLists lists={[]} />);
-
-        screen.debug();
-
-        expect(screen.getByText("All Lists")).toBeInTheDocument();
+  it('when logged in', () => {
+    mockUseSession.mockReturnValue({
+      status: 'authenticated',
+      data: {
+        user: {
+          name: 'test',
+        },
+      },
     });
-})
+
+    // useRouter.mockImplementation(() => ({
+    //     route: "/all-lists",
+    //     pathname: "",
+    //     query: "",
+    //     asPath: "",
+    // }));
+
+    render(<AllLists lists={[]} />);
+
+    screen.debug();
+
+    expect(screen.getByText('All Lists')).toBeInTheDocument();
+  });
+});

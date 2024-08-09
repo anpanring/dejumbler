@@ -136,12 +136,12 @@ a:hover {
 }
 
 select,
-input[type="submit"] {
+input[type='submit'] {
   cursor: pointer;
 }
 
 select:hover,
-input[type="submit"]:hover {
+input[type='submit']:hover {
   background-color: var(--accent-color);
   color: white;
   cursor: pointer;

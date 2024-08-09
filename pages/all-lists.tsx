@@ -1,14 +1,14 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import dbConnect from "../lib/mongodb";
-import List from "../models/List";
-import Layout, { WindowSizeContext } from "../components/layout";
-import Snackbar from "../components/snackbar";
-import ListItem from "../components/list-item";
-import SearchBar from "../components/search";
-import Link from "next/link";
-import Head from "next/head";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "./api/auth/[...nextauth]";
+import { createContext, useContext, useEffect, useState } from 'react';
+import dbConnect from '@/lib/mongodb';
+import List from '@/models/List';
+import Layout, { WindowSizeContext } from '@/components/layout';
+import Snackbar from '@/components/snackbar';
+import ListItem from '@/components/list-item';
+import SearchBar from '@/components/search';
+import Link from 'next/link';
+import Head from 'next/head';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from './api/auth/[...nextauth]';
 
 import {
   Select,
@@ -16,7 +16,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../components/ui/select";
+} from '@/components/ui/select';
 
 import {
   Dialog,
@@ -27,22 +27,40 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../components/ui/dialog"
+} from '@/components/ui/dialog';
 
-
-import useWindowSize from "../lib/useWindowSize";
-import { useQueryParams, withDefault, StringParam, QueryParamConfig } from "use-query-params";
-import styles from "../styles/AllLists.module.css";
+import useWindowSize from '@/lib/useWindowSize';
+import {
+  useQueryParams,
+  withDefault,
+  StringParam,
+  QueryParamConfig,
+} from 'use-query-params';
+import styles from '@/styles/AllLists.module.css';
 
 const mobileWidth = 600;
 
-import { ListMetadata, ListData, CurrentListContextType } from "../types/dejumbler-types";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Textarea } from "../components/ui/textarea";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../components/ui/dropdown-menu";
-export const CurrentListContext = createContext<CurrentListContextType | null>(null);
+import {
+  ListMetadata,
+  ListData,
+  CurrentListContextType,
+} from '@/types/dejumbler-types';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../components/ui/dropdown-menu';
+export const CurrentListContext = createContext<CurrentListContextType | null>(
+  null,
+);
 
 export interface AllListsPageQueryParams {
   listId: string;
@@ -51,7 +69,9 @@ export interface AllListsPageQueryParams {
 interface ListBoxProps {
   data: ListData;
   setListData: React.Dispatch<React.SetStateAction<ListData[]>>;
-  setListModified: React.Dispatch<React.SetStateAction<"Deleted" | "Updated" | null>>;
+  setListModified: React.Dispatch<
+    React.SetStateAction<'Deleted' | 'Updated' | null>
+  >;
   selected: boolean;
 }
 
@@ -66,7 +86,10 @@ export const ListBox: React.FC<ListBoxProps> = ({
   if (!currentListContext) throw new Error('CurrentListContext is null');
   const { setCurrentList } = currentListContext;
 
-  const { width } = useContext(WindowSizeContext) ?? { width: 1200, height: 800 };
+  const { width } = useContext(WindowSizeContext) ?? {
+    width: 1200,
+    height: 800,
+  };
 
   // list name and description
   const [name, setName] = useState<string>(data.name);
@@ -77,7 +100,7 @@ export const ListBox: React.FC<ListBoxProps> = ({
   async function handleDelete(id: string) {
     try {
       const response = await fetch(`/api/delete-list?id=${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
       });
       const updatedData = await response.json();
       setListData(updatedData); // in order to update lists instantly
@@ -94,12 +117,12 @@ export const ListBox: React.FC<ListBoxProps> = ({
     const itemInfo = {
       listId: data._id,
       updatedName: e.target.name.value,
-      updatedDescription: e.target.description.value
-    }
+      updatedDescription: e.target.description.value,
+    };
 
     const fetchOptions = {
       method: 'POST',
-      headers: { "Content-Type": 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(itemInfo),
     };
 
@@ -107,31 +130,54 @@ export const ListBox: React.FC<ListBoxProps> = ({
     const updatedData = await res.json();
     setName(updatedData.name);
     setDescription(updatedData.description);
-    setListModified("Updated");
+    setListModified('Updated');
   }
 
   return (
-    <div key={data._id} className={`${styles.listInfo} ${selected && width >= mobileWidth ? styles.selected : ''}`}>
-      <p><Link
-        href={width < mobileWidth ? `/list/${data._id}` : "#"}
-        onClick={() => setCurrentList && setCurrentList({ id: data._id, name: data.name, type: data.type })} >
-        {name}
-      </Link> ({data.items.length}) - {data.type}</p>
+    <div
+      key={data._id}
+      className={`${styles.listInfo} ${
+        selected && width >= mobileWidth ? styles.selected : ''
+      }`}
+    >
+      <p>
+        <Link
+          href={width < mobileWidth ? `/list/${data._id}` : '#'}
+          onClick={() =>
+            setCurrentList &&
+            setCurrentList({ id: data._id, name: data.name, type: data.type })
+          }
+        >
+          {name}
+        </Link>{' '}
+        ({data.items.length}) - {data.type}
+      </p>
       {/* currentlistdata is changing later than selected */}
-      {data.description &&
+      {data.description && (
         <p className="font-cursive text-sm">
-          {expandDescription ?
-            <span>{description} <a onClick={() => setExpandDescription(false)}>Show less</a></span>
-            : description.length > 100 ?
-              <span>{description.slice(0, 100)}... <a onClick={() => setExpandDescription(true)}>Show more</a></span>
-              : description}
+          {expandDescription ? (
+            <span>
+              {description}{' '}
+              <a onClick={() => setExpandDescription(false)}>Show less</a>
+            </span>
+          ) : description.length > 100 ? (
+            <span>
+              {description.slice(0, 100)}...{' '}
+              <a onClick={() => setExpandDescription(true)}>Show more</a>
+            </span>
+          ) : (
+            description
+          )}
         </p>
-      }
+      )}
       {selected && <div className={styles.selected}></div>}
 
       {/* List options modal */}
       <DropdownMenu>
-        <DropdownMenuTrigger asChild className="self-end w-auto border-none hover:border-1 hover:bg-none">
+        <DropdownMenuTrigger
+          asChild
+          className="self-end w-auto border-none hover:border-1 hover:bg-none"
+        >
           <svg
             viewBox="0 0 16 16"
             xmlns="http://www.w3.org/2000/svg"
@@ -149,31 +195,50 @@ export const ListBox: React.FC<ListBoxProps> = ({
           {/* nested dialog */}
           <DropdownMenuGroup>
             <Dialog>
-              <DialogTrigger asChild className="self-end w-auto hover:border-1 hover:bg-none">
+              <DialogTrigger
+                asChild
+                className="self-end w-auto hover:border-1 hover:bg-none"
+              >
                 {/* <DropdownMenuItem> */}
-                  <p>Edit list</p>
+                <p>Edit list</p>
                 {/* </DropdownMenuItem> */}
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Edit Description</DialogTitle>
                   <DialogDescription>
-                    Make changes to your profile here. Click save when you are done.
+                    Make changes to your profile here. Click save when you are
+                    done.
                   </DialogDescription>
                 </DialogHeader>
-                <form className={`flex-column ${styles.form}`} onSubmit={handleListUpdate} method="POST">
+                <form
+                  className={`flex-column ${styles.form}`}
+                  onSubmit={handleListUpdate}
+                  method="POST"
+                >
                   <div className={styles.formRow}>
                     <Label className="mb-1">Name</Label>
-                    <Input className={styles.formInput} type="text" name="name" defaultValue={name} required />
+                    <Input
+                      className={styles.formInput}
+                      type="text"
+                      name="name"
+                      defaultValue={name}
+                      required
+                    />
                   </div>
                   <div className={styles.formRow}>
                     <Label className="mb-1">Description</Label>
-                    <Textarea name="description" defaultValue={description}></Textarea>
+                    <Textarea
+                      name="description"
+                      defaultValue={description}
+                    ></Textarea>
                   </div>
                   <DialogFooter>
                     <DialogClose>
                       <div className={styles.formRow}>
-                        <Button type="submit" variant="ghost">Save edits</Button>
+                        <Button type="submit" variant="ghost">
+                          Save edits
+                        </Button>
                       </div>
                     </DialogClose>
                   </DialogFooter>
@@ -182,26 +247,40 @@ export const ListBox: React.FC<ListBoxProps> = ({
             </Dialog>
 
             <Dialog>
-              <DialogTrigger asChild className="self-end w-auto hover:border-1 hover:bg-none">
+              <DialogTrigger
+                asChild
+                className="self-end w-auto hover:border-1 hover:bg-none"
+              >
                 {/* <DropdownMenuItem className="hover:bg-red-600 hover:text-white"> */}
-                  <p>Delete list</p>
+                <p>Delete list</p>
                 {/* </DropdownMenuItem> */}
                 {/* </Button> */}
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle><p>Are you sure you want to delete <u><strong>{name}</strong></u>?</p></DialogTitle>
+                  <DialogTitle>
+                    <p>
+                      Are you sure you want to delete{' '}
+                      <u>
+                        <strong>{name}</strong>
+                      </u>
+                      ?
+                    </p>
+                  </DialogTitle>
                   <DialogDescription>
                     This action cannot be undone.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-col gap-4 items-center text-center">
-                  <Button onClick={(e) => {
-                    e.preventDefault();
-                    handleDelete(data._id);
-                    setListModified("Deleted");
-                    if (selected) setCurrentList && setCurrentList(null);
-                  }} className="text-base w-[100%] text-red-600" variant="ghost"
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleDelete(data._id);
+                      setListModified('Deleted');
+                      if (selected) setCurrentList && setCurrentList(null);
+                    }}
+                    className="text-base w-[100%] text-red-600"
+                    variant="ghost"
                   >
                     Yes, delete list
                   </Button>
@@ -213,19 +292,20 @@ export const ListBox: React.FC<ListBoxProps> = ({
                   </DialogClose>
                 </div>
               </DialogContent>
-
             </Dialog>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
   );
-}
+};
 
 interface ListContainerProps {
   lists: ListData[];
   setListData: React.Dispatch<React.SetStateAction<ListData[]>>;
-  setListModified: React.Dispatch<React.SetStateAction<"Deleted" | "Updated" | null>>;
+  setListModified: React.Dispatch<
+    React.SetStateAction<'Deleted' | 'Updated' | null>
+  >;
 }
 
 // List Container
@@ -245,7 +325,7 @@ export const ListContainer: React.FC<ListContainerProps> = ({
   const [songAdded, setSongAdded] = useState(false);
   const [changeType, setChangeType] = useState('');
   const [loading, setLoading] = useState(false);
-  const [listView, setListView] = useState<"list" | "grid">('list');
+  const [listView, setListView] = useState<'list' | 'grid'>('list');
   const [sort, setSort] = useState('added');
 
   useEffect(() => {
@@ -259,7 +339,7 @@ export const ListContainer: React.FC<ListContainerProps> = ({
       };
       populateList();
     }
-    setSort("added");
+    setSort('added');
   }, [currentList]);
 
   useEffect(() => {
@@ -278,39 +358,56 @@ export const ListContainer: React.FC<ListContainerProps> = ({
         if (sort === 'name') return a.name.localeCompare(b.name);
         if (sort === 'director') return a.director.localeCompare(b.director);
         if (sort === 'author') return a.author.localeCompare(b.author);
-      })
+      });
       currentListDataCopy.items = newItems;
       setCurrentListData(currentListDataCopy);
     }
-  }, [sort])
+  }, [sort]);
 
   function handleDataChange(changedData, changeType: string) {
-    setCurrentListData(changedData);        // all list items
-    setSongAdded(true);                     // controls showing of snackbar
-    setChangeType(changeType);              // when adding/removing items
+    setCurrentListData(changedData); // all list items
+    setSongAdded(true); // controls showing of snackbar
+    setChangeType(changeType); // when adding/removing items
   }
 
   return (
-    <div className={`${styles.wideview} ${width < mobileWidth ? styles.mobileview : ''}`}>
+    <div
+      className={`${styles.wideview} ${
+        width < mobileWidth ? styles.mobileview : ''
+      }`}
+    >
       {/* Left */}
-      <section className={`${styles.allListsContainer} ${currentList == null || width < mobileWidth ? styles.wide : ''}`}>
+      <section
+        className={`${styles.allListsContainer} ${
+          currentList == null || width < mobileWidth ? styles.wide : ''
+        }`}
+      >
         {lists.map((list) => {
-          return <ListBox
-            key={list._id}
-            data={list}
-            setListData={setListData}
-            setListModified={setListModified}
-            selected={width >= mobileWidth && list._id == currentList?.id ? true : false}
-          />;
+          return (
+            <ListBox
+              key={list._id}
+              data={list}
+              setListData={setListData}
+              setListModified={setListModified}
+              selected={
+                width >= mobileWidth && list._id == currentList?.id
+                  ? true
+                  : false
+              }
+            />
+          );
         })}
       </section>
 
       {/* Right */}
       {/* {loading && <p>Loading...</p>} */}
-      {currentList && width >= mobileWidth && currentListData &&
+      {currentList && width >= mobileWidth && currentListData && (
         <section className={styles.currentListContainer} key={currentList.id}>
           <div className={styles.currentListTopBar}>
-            <SearchBar listContext={currentList} handleDataChange={handleDataChange} />
+            <SearchBar
+              listContext={currentList}
+              handleDataChange={handleDataChange}
+            />
             {/* Shuffle button */}
             {/* <button className={styles.closeCurrentList} onClick={() => {
                             const rand = Math.floor(Math.random() * currentListData.items.length);
@@ -318,8 +415,11 @@ export const ListContainer: React.FC<ListContainerProps> = ({
                             console.log(currentListData.items[rand].name);
                         }}>S</button> */}
             <div className={styles.controlButtons}>
-              {currentList.type === "Movies" &&
-                <Select onValueChange={(val) => setSort(val)} defaultValue="added">
+              {currentList.type === 'Movies' && (
+                <Select
+                  onValueChange={(val) => setSort(val)}
+                  defaultValue="added"
+                >
                   <SelectTrigger className="h-8">
                     <SelectValue />
                   </SelectTrigger>
@@ -328,9 +428,13 @@ export const ListContainer: React.FC<ListContainerProps> = ({
                     <SelectItem value="name">name</SelectItem>
                     <SelectItem value="director">director</SelectItem>
                   </SelectContent>
-                </Select>}
-              {currentList.type === "Music" &&
-                <Select onValueChange={(val) => setSort(val)} defaultValue="added">
+                </Select>
+              )}
+              {currentList.type === 'Music' && (
+                <Select
+                  onValueChange={(val) => setSort(val)}
+                  defaultValue="added"
+                >
                   <SelectTrigger className="h-8">
                     <SelectValue />
                   </SelectTrigger>
@@ -338,9 +442,13 @@ export const ListContainer: React.FC<ListContainerProps> = ({
                     <SelectItem value="added">added</SelectItem>
                     <SelectItem value="name">name</SelectItem>
                   </SelectContent>
-                </Select>}
-              {currentList.type === "Books" &&
-                <Select onValueChange={(val) => setSort(val)} defaultValue="added">
+                </Select>
+              )}
+              {currentList.type === 'Books' && (
+                <Select
+                  onValueChange={(val) => setSort(val)}
+                  defaultValue="added"
+                >
                   <SelectTrigger className="h-8">
                     <SelectValue />
                   </SelectTrigger>
@@ -349,40 +457,67 @@ export const ListContainer: React.FC<ListContainerProps> = ({
                     <SelectItem value="name">name</SelectItem>
                     <SelectItem value="author">author</SelectItem>
                   </SelectContent>
-                </Select>}
-              <Button className="h-8" onClick={() => setListView(listView === "grid" ? "list" : "grid")} variant="ghost">
-                {listView === "grid" ? "list" : "grid"} view
+                </Select>
+              )}
+              <Button
+                className="h-8"
+                onClick={() =>
+                  setListView(listView === 'grid' ? 'list' : 'grid')
+                }
+                variant="ghost"
+              >
+                {listView === 'grid' ? 'list' : 'grid'} view
               </Button>
-              <Button className="h-8" onClick={() => {
-                if (setCurrentList) setCurrentList(null);
-                setCurrentListData(null);
-              }} variant="destructive">X</Button>
+              <Button
+                className="h-8"
+                onClick={() => {
+                  if (setCurrentList) setCurrentList(null);
+                  setCurrentListData(null);
+                }}
+                variant="destructive"
+              >
+                X
+              </Button>
             </div>
           </div>
-          <div className={listView === "grid" ? styles.gridViewContainer : styles.listViewContainer}>
+          <div
+            className={
+              listView === 'grid'
+                ? styles.gridViewContainer
+                : styles.listViewContainer
+            }
+          >
             {currentListData.items.map((item) => {
-              return <ListItem
-                itemData={item}
-                listMetadata={currentList}
-                view={listView}
-                key={item._id}
-                handleDataChange={handleDataChange} // for editing and deleting
-              />
+              return (
+                <ListItem
+                  itemData={item}
+                  listMetadata={currentList}
+                  view={listView}
+                  key={item._id}
+                  handleDataChange={handleDataChange} // for editing and deleting
+                />
+              );
             })}
           </div>
 
-          {songAdded && <Snackbar message={`${changeType} ${currentListData.name}`} toggleShow={setSongAdded} />}
+          {songAdded && (
+            <Snackbar
+              message={`${changeType} ${currentListData.name}`}
+              toggleShow={setSongAdded}
+            />
+          )}
         </section>
-      }
+      )}
     </div>
-
   );
-}
+};
 
 // Main page for now
 export default function AllLists({ lists }) {
   // ALL LISTS
-  const [listData, setListData] = useState<ListData[]>(lists ? JSON.parse(lists) : []);
+  const [listData, setListData] = useState<ListData[]>(
+    lists ? JSON.parse(lists) : [],
+  );
 
   // state used for context!
   const [currentList, setCurrentList] = useState<ListMetadata | null>(null);
@@ -391,24 +526,27 @@ export default function AllLists({ lists }) {
   const [displayType, setDisplayType] = useState('All');
 
   // control snackbars
-  const [listModified, setListModified] = useState<"Deleted" | "Updated" | null>(null);
+  const [listModified, setListModified] = useState<
+    'Deleted' | 'Updated' | null
+  >(null);
 
   // runs every time filter type changes
   useEffect(() => {
     const filtered = JSON.parse(lists).filter((list) => {
-      if (type == "Any") return true;
+      if (type == 'Any') return true;
       return list.type == type;
     });
     setListData(filtered);
   }, [type, lists]);
 
   function toggleType(type) {
-    if (type != "Any" && (currentList && type != currentList.type)) setCurrentList(null);
+    if (type != 'Any' && currentList && type != currentList.type)
+      setCurrentList(null);
     setType(type);
-    if (type == "Any") setDisplayType("All");
-    if (type == "Movies") setDisplayType("Movie");
-    if (type == "Music") setDisplayType("Music");
-    if (type == "Books") setDisplayType("Book");
+    if (type == 'Any') setDisplayType('All');
+    if (type == 'Movies') setDisplayType('Movie');
+    if (type == 'Music') setDisplayType('Music');
+    if (type == 'Books') setDisplayType('Book');
   }
 
   return (
@@ -418,7 +556,9 @@ export default function AllLists({ lists }) {
       </Head>
 
       <div className="flex items-center justify-between">
-        <h2>{displayType} Lists ({listData.length})</h2>
+        <h2>
+          {displayType} Lists ({listData.length})
+        </h2>
         <div>
           <Select onValueChange={toggleType} defaultValue="Any">
             <SelectTrigger>
@@ -452,7 +592,12 @@ export default function AllLists({ lists }) {
       </CurrentListContext.Provider>
 
       {/* Snackbar */}
-      {listModified && <Snackbar message={`${listModified} list`} toggleShow={setListModified} />}
+      {listModified && (
+        <Snackbar
+          message={`${listModified} list`}
+          toggleShow={setListModified}
+        />
+      )}
     </Layout>
   );
 }
@@ -467,7 +612,7 @@ export async function getServerSideProps(context) {
         destination: '/',
         permanent: false,
       },
-    }
+    };
   }
 
   const { user } = session;
@@ -480,7 +625,7 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      lists: JSON.stringify(result)
-    }
-  }
+      lists: JSON.stringify(result),
+    },
+  };
 }
