@@ -9,12 +9,14 @@ import { useEffect } from 'react';
 
 import { QueryParamProvider } from 'use-query-params';
 import { NextAdapter } from 'next-query-params';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }) {
   const getLayout = Component.getLayout ?? ((page) => page);
+  const queryClient = new QueryClient();
 
   // runs on every page!!
   useEffect(() => {
@@ -30,11 +32,13 @@ export default function App({
 
   return (
     <SessionProvider session={session}>
-      <QueryParamProvider adapter={NextAdapter}>
-        <Component {...pageProps} />
-        <Analytics />
-        <SpeedInsights />
-      </QueryParamProvider>
+      <QueryClientProvider client={queryClient}>
+        <QueryParamProvider adapter={NextAdapter}>
+          <Component {...pageProps} />
+          <Analytics />
+          <SpeedInsights />
+        </QueryParamProvider>
+      </QueryClientProvider>
     </SessionProvider>
   );
 }

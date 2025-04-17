@@ -1,8 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState, useRef, useContext } from 'react';
-
 import styles from './search.module.css';
-
 import { CurrentListContext } from '../pages/all-lists';
 import { ListMetadata } from '../types/dejumbler-types';
 import { Input } from './ui/input';
@@ -13,6 +10,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import { toast } from './ui/use-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+function AddButton({ mutate, data, currentList, listContext, name }) {
+  return (
+    <button
+      className={styles.addButton}
+      onClick={() => {
+        console.log(data, currentList?.id, listContext?.id, name);
+        mutate({
+          data: data,
+          currentList: currentList ? currentList.id : listContext.id,
+          name: name,
+        });
+      }}
+    >
+      +
+    </button>
+  );
+}
 
 function SearchResult({
   data,
@@ -21,13 +38,20 @@ function SearchResult({
 }: {
   data: any;
   listContext: ListMetadata;
-  handleDataChange: (data: any, message: string) => void;
+  handleDataChange: (updatedData) => void;
 }) {
   const { currentList } = useContext(CurrentListContext) ?? {};
   const titleScroll = useRef<HTMLParagraphElement>(null);
 
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: addToList,
+  });
+
+  // different search results for each type
   switch (currentList ? currentList.type : listContext.type) {
     case 'Music':
+      // process data
       const { artists, images, type, name, album } = data;
       const artistNames = artists ? artists.map((artist) => artist.name) : [];
       const imageURLs = images
@@ -37,6 +61,7 @@ function SearchResult({
       return (
         <div className={styles.searchResultWrapper}>
           <div className={styles.searchResultInfo}>
+            {/* image */}
             {imageURLs[0] ? (
               <img
                 className={styles.searchResultImage}
@@ -51,6 +76,8 @@ function SearchResult({
                 <p>{name}</p>
               </div>
             )}
+
+            {/* text */}
             <div className={styles.searchResultText}>
               <p
                 className={styles.title}
@@ -73,21 +100,18 @@ function SearchResult({
               </p>
             </div>
           </div>
-          <button
-            className={styles.addButton}
-            onClick={() =>
-              addToList(
-                data,
-                currentList ? currentList.id : listContext.id,
-                name,
-              )
-            }
-          >
-            +
-          </button>
+
+          <AddButton
+            mutate={mutate}
+            data={data}
+            currentList={currentList}
+            listContext={listContext}
+            name={name}
+          />
         </div>
       );
     case 'Movies':
+      // process data
       const { title, poster_path, overview, director, year } = data;
       data.type = 'movie';
 
@@ -116,18 +140,13 @@ function SearchResult({
               <p className={styles.type}>{overview.slice(0, 120)}...</p>
             </div>
           </div>
-          <button
-            className={styles.addButton}
-            onClick={() =>
-              addToList(
-                data,
-                currentList ? currentList.id : listContext.id,
-                title,
-              )
-            }
-          >
-            +
-          </button>
+          <AddButton
+            mutate={mutate}
+            data={data}
+            currentList={currentList}
+            listContext={listContext}
+            name={title}
+          />
         </div>
       );
     case 'Books':
@@ -169,26 +188,22 @@ function SearchResult({
               )}
             </div>
           </div>
-          <button
-            className={styles.addButton}
-            onClick={() =>
-              addToList(
-                data,
-                currentList ? currentList.id : listContext.id,
-                bookTitle,
-              )
-            }
-          >
-            +
-          </button>
+          <AddButton
+            mutate={addToList}
+            data={data}
+            currentList={currentList}
+            listContext={listContext}
+            name={bookTitle}
+          />
         </div>
       );
   }
 
-  async function addToList(data, listId, itemName) {
+  async function addToList({ data, listId, itemName }) {
     data.listId = listId;
     data = JSON.stringify(data);
 
+    console.log(data, listId, itemName);
     const fetchOptions = {
       method: 'POST',
       headers: {
@@ -199,17 +214,24 @@ function SearchResult({
 
     const res = await fetch('/api/add-item', fetchOptions);
     const updatedData = await res.json();
-    handleDataChange(updatedData, itemName + ' added to');
+
+    handleDataChange(updatedData);
+    toast({
+      title: itemName + ' added',
+    });
+    return updatedData;
   }
 }
 
-function SearchBar({
+interface SearchBarProps {
+  listContext: ListMetadata;
+  handleDataChange: () => void;
+}
+
+export const SearchBar: React.FC<SearchBarProps> = ({
   listContext,
   handleDataChange,
-}: {
-  listContext: ListMetadata;
-  handleDataChange: (data: any, message: string) => void;
-}) {
+}) => {
   const [results, setResults] = useState<Object[] | null>(null);
   const [musicType, setMusicType] = useState('all');
   const [query, setQuery] = useState('');
@@ -217,18 +239,23 @@ function SearchBar({
 
   const formRef = useRef<HTMLInputElement>(null);
 
+  // fetch search results
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
 
     if (query && query.trim() !== '') {
+      // construct url
       let url: string;
       if (listContext.type == 'Music')
         url = `/api/spot/search?q=${query}&type=${musicType}`;
       else if (listContext.type == 'Movies')
         url = `/api/search?q=${query}&type=movies`;
       else url = `/api/search?q=${query}&type=books`;
+
       setSearching(true);
+
+      // fetch data
       fetch(url, { signal })
         .then((res) => {
           if (!res.ok) throw new Error('Error fetching data');
@@ -254,21 +281,12 @@ function SearchBar({
   }, [query, musicType, listContext.type]);
 
   return (
-    <div>
+    <div className="flex-col">
       {/* Search bar */}
-      <form className={styles.searchBar}>
-        {/* <Input
-            className={styles.searchInput}
-            onChange={(e) => setQuery(e.target.value)}
-            type="search"
-            name="value"
-            placeholder={`Search ${listContext.type.toLowerCase()} to add...`}
-            ref={formRef}
-            required
-        /> */}
+      <form className="flex gap-2 mb-3">
         <Input
           // className={styles.searchInput}
-          className="h-8 w-[18em]"
+          className="h-8 w-[16rem]"
           onChange={(e) => setQuery(e.target.value)}
           type="search"
           name="value"
@@ -364,6 +382,4 @@ function SearchBar({
       )}
     </div>
   );
-}
-
-export default SearchBar;
+};

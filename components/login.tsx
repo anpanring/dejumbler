@@ -10,6 +10,8 @@ import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 
 import { useRouter } from 'next/router';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
 
 enum Mode {
   LOGGED_OUT,
@@ -116,22 +118,9 @@ export default function Login() {
     <div className={styles.loginContainer}>
       {mode === Mode.LOGGED_OUT && (
         <div className={styles.loginOptions}>
-          <button
-            className={styles.linkButton}
-            onClick={() => setMode(Mode.SIGN_IN)}
-          >
-            Sign in
-          </button>
-          <p>or</p>
-          <button
-            className={styles.linkButton}
-            onClick={() => setMode(Mode.REGISTER)}
-          >
-            Register
-          </button>
-          <p>or</p>
-          <button
-            className={styles.linkButton}
+          <Button onClick={() => setMode(Mode.SIGN_IN)}>Sign in</Button>
+          <Button onClick={() => setMode(Mode.REGISTER)}>Register</Button>
+          <Button
             onClick={() =>
               signIn('credentials', {
                 username: 'user',
@@ -141,22 +130,19 @@ export default function Login() {
             }
           >
             Demo
-          </button>
+          </Button>
         </div>
       )}
 
       {mode === Mode.SIGN_IN && (
         <div className={styles.subLoginContainer}>
-          <button
-            className={`${styles.linkButton} ${styles.backButton}`}
-            onClick={back}
-          >
+          <Button onClick={back} variant="link" className="w-auto mb-2">
             ← Back
-          </button>
+          </Button>
           <form className={styles.form} ref={loginRef} onSubmit={handleSubmit}>
-            <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+            <Input name="csrfToken" type="hidden" defaultValue={csrfToken} />
             <div className={styles.formSub}>
-              <input
+              <Input
                 className={styles.box}
                 name="username"
                 type="text"
@@ -169,7 +155,7 @@ export default function Login() {
               />
             </div>
             <div className={styles.formSub}>
-              <input
+              <Input
                 className={styles.box}
                 name="password"
                 type="password"
@@ -181,10 +167,10 @@ export default function Login() {
                 }}
               />
             </div>
-            <button className={styles.box} type="submit">
+            <Button className={styles.box} type="submit">
               Sign in
-            </button>
-            {/* <button type="submit" onClick={() => signIn("google")}>Sign in w Google</button> */}
+            </Button>
+            {/* <Button type="submit" onClick={() => signIn("google")}>Sign in w Google</Button> */}
             {error !== '' && <p className={styles.error}>{error}</p>}
           </form>
         </div>
@@ -192,20 +178,17 @@ export default function Login() {
 
       {mode === Mode.REGISTER && (
         <div className={styles.subLoginContainer}>
-          <button
-            className={`${styles.linkButton} ${styles.backButton}`}
-            onClick={back}
-          >
+          <Button onClick={back} className="mb-2">
             ← Back
-          </button>
+          </Button>
           <form
             className={styles.form}
             ref={loginRef}
             onSubmit={handleRegister}
           >
-            <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+            <Input name="csrfToken" type="hidden" defaultValue={csrfToken} />
             <div className={styles.formSub}>
-              <input
+              <Input
                 className={styles.box}
                 name="username"
                 type="text"
@@ -218,7 +201,7 @@ export default function Login() {
               />
             </div>
             <div className={styles.formSub}>
-              <input
+              <Input
                 className={styles.box}
                 name="password"
                 type="password"
@@ -230,9 +213,9 @@ export default function Login() {
                 }}
               />
             </div>
-            <button className={styles.box} type="submit">
+            <Button className={styles.box} type="submit">
               Register
-            </button>
+            </Button>
             {error !== '' && <p className={styles.error}>{error}</p>}
           </form>
         </div>

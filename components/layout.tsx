@@ -2,16 +2,18 @@ import { createContext, Suspense } from 'react';
 
 import Head from 'next/head';
 
-import Loading from './loading';
-import Navbar from './navbar';
+import Loading from '@/components/loading';
+import Navbar from '@/components/navbar';
 
-import styles from './layout.module.css';
+import styles from '@/components/layout.module.css';
 
-import useWindowSize from '../lib/useWindowSize';
-import { WindowContextType } from '../types/dejumbler-types';
+import useWindowSize from '@/lib/useWindowSize';
+import { WindowContextType } from '@/types/dejumbler-types';
+import { Toaster } from '@/components/ui/toaster';
 export const WindowSizeContext = createContext<WindowContextType | null>(null);
 
 export const siteTitle = 'Dejumbler';
+
 export default function Layout({ children }) {
   const [width, height] = useWindowSize();
 
@@ -45,6 +47,7 @@ export default function Layout({ children }) {
           <Suspense fallback={<Loading />}>{children}</Suspense>
         </div>
       </div>
+      <Toaster />
     </WindowSizeContext.Provider>
   );
 }

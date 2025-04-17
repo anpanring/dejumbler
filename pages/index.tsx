@@ -9,6 +9,7 @@ import textLogo from '@/public/images/dejumbler-text-logo.png';
 import styles from '@/styles/Home.module.css';
 
 import { useSession } from 'next-auth/react';
+import Loading from '@/components/loading';
 
 export default function Home() {
   // check session (client-side)
@@ -33,20 +34,7 @@ export default function Home() {
             content="n5dZdc1QljJ4k39BSCkZAbhnJS5CjIdAo6OHVqD_c-Y"
           />
         </Head>
-        <div className={styles.loadingContainer}>
-          <svg
-            className={styles.loadingLogo}
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 283.5 283.5"
-          >
-            <path
-              d="M0 0v283.5h283.5V0H0Zm221.55 108.55h-16v-40h16v40Z"
-              style={{
-                strokeWidth: 0,
-              }}
-            />
-          </svg>
-        </div>
+        <Loading />
       </>
     );
   }
@@ -105,20 +93,7 @@ export default function Home() {
             content="n5dZdc1QljJ4k39BSCkZAbhnJS5CjIdAo6OHVqD_c-Y"
           />
         </Head>
-        <div className={styles.loadingContainer}>
-          <svg
-            className={styles.loadingLogo}
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 283.5 283.5"
-          >
-            <path
-              d="M0 0v283.5h283.5V0H0Zm221.55 108.55h-16v-40h16v40Z"
-              style={{
-                strokeWidth: 0,
-              }}
-            />
-          </svg>
-        </div>
+        <Loading />
       </>
       // <Layout>
       //     <Head>

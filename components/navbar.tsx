@@ -219,8 +219,8 @@ export default function Navbar({ changeMode }) {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Music">Music</SelectItem>
-                    <SelectItem value="Movies">Books</SelectItem>
-                    <SelectItem value="Books">Movies</SelectItem>
+                    <SelectItem value="Movies">Movies</SelectItem>
+                    <SelectItem value="Books">Books</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

@@ -163,18 +163,6 @@ button {
   color: var(--main-text-color);
 }
 
-textarea {
-  background-color: var(--background-color);
-  border: solid 1px var(--main-text-color);
-  border-radius: 0;
-  color: var(--main-text-color);
-  font-size: 1em;
-  font-family: 'Epilogue', sans-serif;
-  height: 6em;
-  padding: 0.25em;
-  resize: vertical;
-}
-
 button:hover {
   background-color: var(--accent-color);
   color: white;

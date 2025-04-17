@@ -97,26 +97,14 @@
   .notesForm {
     display: flex;
     gap: 0.5em;
-    /* align-items: flex-end; */
     max-width: fit-content;
   }
 }
 
 .notesForm {
+  display: flex;
   flex-direction: column;
   gap: 0.25em;
-  width: 100%;
-}
-
-.notesInput {
-  background-color: var(--background-color);
-  border: solid 1px var(--main-text-color);
-  color: var(--main-text-color);
-  font-family: 'Epilogue', sans-serif;
-  font-size: 1em;
-  line-height: 1.5;
-  margin-top: 0.5em;
-  box-sizing: border-box;
   width: 100%;
 }
 

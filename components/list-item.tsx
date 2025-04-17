@@ -5,6 +5,9 @@ import styles from '../styles/ListPage.module.css';
 import { ListMetadata } from '../types/dejumbler-types';
 import { deleteIcon, editIcon } from './icons';
 import { Button } from './ui/button';
+import { Textarea } from './ui/textarea';
+import { toast } from './ui/use-toast';
+import { useQueryClient } from '@tanstack/react-query';
 
 function ListItem({
   itemData,
@@ -20,24 +23,24 @@ function ListItem({
   const [notes, setNotes] = useState(itemData.notes);
   const [showNotesForm, setShowNotesForm] = useState(false);
 
-  async function handleDelete() {
-    const fetchOptions = {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      // body: JSON.stringify({
-      //     itemId: itemData._id,
-      //     listId: listMetadata.id
-      // }),
-    };
+  const queryClient = useQueryClient();
 
+  async function handleDelete() {
     const response = await fetch(
       `/api/remove-item?list=${listMetadata.id}&item=${itemData._id}`,
-      fetchOptions,
+      {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      },
     );
     const updatedList = await response.json();
 
     // set state in parent component
     handleDataChange(updatedList, itemData.name + ' removed from ');
+    queryClient.setQueryData(['get-list', listMetadata.id], updatedList);
+    toast({
+      title: itemData.name + ' deleted',
+    });
   }
 
   async function handleNoteChange(e) {
@@ -118,11 +121,7 @@ function ListItem({
 
         {showNotesForm ? (
           <form onSubmit={handleNoteChange} className={styles.notesForm}>
-            <textarea
-              name="notes"
-              defaultValue={notes}
-              className={styles.notesInput}
-            />
+            <Textarea name="notes" defaultValue={notes} className="mt-2" />
             <div className={styles.notesEditButtons}>
               <Button className={styles.button} type="submit">
                 Save
