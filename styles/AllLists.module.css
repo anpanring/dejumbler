@@ -17,6 +17,7 @@
   width: 30%;
   overflow-y: scroll;
   padding-top: 1em;
+  transition: width 0.2s;
 }
 
 .allListsContainer.wide {
