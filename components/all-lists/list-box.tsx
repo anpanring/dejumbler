@@ -239,6 +239,7 @@ export const ListBox: React.FC<ListBoxProps> = ({
         <DropdownMenu>
           <DropdownMenuTrigger
             asChild
+            data-testid="dialog-menu"
             className="self-end w-auto border-none hover:border-1 hover:bg-none"
           >
             <svg
