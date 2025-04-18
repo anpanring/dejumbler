@@ -29,7 +29,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         return (
           <ListBox
             key={list._id}
-            data={list}
+            listData={list}
             setListData={setListData}
             selected={
               width >= mobileWidth && list._id == currentList?.id ? true : false
