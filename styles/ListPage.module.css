@@ -1,157 +1,144 @@
 /* Save and edit buttons */
 .button {
-    background-color: var(--background-color);
-    color: var(--main-text-color);
-    width: auto;
-    height: 1.5em;
-    cursor: pointer;
+  background-color: var(--background-color);
+  color: var(--main-text-color);
+  width: auto;
+  height: 1.5em;
+  cursor: pointer;
 }
 
 .button:hover {
-    background-color: var(--accent-color);
-    color: white;
+  background-color: var(--accent-color);
+  color: white;
 }
 
 .itemsContainer {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding-bottom: 1em;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-bottom: 1em;
 }
 
 .editButton {
-    /* height: 20px;
+  /* height: 20px;
     width: 20px; */
-    cursor: pointer;
-    display: flex;
-    font-size: 0.75em;
-    align-items: center;
+  cursor: pointer;
+  display: flex;
+  font-size: 0.75em;
+  align-items: center;
 }
 
 .editButton svg {
-    fill: var(--main-text-color);
+  fill: var(--main-text-color);
 }
 
 .editButton:hover svg {
-    fill: var(--accent-color);
+  fill: var(--accent-color);
 }
 
 .deleteButton {
-    /* height: 20px;
+  /* height: 20px;
     width: 20px; */
-    cursor: pointer;
-    display: flex;
-    font-size: 0.75em;
-    align-items: center;
+  cursor: pointer;
+  display: flex;
+  font-size: 0.75em;
+  align-items: center;
 }
 
 .deleteButton svg {
-    fill: var(--main-text-color);
+  fill: var(--main-text-color);
 }
 
 .deleteButton:hover svg {
-    fill: red;
+  fill: red;
 }
 
 /* Each list item */
 .listItem {
-    display: flex;
-    align-items: center;
-    border: solid var(--main-text-color) 1px;
-    /* padding: 10px 10px 10px 10px; */
+  display: flex;
+  align-items: center;
+  border: solid var(--main-text-color) 1px;
+  /* padding: 10px 10px 10px 10px; */
 }
 
 .listItemArt {
-    margin-left: 1em;
-    width: 50px;
-    height: auto;
+  margin-left: 1em;
+  width: 50px;
+  height: auto;
 }
 
 .listItemText {
-    display: flex;
-    flex-direction: column;
-    margin: 0.75em;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0.75em;
+  width: 100%;
 }
 
 .listItemType {
-    font-size: 0.75em;
-    color: grey;
+  font-size: 0.75em;
+  color: grey;
 }
 
 .listItemActions {
-    display: flex;
-    flex-direction: row;
-    gap: 1em;
-    margin-top: 0.5em;
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  margin-top: 0.5em;
 }
 
 .listItemNotes {
-    font-style: italic;
-    font-size: 12px;
-    margin-top: 0.5em;
+  font-style: italic;
+  font-size: 12px;
+  margin-top: 0.5em;
 }
 
 @media (width >= 600px) {
-    .notesForm {
-        display: flex;
-        gap: 0.5em;
-        /* align-items: flex-end; */
-        max-width: fit-content;
-    }
+  .notesForm {
+    display: flex;
+    gap: 0.5em;
+    max-width: fit-content;
+  }
 }
 
 .notesForm {
-    flex-direction: column;
-    gap: 0.25em;
-    width: 100%;
-}
-
-.notesInput {
-    background-color: var(--background-color);
-    border: solid 1px var(--main-text-color);
-    color: var(--main-text-color);
-    font-family: 'Epilogue', sans-serif;
-    font-size: 1em;
-    line-height: 1.5;
-    margin-top: 0.5em;
-    box-sizing: border-box;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  width: 100%;
 }
 
 .notesEditButtons {
-    display: flex;
-    flex-direction: row;
-    gap: 0.25em;
+  display: flex;
+  flex-direction: row;
+  gap: 0.25em;
 }
 
 @media (width < 600px) {
-    /* .notesForm {
+  /* .notesForm {
         flex-direction: column;
         gap: 0.25em;
     } */
 
-    .notesEditButtons {
-        display: flex;
-        flex-direction: row;
-        gap: 0.25em;
-    }
+  .notesEditButtons {
+    display: flex;
+    flex-direction: row;
+    gap: 0.25em;
+  }
 }
-
 
 /* List info */
 .listInfo {
-    margin: 1.5em 0 1em;
+  margin: 1.5em 0 1em;
 }
 
 .listTitle {
-    margin: 0;
-    line-height: 1.2em;
+  margin: 0;
+  line-height: 1.2em;
 }
 
 .listType {
-    margin: 0;
-    font-size: 15px;
-    color: grey;
+  margin: 0;
+  font-size: 15px;
+  color: grey;
 }

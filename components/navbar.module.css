@@ -1,0 +1,163 @@
+/* Containers */
+.navbarBack {
+  background-color: var(--background-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0.5em 1em 0;
+}
+
+.navbarContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+/* Icons */
+.smallLogo {
+  width: 42px;
+  height: 42px;
+  fill: var(--main-text-color);
+  cursor: pointer;
+}
+
+.icon {
+  fill: var(--main-text-color);
+  border: solid 1px var(--accent-color);
+  height: 40px;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.icon:hover {
+  background-color: var(--accent-color);
+  fill: var(--background-color);
+}
+
+/* New list modal */
+.form {
+  justify-content: space-between;
+  gap: 1em;
+  height: 100%;
+}
+
+.formTypeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.formRow {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: space-between;
+}
+
+.formNameInput {
+  background-color: var(--background-color);
+  font-size: 1em;
+  flex-grow: 1;
+  padding: 0.25em;
+}
+
+.formDescriptionBox {
+  flex-grow: 1;
+  font-size: 1em;
+}
+
+.formTypeSelect {
+  height: auto;
+  font-size: 1em;
+}
+
+.formCloseButton {
+  width: 2em;
+  height: 2em;
+  position: absolute;
+  top: -1em;
+  right: -1em;
+  text-align: center;
+}
+
+.formCloseButton:hover {
+  background-color: red;
+  color: var(--background-color);
+}
+
+.formSubmitButton {
+  font-size: 1em;
+  width: 90%;
+  height: 2em;
+  margin: auto;
+}
+
+/* Profile modal */
+.loggedInWrapper {
+  align-items: center;
+  gap: 1em;
+}
+
+.signoutButton {
+  font-size: 1em;
+  width: 90%;
+  height: 2em;
+  margin: auto;
+  color: red;
+}
+
+.signoutButton:hover {
+  background-color: red;
+  color: var(--background-color);
+}
+
+/* Settings modal */
+.settingsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.colorPicker {
+  display: flex;
+  gap: 0.25em;
+}
+
+.colorSquare {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin: 2px;
+  border: solid 1px var(--background-color);
+  text-align: center;
+}
+
+.colorSquare:hover {
+  border: solid 1px var(--main-text-color);
+}
+
+.selectedColor {
+  border: solid 1px var(--main-text-color);
+}
+
+.darkMode {
+  display: flex;
+  gap: 1em;
+}
+
+.toggleModeButton {
+  height: 2em;
+}

@@ -1,109 +1,70 @@
-import { useState } from 'react';
-
+import { useMemo } from 'react';
 import Head from 'next/head';
+import Layout from '@/components/layout';
+import ListItem from '@/components/list-item';
+import { SearchBar } from '@/components/search';
+import styles from '@/styles/ListPage.module.css';
+import { ListData } from '@/types/dejumbler-types';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
+import { toast } from '@/components/ui/use-toast';
 
-import Layout from '../../components/Layout/layout';
-import ListItem from '../../components/list-item';
-import SearchBar from '../../components/Search/search';
-import Snackbar from '../../components/Snackbar/snackbar';
+export default function ListPage() {
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
-import dbConnect from '../../lib/mongodb';
-import List from '../../models/List';
+  const { data } = useQuery({
+    queryKey: ['get-list', router.query.id],
+    queryFn: (): Promise<ListData> =>
+      fetch(`/api/get-list?id=${router.query.id}`).then((res) => res.json()),
+  });
 
-import styles from '../../styles/ListPage.module.css';
+  const listMetadata = useMemo(
+    () => ({
+      id: router.query.id as string,
+      name: data?.name || '',
+      type: data?.type || 'Music',
+    }),
+    [router.query.id, data],
+  );
 
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../api/auth/[...nextauth]';
+  function handleDataChange() {
+    queryClient.invalidateQueries({ queryKey: ['get-list', router.query.id] });
+    toast({
+      title: 'successful',
+    });
+  }
 
-import { ListMetadata, ListData } from '../../types/dejumbler-types';
-import ListsLayout from '../../components/lists-layout';
+  return (
+    <Layout>
+      <Head>
+        <title>{data?.name}</title>
+      </Head>
 
-export default function ListPage({ listData, listMetadata }: {
-    listData: string,
-    listMetadata: ListMetadata
-}) {
-    const [data, setData] = useState<ListData>(JSON.parse(listData));
-    const [songAdded, setSongAdded] = useState(false);
-    const [changeType, setChangeType] = useState('');
+      <div className={styles.listInfo}>
+        <h2 className={styles.listTitle}>{data?.name} </h2>
+        <h3 className={styles.listType}>{data?.type} </h3>
+      </div>
 
-    function handleDataChange(changedData, changeType) {
-        setData(changedData);               // all list items
-        setSongAdded(true);                 // controls showing of snackbar
-        setChangeType(changeType);          // when adding/removing items
-    }
+      {/* still need to pass in listId and listType b/c can't carry context between pages */}
+      <SearchBar
+        listContext={listMetadata}
+        handleDataChange={handleDataChange}
+      />
 
-    return (
-        <Layout>
-            {/* <ListsLayout> */}
-                <Head>
-                    <title>{data.name}</title>
-                </Head>
-
-                <div className={styles.listInfo}>
-                    <h2 className={styles.listTitle}>{data.name} </h2>
-                    <h3 className={styles.listType}>{data.type} </h3>
-                </div>
-
-                {/* still need to pass in listId and listType b/c can't carry context between pages */}
-                <SearchBar listContext={listMetadata} handleDataChange={handleDataChange} />
-
-                <div className={styles.itemsContainer}>
-                    {
-                        data.items.map((item) => {
-                            return (
-                                <ListItem
-                                    itemData={item}
-                                    listMetadata={listMetadata}
-                                    view="list"
-                                    key={item.artURL || item.name}
-                                    handleDataChange={handleDataChange}
-                                />
-                            );
-                        })
-                    }
-                </div>
-                {songAdded && <Snackbar message={`${changeType} ${data.name}`} toggleShow={setSongAdded} />}
-            {/* </ListsLayout> */}
-        </Layout>
-    )
-}
-
-export async function getServerSideProps(context) {
-    const session = await getServerSession(context.req, context.res, authOptions);
-
-    // redirect anyone not logged in
-    if (!session) {
-        return {
-            redirect: {
-                destination: '/',
-                permanent: false,
-            },
-        }
-    }
-
-    // fetch list
-    await dbConnect();
-    const data = await List.findById(context.params.id);
-
-    // verify list belongs to user
-    if (session.user.id !== data.user.toString()) {
-        return {
-            redirect: {
-                destination: '/',
-                permanent: false,
-            },
-        }
-    }
-
-    const listData = JSON.stringify(data);
-    return {
-        props: {
-            listData,
-            listMetadata: {
-                id: context.params.id,
-                name: data.name,
-                type: data.type,
-            }
-        }
-    };
+      <div className={styles.itemsContainer}>
+        {data?.items.map((item) => {
+          return (
+            <ListItem
+              itemData={item}
+              listMetadata={listMetadata}
+              view="list"
+              key={item.artURL || item.name}
+              handleDataChange={handleDataChange}
+            />
+          );
+        })}
+      </div>
+    </Layout>
+  );
 }

@@ -1,0 +1,51 @@
+.loginContainer {
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1em;
+}
+
+.loginOptions {
+  display: flex;
+  gap: 0.5em;
+}
+
+/* For login and register forms */
+.subLoginContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.formSub {
+  display: flex;
+  flex-direction: column;
+}
+
+/* For input and buttons */
+.box {
+  height: 2em;
+  font-size: 1em;
+}
+
+.linkButton {
+  border: none;
+  padding: 0;
+  font-size: 1em;
+  width: fit-content;
+  height: 1.5em;
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+.backButton {
+  margin-bottom: 1em;
+}

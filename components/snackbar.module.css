@@ -1,0 +1,21 @@
+.snack {
+  position: fixed;
+  border: 1px solid var(--accent-color);
+  padding: 1em 1em 1em;
+  top: 92%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--background-color);
+  z-index: 99;
+  width: fit-content;
+}
+
+@media (width < 600px) {
+  .snack {
+    width: 80%;
+  }
+}
+
+.message {
+  text-align: center;
+}
