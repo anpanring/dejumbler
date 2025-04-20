@@ -17,8 +17,6 @@ export default async function handler(
 
   if (!session) res.status(401).send('not authorized');
   else {
-    const { user } = session;
-
     try {
       await dbConnect();
       const data = await List.findById(query.id);
