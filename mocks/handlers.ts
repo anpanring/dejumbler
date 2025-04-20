@@ -1,22 +1,9 @@
 import { http, HttpResponse } from 'msw';
-
-const mockListItem = {
-  __t: 'Album',
-  _id: '664e3b7dc2899c9861398ff2',
-  artURL: 'https://i.scdn.co/image/ab67616d0000b2732590c2d33bd70c8bf059591b',
-  artist: 'Haley Heynderickx',
-  name: 'I Need to Start a Garden',
-  status: 'todo',
-};
-
-const mockListItem2 = {
-  __t: 'Album',
-  _id: '664e3ba4c2899c98613990a8',
-  artURL: 'https://i.scdn.co/image/ab67616d0000b27319112975fac887f75c0b095b',
-  artist: 'Mort Garson',
-  name: "Mother Earth's Plantasia",
-  status: 'todo',
-};
+import {
+  mockListItem,
+  mockListItem2,
+  mockSearchResults,
+} from './testing-utils';
 
 export const handlers = [
   http.get('/api/get-list', ({ request, params, cookies }) => {
@@ -32,5 +19,9 @@ export const handlers = [
       items: [mockListItem, mockListItem2],
       __v: 0,
     });
+  }),
+
+  http.get('/api/search', ({ request, params, cookies }) => {
+    return HttpResponse.json(mockSearchResults);
   }),
 ];
