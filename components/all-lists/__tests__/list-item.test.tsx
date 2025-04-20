@@ -1,17 +1,12 @@
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-
 import ListItem from '../../list-item';
 import React from 'react';
 import { CurrentListContext } from '@/pages/all-lists';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { mockListMetadata } from 'mocks/testing-utils';
 
 const mockSetCurrentList = jest.fn();
-const mockListMetadata = {
-  id: '12345',
-  name: 'Test List',
-  type: 'Movies' as 'Movies',
-};
 const queryClient = new QueryClient();
 
 describe('ListItem', () => {

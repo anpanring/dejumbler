@@ -2,27 +2,19 @@ import '@testing-library/jest-dom';
 import {
   render,
   screen,
-  fireEvent,
   waitFor,
   renderHook,
 } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-
 import { ListContainer } from '../list-container';
 import React from 'react';
 import { CurrentListContext } from '@/pages/all-lists';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import useGetList from '@/lib/hooks/useGetList';
 import { server } from 'mocks/server';
+import { mockListMetadata } from 'mocks/testing-utils';
 
 const mockSetCurrentList = jest.fn();
 const mockSetListData = jest.fn();
-
-const mockListMetadata = {
-  id: '12345',
-  name: 'Test List',
-  type: 'Movies' as 'Movies',
-};
 const queryClient = new QueryClient();
 
 describe('ListContainer', () => {

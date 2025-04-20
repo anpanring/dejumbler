@@ -49,6 +49,29 @@ function SearchResult({
     },
   });
 
+  async function addToList(data: any) {
+    console.log('adding to list', 'data:', data);
+    // data.listId = listId;
+    const stringifiedData = JSON.stringify(data);
+    console.log(data);
+
+    const fetchOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: stringifiedData,
+    };
+
+    const res = await fetch('/api/add-item', fetchOptions);
+    const updatedData = await res.json();
+
+    toast({
+      title: 'item successfully added',
+    });
+    return updatedData;
+  }
+
   // different search results for each type
   switch (currentList ? currentList.type : listContext.type) {
     case 'Music':
@@ -202,29 +225,6 @@ function SearchResult({
         </div>
       );
   }
-
-  async function addToList(data: any) {
-    console.log('adding to list', 'data:', data);
-    // data.listId = listId;
-    const stringifiedData = JSON.stringify(data);
-    console.log(data);
-
-    const fetchOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: stringifiedData,
-    };
-
-    const res = await fetch('/api/add-item', fetchOptions);
-    const updatedData = await res.json();
-
-    toast({
-      title: 'item successfully added',
-    });
-    return updatedData;
-  }
 }
 
 interface SearchBarProps {
@@ -285,7 +285,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({ listContext }) => {
       {/* Search bar */}
       <form className="flex gap-2 mb-3">
         <Input
-          // className={styles.searchInput}
           className="h-8 w-[16rem]"
           onChange={(e) => setQuery(e.target.value)}
           type="search"
