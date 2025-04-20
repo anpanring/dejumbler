@@ -29,6 +29,7 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface ListBoxProps {
   listData: ListData;
@@ -58,7 +59,23 @@ export const ListBox: React.FC<ListBoxProps> = ({
   const [expandDescription, setExpandDescription] = useState(false);
 
   const { toast } = useToast();
-  
+
+  const queryClient = useQueryClient();
+  const deleteList = useMutation({
+    mutationFn: (list: ListData) => {
+      return fetch(`/api/delete-list?id=${list._id}`, {
+        method: 'DELETE',
+      });
+    },
+    onSuccess: (data, list, context) => {
+      console.log(data, list, context);
+      toast({
+        title: `Deleted ${list.name}`,
+      });
+      queryClient.refetchQueries({ queryKey: ['lists'], type: 'active' });
+    },
+  });
+
   const [dialog, setDialog] = useState('none');
   const handleDialogMenu = (): JSX.Element | null => {
     switch (dialog) {
@@ -70,24 +87,6 @@ export const ListBox: React.FC<ListBoxProps> = ({
         return null;
     }
   };
-
-  // handle deleting list
-  async function handleDelete(id: string) {
-    try {
-      const response = await fetch(`/api/delete-list?id=${id}`, {
-        method: 'DELETE',
-      });
-      const updatedData = await response.json();
-      setListData(updatedData); // in order to update lists instantly
-      toast({
-        title: 'Deleted',
-        description: 'Friday, February 10, 2023 at 5:57 PM',
-      });
-      if (selected) setCurrentList && setCurrentList(null);
-    } catch (error) {
-      alert('Failed to delete list.');
-    }
-  }
 
   // handle editing list description
   async function handleListUpdate(e) {
@@ -173,7 +172,7 @@ export const ListBox: React.FC<ListBoxProps> = ({
         <Button
           onClick={(e) => {
             e.preventDefault();
-            handleDelete(listData._id);
+            deleteList.mutate(listData);
             if (selected) setCurrentList && setCurrentList(null);
           }}
           className="text-base w-[100%] text-red-600"

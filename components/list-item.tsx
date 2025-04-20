@@ -7,41 +7,34 @@ import { deleteIcon, editIcon } from './icons';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { toast } from './ui/use-toast';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 function ListItem({
   itemData,
   listMetadata,
-  handleDataChange,
   view,
 }: {
   itemData: any;
   listMetadata: ListMetadata;
-  handleDataChange: (updatedList: any, message: string) => void;
   view: 'list' | 'grid';
 }) {
   const [notes, setNotes] = useState(itemData.notes);
   const [showNotesForm, setShowNotesForm] = useState(false);
 
   const queryClient = useQueryClient();
-
-  async function handleDelete() {
-    const response = await fetch(
-      `/api/remove-item?list=${listMetadata.id}&item=${itemData._id}`,
-      {
+  const deleteItem = useMutation({
+    mutationFn: ({ listId, itemId }: { listId: string; itemId: string }) => {
+      return fetch(`/api/remove-item?list=${listId}&item=${itemId}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
-    const updatedList = await response.json();
-
-    // set state in parent component
-    handleDataChange(updatedList, itemData.name + ' removed from ');
-    queryClient.setQueryData(['get-list', listMetadata.id], updatedList);
-    toast({
-      title: itemData.name + ' deleted',
-    });
-  }
+      });
+    },
+    onSuccess: (data, { listId, itemId }, context) => {
+      toast({
+        title: `Deleted ${itemId} from ${listId}`,
+      });
+      queryClient.invalidateQueries({ queryKey: ['get-list', listId] });
+    },
+  });
 
   async function handleNoteChange(e) {
     e.preventDefault();
@@ -65,7 +58,7 @@ function ListItem({
     setShowNotesForm(!showNotesForm);
   }
 
-  let listInfoComponent;
+  let listInfoComponent: JSX.Element;
   if (listMetadata.type === 'Movies') {
     listInfoComponent = (
       <>
@@ -148,7 +141,12 @@ function ListItem({
             </div>
             <div
               className={styles.deleteButton}
-              onClick={handleDelete}
+              onClick={() =>
+                deleteItem.mutate({
+                  listId: listMetadata.id,
+                  itemId: itemData._id,
+                })
+              }
               role="button"
             >
               {deleteIcon}

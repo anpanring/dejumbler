@@ -10,13 +10,15 @@ import { useEffect } from 'react';
 import { QueryParamProvider } from 'use-query-params';
 import { NextAdapter } from 'next-query-params';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
+const queryClient = new QueryClient();
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }) {
   const getLayout = Component.getLayout ?? ((page) => page);
-  const queryClient = new QueryClient();
 
   // runs on every page!!
   useEffect(() => {
@@ -38,6 +40,7 @@ export default function App({
           <Analytics />
           <SpeedInsights />
         </QueryParamProvider>
+        <ReactQueryDevtools initialIsOpen={true} />
       </QueryClientProvider>
     </SessionProvider>
   );
