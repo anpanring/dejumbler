@@ -151,7 +151,7 @@
   /* overflow: hidden; */
   white-space: nowrap;
   position: relative;
-  overflow-x: scroll;
+  /* overflow-x: scroll; */
   width: 297px;
 }
 

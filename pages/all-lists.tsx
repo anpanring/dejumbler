@@ -16,6 +16,7 @@ import {
   ListData,
   CurrentListContextType,
 } from '@/types/dejumbler-types';
+import styles from '@/styles/AllLists.module.css';
 
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -24,6 +25,8 @@ import {
   useQueryParams,
   withDefault,
 } from 'use-query-params';
+import useWindowSize from '@/lib/useWindowSize';
+import { Sidebar } from '@/components/all-lists/sidebar';
 
 export const CurrentListContext = createContext<CurrentListContextType | null>(
   null,
@@ -44,10 +47,12 @@ export interface AllListsPageQueryParams {
 
 export default function AllLists() {
   const { data: lists, isLoading } = useQuery({
-    queryKey: ['todos'],
+    queryKey: ['lists'],
     queryFn: (): Promise<ListData[]> =>
       fetch('/api/get-all-lists').then((res) => res.json()),
   });
+
+  const [width] = useWindowSize();
 
   // state used for context!
   const [currentList, setCurrentList] = useState<ListMetadata | null>(null);
@@ -110,7 +115,17 @@ export default function AllLists() {
       {isLoading && <h1>Loading...</h1>}
 
       <CurrentListContext.Provider value={{ currentList, setCurrentList }}>
-        <ListContainer lists={filteredLists ?? []} setListData={() => {}} />
+        <div
+          className={`${styles.wideview} ${
+            width < mobileWidth ? styles.mobileview : ''
+          }`}
+        >
+          {/* left sidebar showing all lists */}
+          <Sidebar lists={filteredLists ?? []} setListData={() => {}} />
+          {currentList && width >= mobileWidth && (
+            <ListContainer currentList={currentList} setCurrentList={setCurrentList} />
+          )}
+        </div>
       </CurrentListContext.Provider>
     </Layout>
   );

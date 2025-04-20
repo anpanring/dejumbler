@@ -34,11 +34,9 @@ function AddButton({ mutate, data, currentList, listContext, name }) {
 function SearchResult({
   data,
   listContext,
-  handleDataChange,
 }: {
   data: any;
   listContext: ListMetadata;
-  handleDataChange: (updatedData) => void;
 }) {
   const { currentList } = useContext(CurrentListContext) ?? {};
   const titleScroll = useRef<HTMLParagraphElement>(null);
@@ -46,6 +44,9 @@ function SearchResult({
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: addToList,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['get-list', listContext.id] });
+    },
   });
 
   // different search results for each type
@@ -63,6 +64,7 @@ function SearchResult({
           <div className={styles.searchResultInfo}>
             {/* image */}
             {imageURLs[0] ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 className={styles.searchResultImage}
                 src={imageURLs[0]}
@@ -119,6 +121,7 @@ function SearchResult({
         <div className={styles.movieSearchResultWrapper}>
           <div className={styles.searchResultInfo}>
             {poster_path ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 className={styles.searchResultImage}
                 src={`https://image.tmdb.org/t/p/w92${poster_path}`}
@@ -163,6 +166,7 @@ function SearchResult({
         <div className={styles.movieSearchResultWrapper}>
           <div className={styles.searchResultInfo}>
             {cover_edition_key ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 className={styles.searchResultImage}
                 src={`https://covers.openlibrary.org/b/olid/${cover_edition_key}-M.jpg`}
@@ -189,7 +193,7 @@ function SearchResult({
             </div>
           </div>
           <AddButton
-            mutate={addToList}
+            mutate={() => addToList(data)}
             data={data}
             currentList={currentList}
             listContext={listContext}
@@ -199,25 +203,25 @@ function SearchResult({
       );
   }
 
-  async function addToList({ data, listId, itemName }) {
-    data.listId = listId;
-    data = JSON.stringify(data);
+  async function addToList(data: any) {
+    console.log('adding to list', 'data:', data);
+    // data.listId = listId;
+    const stringifiedData = JSON.stringify(data);
+    console.log(data);
 
-    console.log(data, listId, itemName);
     const fetchOptions = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: data,
+      body: stringifiedData,
     };
 
     const res = await fetch('/api/add-item', fetchOptions);
     const updatedData = await res.json();
 
-    handleDataChange(updatedData);
     toast({
-      title: itemName + ' added',
+      title: 'item successfully added',
     });
     return updatedData;
   }
@@ -225,13 +229,9 @@ function SearchResult({
 
 interface SearchBarProps {
   listContext: ListMetadata;
-  handleDataChange: () => void;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({
-  listContext,
-  handleDataChange,
-}) => {
+export const SearchBar: React.FC<SearchBarProps> = ({ listContext }) => {
   const [results, setResults] = useState<Object[] | null>(null);
   const [musicType, setMusicType] = useState('all');
   const [query, setQuery] = useState('');
@@ -331,7 +331,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                 key={Math.random() * Number.MAX_VALUE}
                 data={result}
                 listContext={listContext}
-                handleDataChange={handleDataChange}
               />
             );
           })}

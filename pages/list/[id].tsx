@@ -49,7 +49,6 @@ export default function ListPage() {
       {/* still need to pass in listId and listType b/c can't carry context between pages */}
       <SearchBar
         listContext={listMetadata}
-        handleDataChange={handleDataChange}
       />
 
       <div className={styles.itemsContainer}>
@@ -60,7 +59,6 @@ export default function ListPage() {
               listMetadata={listMetadata}
               view="list"
               key={item.artURL || item.name}
-              handleDataChange={handleDataChange}
             />
           );
         })}

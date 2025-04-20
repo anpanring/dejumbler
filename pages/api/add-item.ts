@@ -22,27 +22,28 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    let listId = req.body.listId;
+    let listId = req.body.currentList;
+    let itemData = req.body.data;
 
     let newItem: HydratedDocument<IItem>;
-    if (req.body.type === 'movie') {
-      const { title, poster_path } = req.body;
+    if (itemData.type === 'movie') {
+      const { title, poster_path } = itemData;
 
       const newMovie: HydratedDocument<IMovie> = new Movie({
         name: title,
         artURL: `https://image.tmdb.org/t/p/w92${poster_path}`,
       });
-      if (req.body.director) newMovie.director = req.body.director;
-      if (req.body.year) newMovie.year = req.body.year;
+      if (itemData.director) newMovie.director = itemData.director;
+      if (itemData.year) newMovie.year = itemData.year;
       newItem = newMovie;
-    } else if (req.body.type === 'book') {
+    } else if (itemData.type === 'book') {
       const {
         title: bookTitle,
         author_name,
         first_publish_year,
         cover_edition_key,
         subject,
-      } = req.body;
+      } = itemData;
 
       const newBook: HydratedDocument<IBook> = new Book({
         name: bookTitle,
@@ -54,7 +55,7 @@ export default async function handler(
       newItem = newBook;
     } else {
       // music
-      const { artists, images, type, name, album } = req.body;
+      const { artists, images, type, name, album } = itemData;
 
       // process artists
       const artistNames = artists ? artists.map((artist) => artist.name) : [];

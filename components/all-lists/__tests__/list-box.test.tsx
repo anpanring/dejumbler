@@ -6,6 +6,7 @@ import { CurrentListContextType, ListData } from '@/types/dejumbler-types';
 import { createContext, SetStateAction } from 'react';
 import React from 'react';
 import { CurrentListContext } from '@/pages/all-lists';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const mockSetCurrentList = jest.fn();
 const mockListData = {
@@ -24,25 +25,28 @@ const mockListMetadata = {
   name: 'Test List',
   type: 'Movies' as 'Movies',
 };
+const queryClient = new QueryClient();
 
 describe('ListBox', () => {
   it('renders', () => {
     // Act
     render(
-      <CurrentListContext.Provider
-        value={{
-          currentList: mockListMetadata,
-          setCurrentList: mockSetCurrentList,
-        }}
-      >
-        <ListBox
-          listData={mockListData}
-          setListData={function (value: SetStateAction<ListData[]>): void {
-            throw new Error('Function not implemented.');
+      <QueryClientProvider client={queryClient}>
+        <CurrentListContext.Provider
+          value={{
+            currentList: mockListMetadata,
+            setCurrentList: mockSetCurrentList,
           }}
-          selected={false}
-        />
-      </CurrentListContext.Provider>,
+        >
+          <ListBox
+            listData={mockListData}
+            setListData={function (value: SetStateAction<ListData[]>): void {
+              throw new Error('Function not implemented.');
+            }}
+            selected={false}
+          />
+        </CurrentListContext.Provider>
+      </QueryClientProvider>,
     );
 
     // Assert
