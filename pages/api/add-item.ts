@@ -1,10 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-
-// schemas
 import { Album, Artist, Movie, Song, Book } from '../../models/Types';
 import List from '../../models/List';
-
-// TS types
 import {
   IAlbum,
   IArtist,
@@ -14,7 +10,6 @@ import {
   ISong,
 } from '../../models/definitions.types';
 import { HydratedDocument } from 'mongoose';
-
 import dbConnect from '../../lib/mongodb';
 
 export default async function handler(
@@ -27,67 +22,17 @@ export default async function handler(
 
     let newItem: HydratedDocument<IItem>;
     if (itemData.type === 'movie') {
-      const { title, poster_path } = itemData;
-
-      const newMovie: HydratedDocument<IMovie> = new Movie({
-        name: title,
-        artURL: `https://image.tmdb.org/t/p/w92${poster_path}`,
-      });
-      if (itemData.director) newMovie.director = itemData.director;
-      if (itemData.year) newMovie.year = itemData.year;
-      newItem = newMovie;
+      newItem = createMovie(itemData);
     } else if (itemData.type === 'book') {
-      const {
-        title: bookTitle,
-        author_name,
-        first_publish_year,
-        cover_edition_key,
-        subject,
-      } = itemData;
-
-      const newBook: HydratedDocument<IBook> = new Book({
-        name: bookTitle,
-        author: author_name.join(', '),
-        artURL: `https://covers.openlibrary.org/b/olid/${cover_edition_key}-M.jpg`,
-        year: first_publish_year,
-        genres: subject.slice(0, 6),
-      });
-      newItem = newBook;
+      newItem = createBook(itemData);
     } else {
-      // music
-      const { artists, images, type, name, album } = itemData;
-
-      // process artists
-      const artistNames = artists ? artists.map((artist) => artist.name) : [];
-
-      // process images
-      const imageURLs = images
-        ? images.map((image) => image.url)
-        : album.images.map((image) => image.url);
-
+      const { type } = itemData;
       if (type === 'artist') {
-        const newArtist: HydratedDocument<IArtist> = new Artist<IArtist>({
-          name: name,
-          artURL: imageURLs[0],
-          status: 'todo',
-        });
-        newItem = newArtist;
+        newItem = createArtist(itemData);
       } else if (type === 'track') {
-        const newSong: HydratedDocument<ISong> = new Song<ISong>({
-          name: name,
-          artist: artistNames.join(', '),
-          artURL: imageURLs[0],
-          status: 'todo',
-        });
-        newItem = newSong;
+        newItem = createSong(itemData);
       } else {
-        const newAlbum: HydratedDocument<IAlbum> = new Album<IAlbum>({
-          name: name,
-          artist: artistNames.join(', '),
-          artURL: imageURLs[0],
-          status: 'todo',
-        });
-        newItem = newAlbum;
+        newItem = createAlbum(itemData);
       }
     }
 
@@ -102,4 +47,69 @@ export default async function handler(
   } catch (err) {
     res.status(401).send({ message: err });
   }
+}
+
+function createMovie(itemData): HydratedDocument<IMovie> {
+  const { title, poster_path } = itemData;
+
+  const newMovie: HydratedDocument<IMovie> = new Movie({
+    name: title,
+    artURL: `https://image.tmdb.org/t/p/w92${poster_path}`,
+  });
+  if (itemData.director) newMovie.director = itemData.director;
+  if (itemData.year) newMovie.year = itemData.year;
+  return newMovie;
+}
+
+function createBook(itemData): HydratedDocument<IBook> {
+  const {
+    title: bookTitle,
+    author_name,
+    first_publish_year,
+    cover_edition_key,
+    subject,
+  } = itemData;
+  return new Book({
+    name: bookTitle,
+    author: author_name.join(', '),
+    artURL: `https://covers.openlibrary.org/b/olid/${cover_edition_key}-M.jpg`,
+    year: first_publish_year,
+    genres: subject?.slice(0, 6),
+  });
+}
+
+function createAlbum(itemData): HydratedDocument<IAlbum> {
+  const { artists, images, name, album } = itemData;
+  const artistNames = artists ? artists.map((artist) => artist.name) : [];
+  const imageURLs = images
+    ? images.map((image) => image.url)
+    : album.images.map((image) => image.url);
+  return new Album<IAlbum>({
+    name: name,
+    artist: artistNames.join(', '),
+    artURL: imageURLs[0],
+    status: 'todo',
+  });
+}
+
+function createSong(itemData): HydratedDocument<ISong> {
+  const { artists, images, name } = itemData;
+  const artistNames = artists ? artists.map((artist) => artist.name) : [];
+  const imageURLs = images.map((image) => image.url);
+  return new Song<ISong>({
+    name: name,
+    artist: artistNames.join(', '),
+    artURL: imageURLs[0],
+    status: 'todo',
+  });
+}
+
+function createArtist(itemData): HydratedDocument<IArtist> {
+  const { images, name } = itemData;
+  const imageURLs = images.map((image) => image.url);
+  return new Artist<IArtist>({
+    name: name,
+    artURL: imageURLs[0],
+    status: 'todo',
+  });
 }

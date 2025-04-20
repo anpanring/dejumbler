@@ -216,7 +216,7 @@ function SearchResult({
             </div>
           </div>
           <AddButton
-            mutate={() => addToList(data)}
+            mutate={mutate}
             data={data}
             currentList={currentList}
             listContext={listContext}
