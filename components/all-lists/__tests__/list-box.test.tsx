@@ -1,30 +1,14 @@
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent } from '@testing-library/react';
-
+import { render, screen } from '@testing-library/react';
 import { ListBox } from '../list-box';
-import { CurrentListContextType, ListData } from '@/types/dejumbler-types';
-import { createContext, SetStateAction } from 'react';
+import { ListData } from '@/types/dejumbler-types';
+import { SetStateAction } from 'react';
 import React from 'react';
 import { CurrentListContext } from '@/pages/all-lists';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { mockListData, mockListMetadata } from 'mocks/testing-utils';
 
 const mockSetCurrentList = jest.fn();
-const mockListData = {
-  user: 'test',
-  name: 'Test List',
-  description: 'This is a test list',
-  type: 'Movies' as 'Movies',
-  _id: '12345',
-  createdAt: '2023-01-01',
-  slug: 'test-list',
-  items: [{}, {}],
-  __v: 0,
-};
-const mockListMetadata = {
-  id: '12345',
-  name: 'Test List',
-  type: 'Movies' as 'Movies',
-};
 const queryClient = new QueryClient();
 
 describe('ListBox', () => {
