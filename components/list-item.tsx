@@ -36,21 +36,21 @@ function ListItem({
     },
   });
 
-  async function handleNoteChange(e) {
-    e.preventDefault();
-
+  async function handleNoteChange(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    
     const itemInfo = {
       itemId: itemData._id,
       listId: listMetadata.id,
-      updatedNotes: e.target.notes.value,
+      updatedNotes: form.elements.notes.value,
     };
-
     const fetchOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(itemInfo),
     };
-
     const response = await fetch('/api/edit-list-item', fetchOptions);
     const updatedData = await response.json();
 
@@ -112,7 +112,7 @@ function ListItem({
           <p className={styles.listItemNotes}> Notes: {notes}</p>
         )}
 
-        {showNotesForm ? (
+        {showNotesForm && (
           <form onSubmit={handleNoteChange} className={styles.notesForm}>
             <Textarea name="notes" defaultValue={notes} className="mt-2" />
             <div className={styles.notesEditButtons}>
@@ -127,7 +127,7 @@ function ListItem({
               </Button>
             </div>
           </form>
-        ) : null}
+        )}
 
         {!showNotesForm && (
           <div className={styles.listItemActions}>
