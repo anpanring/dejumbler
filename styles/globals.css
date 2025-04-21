@@ -75,6 +75,7 @@
   --main-text-color: black;
   --navbar-height: 82px;
   --secondary-font: 'Epilogue', sans-serif;
+  --frosted-accent: color-mix(in srgb, var(--accent-color) 50%, black);
 }
 
 html,

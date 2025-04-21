@@ -27,6 +27,7 @@ import {
 } from 'use-query-params';
 import useWindowSize from '@/lib/useWindowSize';
 import { Sidebar } from '@/components/all-lists/sidebar';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const CurrentListContext = createContext<CurrentListContextType | null>(
   null,
@@ -112,7 +113,13 @@ export default function AllLists() {
         </div>
       </div>
 
-      {isLoading && <h1>Loading...</h1>}
+      {isLoading && (
+        <div className="flex flex-col space-y-3">
+          {Array.from({ length: 9 }, (_, index) => (
+            <Skeleton key={index} className="h-[100px] w-auto rounded-xl bg-[var(--frosted-accent)]" />
+          ))}
+        </div>
+      )}
 
       <CurrentListContext.Provider value={{ currentList, setCurrentList }}>
         <div
@@ -123,7 +130,10 @@ export default function AllLists() {
           {/* left sidebar showing all lists */}
           <Sidebar lists={filteredLists ?? []} setListData={() => {}} />
           {currentList && width >= mobileWidth && (
-            <ListContainer currentList={currentList} setCurrentList={setCurrentList} />
+            <ListContainer
+              currentList={currentList}
+              setCurrentList={setCurrentList}
+            />
           )}
         </div>
       </CurrentListContext.Provider>
