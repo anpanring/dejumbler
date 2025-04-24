@@ -10,6 +10,13 @@ import styles from '@/styles/Home.module.css';
 
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { getServerSession } from 'next-auth/next';
+import dynamic from 'next/dynamic';
+
+const DynamicThreeScene = dynamic(() => import('@/components/ThreeScene'), {
+  ssr: false,
+  // Optionally add a loading component
+  loading: () => <p>Loading 3D scene...</p>,
+});
 
 export default function Home() {
   const router = useRouter();
@@ -33,6 +40,7 @@ export default function Home() {
         />
       </Head>
       <div className="flex flex-col items-center justify-center h-screen gap-2">
+        <DynamicThreeScene />
         <Image
           src={textLogo}
           className={styles.textLogo}
@@ -51,7 +59,9 @@ export default function Home() {
 // check login server-side to prevent flashing login page
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
+  console.log('session', session);
   if (session) {
+    console.log('redirecting to all-lists');
     return {
       redirect: {
         destination: '/all-lists',
