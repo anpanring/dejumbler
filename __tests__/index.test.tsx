@@ -15,20 +15,22 @@ const useRouter = jest.spyOn(require('next/router'), 'useRouter');
 
 jest.mock('next-auth/react');
 import { useSession, signIn, signOut } from 'next-auth/react';
+import { getServerSession } from 'next-auth/next';
 
-const mockUseSession = useSession as jest.Mock;
-(signIn as jest.Mock).mockImplementation(() => jest.fn());
-(signOut as jest.Mock).mockImplementation(() => jest.fn());
+// const mockUseSession = useSession as jest.Mock;
+// const mockGetServerSession = getServerSession as jest.Mock;
+// (signIn as jest.Mock).mockImplementation(() => jest.fn());
+// (signOut as jest.Mock).mockImplementation(() => jest.fn());
 
 import Home from '../pages/index';
 import AllLists from '../pages/all-lists';
 
 describe('Home', () => {
   it('when logged out', () => {
-    mockUseSession.mockReturnValue({
-      status: 'unauthenticated',
-      data: null,
-    });
+    // mockGetServerSession.mockReturnValue({
+    //   status: 'unauthenticated',
+    //   data: null,
+    // });
 
     useRouter.mockImplementation(() => ({
       route: '/',

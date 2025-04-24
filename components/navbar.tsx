@@ -114,7 +114,7 @@ export default function Navbar({ changeMode }) {
                     <strong>{data?.user.name}</strong>
                   </u>
                 </p>
-                <Button onClick={() => signOut()} variant="destructive">
+                <Button onClick={() => signOut({ callbackUrl: '/' })} variant="destructive">
                   Sign out
                 </Button>
               </div>
