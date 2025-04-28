@@ -1,19 +1,18 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 
 import { siteTitle } from '@/components/layout';
 import Login from '@/components/login';
 
 import textLogo from '@/public/images/dejumbler-text-logo.png';
-import styles from '@/styles/Home.module.css';
+import dynamic from 'next/dynamic';
 
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { getServerSession } from 'next-auth/next';
+const DynamicThreeScene = dynamic(() => import('@/components/ThreeScene'), {
+  ssr: false,
+  loading: () => <p>Loading 3D scene...</p>,
+});
 
 export default function Home() {
-  const router = useRouter();
-
   // document.documentElement.setAttribute('data-theme', 'light');
   // document.documentElement.style.setProperty('--accent-color', 'green');
   // document.documentElement.style.setProperty('--secondary-font', 'Epilogue');
@@ -32,13 +31,14 @@ export default function Home() {
           content="n5dZdc1QljJ4k39BSCkZAbhnJS5CjIdAo6OHVqD_c-Y"
         />
       </Head>
-      <div className="flex flex-col items-center justify-center h-screen gap-2">
+      <div className="flex flex-col items-center justify-center h-screen gap-2 bg-[var(--background)]">
+        {/* <DynamicThreeScene /> */}
         <Image
           src={textLogo}
-          className={styles.textLogo}
+          className="w-1/2 h-20 fill-[var(--foreground)]"
           alt="Dejumbler text logo"
         />
-        <h2 className="text-base text-center">
+        <h2 className="text-base text-center text-[var(--foreground)]">
           The Dejumbler is a platform that helps you use lists to manage the
           media you consume.
         </h2>
@@ -46,23 +46,4 @@ export default function Home() {
       </div>
     </>
   );
-}
-
-// check login server-side to prevent flashing login page
-export async function getServerSideProps(context) {
-  const session = await getServerSession(context.req, context.res, authOptions);
-  if (session) {
-    return {
-      redirect: {
-        destination: '/all-lists',
-        permanent: true,
-      },
-    };
-  }
-
-  return {
-    props: {
-      session: session,
-    },
-  };
 }

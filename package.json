@@ -47,6 +47,7 @@
     "swr": "^2.2.5",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "three": "^0.176.0",
     "use-query-params": "^2.2.1"
   },
   "devDependencies": {
